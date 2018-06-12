@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +24,7 @@ import javax.transaction.Transactional;
 
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.MapaDashboardDTO;
+import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.RubricaMesAnoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
@@ -49,6 +51,8 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     private ContaDao contaDao;
 
     private LancamentoDao lancamentoDao;
+    
+    private Logger log = Logger.getLogger(this.getClass().getName());
 
     @PostConstruct
     public void init() {
@@ -89,13 +93,18 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
             throw new CampoObrigatorioException("FIltro não informado");
         }
         try {
-        	Date dataInicial = UtilData.createDataSemHoras(1, dtoFiltro.getMes(), dtoFiltro.getAno());
-         	Date dataFinal   = UtilData.asDate(UtilData.getUltimaDataMes(dtoFiltro.getMes(), dtoFiltro.getAno()));
-            return getConversor().converterEntidadeParaPojo(lancamentoDao.listarParcelas(dataInicial, dataFinal));
+        	List<Lancamento> listaParcelas = filtrarParcelas(dtoFiltro);
+			return getConversor().converterEntidadeParaPojo(listaParcelas);
         } catch (PersistenciaException e) {
             throw new NegocioException(e);
         }
     }
+
+	private List<Lancamento> filtrarParcelas(FiltraParcelasDto dtoFiltro) throws PersistenciaException {
+		Date dataInicial = UtilData.createDataSemHoras(1, dtoFiltro.getMes(), dtoFiltro.getAno());
+		Date dataFinal   = UtilData.asDate(UtilData.getUltimaDataMes(dtoFiltro.getMes(), dtoFiltro.getAno()));
+		return lancamentoDao.listarParcelas(dataInicial, dataFinal);
+	}
 
     @Override
     public boolean baixarParcelas(List<Integer> idsLancamentos) throws NegocioException {
@@ -272,15 +281,15 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 //						.collect(Collectors.groupingBy(Lancamento::getMesAno));
 			
 			//0=receita; 1=despesa; 2=saldo
-			BigDecimal[] resumoMesAtual = calcularTotais(listaMesAtual);
+			ResumoMesAnoDTO calculoTotais = calcularTotais(listaMesAtual);
 			
 			MapaDashboardDTO mapaDashboard = new MapaDashboardDTO();
 			mapaDashboard.setRubricaMesAnoDTO(getResumoPorRubricasMesPesquisa(listaMesAtual));
 			mapaDashboard.setSaldoEmConta( getTotalConciliado(listaMesAtual) );
-			mapaDashboard.setTotalEntradas(resumoMesAtual[0]);
-			mapaDashboard.setTotalSaidas(resumoMesAtual[1]);
+			mapaDashboard.setTotalEntradas(calculoTotais.getTotalReceitas());
+			mapaDashboard.setTotalSaidas(calculoTotais.getTotalDespesas());
 			mapaDashboard.setTotalPagar( getTotalPagar(listaMesAtual) );
-			mapaDashboard.setTotalPago( resumoMesAtual[1].subtract(mapaDashboard.getTotalPagar()) );
+			mapaDashboard.setTotalPago( mapaDashboard.getTotalSaidas().subtract(mapaDashboard.getTotalPagar()) );
 			
 			return mapaDashboard;
 		} catch (PersistenciaException e) {
@@ -319,6 +328,16 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 				
 		return new BigDecimal(valorAPagar);
 	}
+	
+	private BigDecimal getTotalReceber(List<Lancamento> listaMesAtual) {
+		Double valorAPagar =
+				listaMesAtual.stream()
+				.filter(lancamento -> lancamento.isReceita() && !lancamento.getBolPaga())
+				.mapToDouble(lanc -> lanc.getValorEmDouble())
+				.sum();
+				
+		return new BigDecimal(valorAPagar);
+	}	
 
 	/**
 	 * @param mapaMensal
@@ -354,14 +373,11 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 				.entrySet()
 				.stream()
 				.map(itemMap -> {
-					BigDecimal[] totais = this.calcularTotais(itemMap.getValue());
+					ResumoMesAnoDTO dto = this.calcularTotais(itemMap.getValue());
 					String[] chaveQuebrada = itemMap.getKey().split("/");
 					
-					ResumoMesAnoDTO dto = new ResumoMesAnoDTO();
 					dto.setMes(Integer.valueOf(chaveQuebrada[0]));
 					dto.setAno(Integer.valueOf(chaveQuebrada[1]));
-					dto.setTotalDespesas(totais[1]);
-					dto.setTotalReceitas(totais[0]);
 					return dto;
 				})
 				.collect(Collectors.toSet());
@@ -371,14 +387,65 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 * @param list
 	 * @return
 	 */
-	private BigDecimal[] calcularTotais(List<Lancamento> lista) {
+	private ResumoMesAnoDTO calcularTotais(List<Lancamento> lista) {
 		Map<Boolean, Double> mapTotais = lista.stream()
 			.collect(Collectors.groupingBy(Lancamento::isReceita, Collectors.summingDouble(Lancamento::getValorEmDouble)));
 		BigDecimal saldo = new BigDecimal(mapTotais.get(true)).subtract(new BigDecimal(mapTotais.get(false)));
 		
-		return new BigDecimal[] {
-								 new BigDecimal(mapTotais.get(true)).setScale(2, RoundingMode.CEILING),
-								 new BigDecimal(mapTotais.get(false)).setScale(2,RoundingMode.CEILING),
-								 saldo.setScale(2, RoundingMode.CEILING)};
+		ResumoMesAnoDTO dto = new ResumoMesAnoDTO();
+		dto.setTotalDespesas(new BigDecimal(mapTotais.get(true)).setScale(2, RoundingMode.CEILING));
+		dto.setTotalReceitas(new BigDecimal(mapTotais.get(false)).setScale(2,RoundingMode.CEILING));
+		dto.setSaldoFinal(saldo);
+		
+		return dto;
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#obterResumoMesAno(br.net.walltec.api.dto.FiltraParcelasDto)
+	 */
+	@Override
+	public ResumoMesAnoDTO obterResumoMesAno(FiltraParcelasDto dtoFiltro) throws NegocioException {
+		log.info("Parametros:" + dtoFiltro);
+    	try {
+			List<Lancamento> listaParcelas = filtrarParcelas(dtoFiltro);
+			if (listaParcelas == null || listaParcelas.isEmpty()) {
+				throw new NegocioException("Lançamentos não encontrados!");
+			}
+			
+			ResumoMesAnoDTO resumo = this.calcularTotais(listaParcelas);
+			return resumo;
+		} catch (PersistenciaException e) {
+			throw new NegocioException(e);
+		}		
+
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#obterResumoDetalhadoMesAno(br.net.walltec.api.dto.FiltraParcelasDto)
+	 */
+	@Override
+	public ResumoDetalhadoMesAnoDTO obterResumoDetalhadoMesAno(FiltraParcelasDto dtoFiltro) throws NegocioException {
+		log.info("Parametros:" + dtoFiltro);
+		log.info("Parametros:" + dtoFiltro);
+    	try {
+			List<Lancamento> listaParcelas = filtrarParcelas(dtoFiltro);
+			
+			if (listaParcelas == null || listaParcelas.isEmpty()) {
+				throw new NegocioException("Lançamentos não encontrados!");
+			}
+			
+			ResumoMesAnoDTO resumo = this.calcularTotais(listaParcelas);
+			
+			ResumoDetalhadoMesAnoDTO dto = new ResumoDetalhadoMesAnoDTO(resumo);
+			dto.setTotalPagar(getTotalPagar(listaParcelas));
+			dto.setTotalReceber(getTotalReceber(listaParcelas));
+			
+			dto.setTotalRecebido(dto.getTotalReceitas().subtract(dto.getTotalReceber()));
+			dto.setTotalPago(dto.getTotalDespesas().subtract(dto.getTotalPagar()));
+			return dto;
+		} catch (PersistenciaException e) {
+			throw new NegocioException(e);
+		}		
+
 	}
 }

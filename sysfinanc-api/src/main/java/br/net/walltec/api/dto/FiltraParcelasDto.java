@@ -43,6 +43,11 @@ public class FiltraParcelasDto extends DtoPadrao {
 	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
+
+	@Override
+	public String toString() {
+		return "FiltraParcelasDto [mes=" + mes + ", ano=" + ano + "]";
+	}
 	
 	
 	
