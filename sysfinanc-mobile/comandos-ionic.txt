@@ -1,0 +1,16 @@
+﻿npm install -g cordova ionic
+
+ionic start myApp tabs
+
+cd myApp
+ionic serve
+
+--> 
+após baixar os fontes:
+
+- npm update
+- verificar a versão do ionic e instalar a versão 3.x
+- rodar o build
+npm install node-sass
+npm install --prefix . chart.js --save
+npm install --prefix . ng2-charts --save

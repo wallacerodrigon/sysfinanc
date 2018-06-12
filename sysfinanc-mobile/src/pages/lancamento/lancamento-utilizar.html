@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Utilização de Lançamento</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form (submit)="registrarUso()">
+      <ion-item>
+          <ion-label stacked>Data do Uso</ion-label>
+          <ion-input [(ngModel)]="dataUtilizacao" name="dataUtilizacao" type="date"></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label stacked>Valor usado</ion-label>
+          <ion-input [(ngModel)]="valorUtilizado" name="valorUtilizado" type="number"></ion-input>
+      </ion-item>
+
+      <button ion-button full color="light" type="submit">Registrar</button>
+    </form>
+
+</ion-content>
