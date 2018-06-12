@@ -54,7 +54,7 @@ import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 //TODO: Seguir a seguinte padroniza??o: PUT - atualiza; POST - cria;
 @Path("/lancamentos")
 @Produces(value=MediaType.APPLICATION_JSON)
-//@Interceptors({RequisicaoInterceptor.class})
+@Interceptors({RequisicaoInterceptor.class})
 
 public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 
