@@ -1,0 +1,112 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {CrudComponente} from '../../../componentes/crud-componente/crud-componente.component';
+import { DialogService } from "ng2-bootstrap-modal";  
+import {AlertaComponent} from '../../../componentes/mensagens/alert.component';
+import {UtilObjeto} from '../../../utilitarios/util-objeto';
+import { TurmaModalComponent } from '../turma-modal/turma-modal.component';
+import {TurmaService} from '../../../servicos/turma.service';
+import {ProfessorVO} from '../../../dominio/vo/professor-vo';
+import {ModalidadeVO} from '../../../dominio/vo/modalidade-vo';
+
+@Component({
+  selector: 'app-turma',
+  templateUrl: './turma.component.html',
+  styleUrls: ['./turma.component.css']
+})
+export class TurmaComponent implements OnInit {
+
+    public listagem: Array<any> = [];
+
+    public colunas: Array<string> = ["Nome", "Professor", "Modalidade", "Dias Semana", "Horário", "Valor Normal", "Valor Antecipado", "Ativa"];
+    public atributos: Array<string>= ["nomeTurma", "professor", "modalidade", "diasSemanaString", "periodo", "valorTurmaStr", "valorAntecipadoStr", "statusStr"];
+    public tamanhoListagem: number = 0;
+
+    public listaProfessores: Array<ProfessorVO> = [];
+    public listaModalidades: Array<ModalidadeVO> = [];
+
+
+    @ViewChild(CrudComponente) crudComponente: CrudComponente;
+
+  constructor(private _dialogService: DialogService, 
+              private _service: TurmaService) { 
+                
+              }
+
+  ngOnInit() {
+        this.crudComponente.target = this;
+        this.crudComponente.exibeFiltro = false;
+        this._inicializaCombos();
+        this.listar();
+  }
+
+  listar(){
+        this._service
+            .listar()
+            .subscribe(lista => {
+                this.listagem = lista;
+                this.tamanhoListagem = this.listagem.length;
+            });
+    }
+
+    private _inicializaCombos(){
+        this._service
+            .recuperarDadosParaCombos()
+            .subscribe(lista => {
+                  lista.modalidades.forEach(item => this.listaModalidades.push(new ModalidadeVO(item.idModalidade, item.descModalidade)));
+                  lista.professores.forEach(prof => {
+                      let vo : ProfessorVO = new ProfessorVO();
+                      vo.id = prof.id;
+                      vo.nome = prof.nome;
+                      this.listaProfessores.push(vo);
+                  });
+                 
+            });
+    }
+
+    protected removerItem(indice: number){
+        this.listagem.splice(indice, 1);
+        this.tamanhoListagem = this.listagem.length;
+    }
+
+    editar(event: Event){
+        this.crudComponente.dialogService.addDialog(TurmaModalComponent, {
+            turma: UtilObjeto.clonarObjeto(this.crudComponente.itemSelecionado),
+            bolEditando: true,
+            componenteAlvo: this.crudComponente,
+            listaProfessores: this.listaProfessores,
+            listaModalidades: this.listaModalidades            
+        });
+    }
+
+    excluir(event: Event){
+        if (event){
+            this._service.excluir(this.crudComponente.itemSelecionado.idTurma)
+                .then(() => {
+                   this.removerItem(this.crudComponente.indiceItem);
+                   new AlertaComponent(this._dialogService).exibirMensagem('Turma excluída com sucesso!');
+                  
+                })
+                .catch((erro) => {                  
+                    new AlertaComponent(this._dialogService).exibirMensagem('Erro ao excluir a turma! Ela pode estar em alguma matrícula!');
+                })   
+        }
+              
+    }    
+
+    abrirModalNovo(event: Event){
+        this.crudComponente.dialogService.addDialog(TurmaModalComponent, {
+            componenteAlvo: this.crudComponente,
+            listaProfessores: this.listaProfessores,
+            listaModalidades: this.listaModalidades            
+            
+        });
+                
+    }
+
+    funcaoFiltro(event: Event){
+        this.crudComponente.dialogService.addDialog(TurmaModalComponent, {
+               componenteAlvo: this
+        });
+    }  
+
+}

@@ -1,0 +1,34 @@
+/**
+ *
+ */
+package br.net.walltec.api.persistencia.dao;
+
+import br.net.walltec.api.entidades.FormaPagamento;
+import br.net.walltec.api.entidades.Parcela;
+import br.net.walltec.api.entidades.TipoConta;
+import br.net.walltec.api.enums.EnumEstadoParcela;
+import br.net.walltec.api.excecoes.PersistenciaException;
+import br.net.walltec.api.persistencia.dao.comum.PersistenciaPadraoDao;
+import br.net.walltec.api.vo.HistoricoUtilizacaoMensalVO;
+import br.net.walltec.api.vo.ResumoLancamentosMesVO;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * @author Wallace
+ */
+public interface LancamentoDao extends PersistenciaPadraoDao<Parcela> {
+
+    List<Parcela> listarParcelas(Date dataInicial, Date dataFinal, Integer idConta, String descConta,
+                                 EnumEstadoParcela estadoAtual, Boolean bolDespesas) throws PersistenciaException;
+
+    boolean baixarParcelas(Parcela... parcelas) throws PersistenciaException;
+
+    boolean excluirParcelas(Parcela... parcelas) throws PersistenciaException;
+
+    ResumoLancamentosMesVO obterResumoLancamentos(Integer mes, Integer ano) throws PersistenciaException;
+
+    List<HistoricoUtilizacaoMensalVO> listarHistoricoUtilizacao(Date dataInicial, Date dataFinal) throws PersistenciaException;
+
+}

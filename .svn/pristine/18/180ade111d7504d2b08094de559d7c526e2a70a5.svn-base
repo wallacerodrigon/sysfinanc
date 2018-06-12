@@ -1,0 +1,28 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes }  from '@angular/router';
+import { HomeDashboardComponent } from './widgets/home-dashboard.component';
+import { BlockUIModule } from 'ng-block-ui';
+
+import { HomeModule } from '../home/home.module';
+import { DashboardComponents } from './dashboard-components';
+import { AuthGuard } from '../servicos/auth-guard.service';
+
+const rotas: Routes = [
+  {path: '', component: DashboardComponents,
+   children: [
+        {
+        path:'dashboard', component: HomeDashboardComponent, canActivate: [AuthGuard]
+        }
+   ]}
+];
+
+@NgModule({
+  imports: [
+    CommonModule , RouterModule.forChild(rotas), BlockUIModule, HomeModule
+  ],
+  declarations: [HomeDashboardComponent, DashboardComponents],
+  exports: [HomeDashboardComponent, DashboardComponents],
+  entryComponents: [HomeDashboardComponent,DashboardComponents]
+})
+export class DashboardModule { }

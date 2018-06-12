@@ -1,0 +1,94 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import 'rxjs/add/operator/map';
+import {FormsModule} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+import {HomeModule} from './home/home.module';
+import {LoginModule} from './login/login.module';
+
+import {HttpModule, Http, XHRBackend, RequestOptions} from '@angular/http';
+import {ComponentesModule} from './componentes/componentes.module';
+import {CadastrosModule} from './cadastros/cadastros.module';
+import {TurmaModule} from './cadastros/turma/turma.module';
+import {MatriculaModule} from './cadastros/matricula/matricula.module';
+import {PlanoPagamentoModule} from './cadastros/plano-pagamento/plano-pagamento.module';
+import {RelatoriosModule} from './relatorios/relatorios.module';
+import {FinanceiroModule} from './financeiro/financeiro.module';
+
+//HTTP_INTERCEPTORS
+import {HttpFactory} from './servicos/http-factory';
+import {HttpInterceptor } from './servicos/http-interceptor';
+
+//modulos externos
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import {NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TextMaskModule } from 'angular2-text-mask';
+import { DialogService } from "ng2-bootstrap-modal";
+
+
+//serviços
+
+import {ModalidadeService} from './servicos/modalidade.service';
+import {ProfessorService} from './servicos/professor.service';
+import {AlunoService} from './servicos/aluno.service';
+import {DashBoardService} from './servicos/dashboard.service';
+import {TurmaService} from './servicos/turma.service';
+import {MatriculaService} from './servicos/matricula.service';
+import {PlanoPagamentoService} from './servicos/plano-pagamento.service';
+import {UsuarioService} from './servicos/usuario.service';
+import {AulaExperimentalService} from './servicos/aula-experimental.service';
+import {RecebimentoService} from './servicos/recebimento.service';
+import {MensalidadeService} from './servicos/mensalidade.service';
+import {AuthGuard} from './servicos/auth-guard.service';
+
+//rotas
+import {AcademiaRoutingModule} from './academia-routes-module';
+import {CadastrosRoutesModule} from './cadastros/cadastros-routes-module';
+import {RelatoriosRoutesModule} from './relatorios/relatorios-routes-module';
+import {HomeRoutesModule} from './home/home-routes-module';
+import {FinanceiroRoutesModule} from './financeiro/financeiro-routes-module';
+ 
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    //externos
+    BrowserModule,
+    FormsModule, 
+    HttpModule, 
+    CommonModule,
+    BootstrapModalModule, 
+    NgbModule.forRoot(),
+
+    //modulos do sistema
+    HomeModule, CadastrosModule, LoginModule, ComponentesModule, TextMaskModule, 
+    TurmaModule, MatriculaModule, PlanoPagamentoModule, RelatoriosModule,
+    FinanceiroModule, 
+    
+    //rotas
+    CadastrosRoutesModule, RelatoriosRoutesModule, HomeRoutesModule,
+    FinanceiroRoutesModule,
+    AcademiaRoutingModule /*deve ser a última para evitar conflitos*/ 
+  ],
+  providers: [
+        {
+            provide: HttpInterceptor,
+            useFactory: HttpFactory,
+            deps: [XHRBackend, RequestOptions, Router, DialogService]
+        },
+        AuthGuard,
+        ModalidadeService, ProfessorService, AlunoService, DashBoardService, TurmaService, MatriculaService,
+        PlanoPagamentoService, UsuarioService, AulaExperimentalService, RecebimentoService, MensalidadeService        
+    ],
+  bootstrap: [AppComponent]
+})
+export class AppModule {  
+
+
+
+}

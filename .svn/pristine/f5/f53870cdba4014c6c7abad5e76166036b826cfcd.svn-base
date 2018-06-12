@@ -1,0 +1,40 @@
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
+import { CanActivate } from '@angular/router';
+import * as jwtDecode from 'jwt-decode';
+
+@Injectable()
+export class AuthGuard implements CanActivate, CanActivateChild {
+
+  constructor(private router: Router) {}
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    let token: string = "";    
+    /*if (token) {
+      const decoded = jwtDecode(token);
+      if (decoded.resource_access.skeleton) {
+        const roles = decoded.resource_access.skeleton.roles;
+
+        let url = state.url;
+        if (url.indexOf('editar') >= 0) {
+          url = url.substring(0, url.lastIndexOf('/'));
+        }
+        
+
+        if (roles.indexOf(url) >= 0) {
+          return true;
+        }
+      }
+      this.router.navigate(['unauthorized']);
+      return false;
+    } else {
+      this.router.navigate(['unauthorized']);
+      return false;
+    }*/
+    return true;
+  }
+
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    return this.canActivate(route, state);
+  }
+}

@@ -1,0 +1,95 @@
+import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import {HttpInterceptor} from '../../servicos/http-interceptor';
+import {LoginVO} from '../../dominio/vo/login-vo';
+import {UsuarioLogadoVO} from '../../dominio/vo/usuario-logado-vo';
+import {AlertaComponent} from '../../componentes/mensagens/alert.component';
+import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit {
+  
+  public usuario: LoginVO = new LoginVO();
+  private alerta: AlertaComponent = new AlertaComponent(this._dialogService);
+  private efetuandoLogin: boolean = false;
+  title = 'Gyman';
+  nomeUsuario: string;
+  descVersaoSistema: string = "";
+
+  @ViewChild("#btnLogin") btnLogin: ElementRef;
+  @BlockUI() blockUI: NgBlockUI;
+
+  constructor(private router: Router, private _http: HttpInterceptor, private _dialogService: DialogService ) { 
+  }
+
+  ngOnInit() {
+  }
+
+  private habilitaLogin(estado: boolean){
+    this.btnLogin.nativeElement.disabled = estado;      
+  }
+
+  efetuarLogin(event: Event){
+
+    if ( (!this.usuario) || (! this.usuario.login) || (! this.usuario.senha) ||
+         (this.usuario && this.usuario.login.trim().length === 0) ||
+         (this.usuario && this.usuario.senha.trim().length === 0) ){
+        this.alerta.exibirMensagem("Login e senha devem ser infomados");
+        return;         
+    }
+     this.blockUI.start('Autenticando...');
+     this.efetuandoLogin = true;
+     this._http
+        .post('/usuario/login', JSON.stringify(this.usuario))
+        .toPromise()
+        .then(retorno => {
+            let json: string = JSON.stringify(retorno.json());
+            sessionStorage.setItem("usuario", json);
+            let vo: LoginVO = JSON.parse(json);
+            UsuarioLogadoVO.usuarioLogado = vo;
+            if (vo.primeiroAcesso){
+                //parametrizar para não ter menu e redirecionar para login
+                this.router.navigate(['/altera-senha-primeiro-acesso']);
+            } else {
+                this.router.navigate(['/dashboard']);
+            }
+
+        })
+        .then(() => {
+            this._carregarEstados();
+        })
+        .then(() => {
+            this._carregarGrausParentescos();
+            this.blockUI.stop(); // Stop blocking
+        })
+        .catch(erro => {
+            this.efetuandoLogin = false;
+            this.blockUI.stop(); // Stop blocking
+            if (erro.status === 403){
+                this.alerta.exibirMensagem("Usuário ou senha inválidos");
+            } else {
+                this.alerta.exibirMensagem("Erro interno:"+ erro._data);
+            }
+        });
+  }
+
+  private _carregarGrausParentescos(){
+      this._http
+          .get('/academia/grau-parentesco')
+          .subscribe(retorno => sessionStorage.setItem('graus', JSON.stringify(retorno.json())));      
+  }
+
+//ver promisse encadeada
+  private _carregarEstados(){
+      this._http
+          .get('/academia/estados')
+          .subscribe(retorno =>  sessionStorage.setItem('estados', JSON.stringify(retorno.json())));
+          
+          
+  }
+}

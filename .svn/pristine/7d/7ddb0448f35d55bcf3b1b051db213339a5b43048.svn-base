@@ -1,0 +1,21 @@
+import { Injectable } from '@angular/core';
+import {HttpInterceptor} from '../servicos/http-interceptor';
+import {UsuarioVO} from '../dominio/vo/usuario-vo';
+import {AbstractServicos} from '../servicos/abstract.servicos';
+
+@Injectable()
+export class LoginService extends AbstractServicos<UsuarioVO> {
+
+  protected uri: string = '/usuario';
+
+  constructor(protected http: HttpInterceptor) { 
+      super();
+  }
+
+  public transformar(element: any): UsuarioVO {
+       let vo: UsuarioVO = new UsuarioVO();
+       vo.transformar(element);
+       return vo;
+  };  
+
+}

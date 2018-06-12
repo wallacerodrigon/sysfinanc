@@ -1,0 +1,48 @@
+<app-loading [display]="isLoading"></app-loading>
+<mat-card>
+  <app-content-header title="{{ isUpdate ? 'Editar' : 'Adicionar' }} Rubrica">
+    <button mat-raised-button (click)="goBack()">Voltar</button>
+  </app-content-header>
+
+  <form [formGroup]="form" novalidate class="app-form" (ngSubmit)="onSave()">
+    <div fxLayout="column" fxLayoutAlign="start">
+      <div fxLayout fxLayout.xs="column" fxLayoutWrap fxLayoutGap="25px">
+
+        <mat-form-field fxFlex="40">
+          <input placeholder="Nome da Rubrica" matInput formControlName="descricao" [(ngModel)]="rubrica.descricao">
+          <mat-error *ngIf="validationErros.descricao">
+              {{validationErros.descricao}}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="40">
+          <mat-select placeholder="Tipo de Conta" formControlName="idTipoConta">
+              <mat-option *ngFor="let data of listaTiposContas" [value]="data.id">
+                {{ data.descricao }}
+              </mat-option>
+          </mat-select>          
+          <mat-error *ngIf="validationErros.idTipoConta">
+              {{validationErros.descTipoConta}}
+          </mat-error>
+        </mat-form-field>
+
+  
+        <mat-radio-group fxFlex="10">
+            <mat-checkbox formControlName="despesa">Despesa</mat-checkbox>
+        </mat-radio-group>        
+      
+
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="flex-end">
+        <div class="app-margin-right">
+          <button type="button" mat-raised-button (click)="goBack()">Cancelar</button>
+        </div>
+        <div>
+          <button mat-raised-button color="primary" type="submit">Salvar</button>
+        </div>
+      </div>    
+  </form>
+</mat-card>

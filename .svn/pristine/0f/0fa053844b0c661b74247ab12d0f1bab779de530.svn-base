@@ -1,0 +1,100 @@
+/**
+ * 
+ */
+package br.net.walltec.api.entidades;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import br.net.walltec.api.entidades.comum.EntidadeBasica;
+
+/**
+ * @author wallace
+ *
+ */
+@Entity
+@Table(name="plano_pagamento")
+public class PlanoPagamento extends EntidadeBasica<PlanoPagamento> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="co_plano", nullable=false)
+	private Integer idPlanoPagamento;
+	
+	@Column(name="ds_plano", nullable=false, length=50)
+	private String descPlanoPagamento;
+	
+	@Column(name="bol_parcela", nullable=false, columnDefinition="char(1) default 'N'")
+	private String bolParcelamento;
+	
+	@Column(name="qt_parcela", nullable=false)
+	private Integer qtdParcelas;
+	
+	/**
+	 * @return the idPlanoPagamento
+	 */
+	public Integer getIdPlanoPagamento() {
+		return idPlanoPagamento;
+	}
+
+	/**
+	 * @param idPlanoPagamento the idPlanoPagamento to set
+	 */
+	public void setIdPlanoPagamento(Integer idPlanoPagamento) {
+		this.idPlanoPagamento = idPlanoPagamento;
+	}
+
+	/**
+	 * @return the descPlanoPagamento
+	 */
+	public String getDescPlanoPagamento() {
+		return descPlanoPagamento;
+	}
+
+	/**
+	 * @param descPlanoPagamento the descPlanoPagamento to set
+	 */
+	public void setDescPlanoPagamento(String descPlanoPagamento) {
+		this.descPlanoPagamento = descPlanoPagamento;
+	}
+
+	/**
+	 * @return the bolParcelamento
+	 */
+	public String getBolParcelamento() {
+		return bolParcelamento;
+	}
+
+	/**
+	 * @param bolParcelamento the bolParcelamento to set
+	 */
+	public void setBolParcelamento(String bolParcelamento) {
+		this.bolParcelamento = bolParcelamento;
+	}
+
+	/**
+	 * @return the qtdParcelas
+	 */
+	public Integer getQtdParcelas() {
+		return qtdParcelas;
+	}
+
+	/**
+	 * @param qtdParcelas the qtdParcelas to set
+	 */
+	public void setQtdParcelas(Integer qtdParcelas) {
+		this.qtdParcelas = qtdParcelas;
+	}
+
+	
+    
+}

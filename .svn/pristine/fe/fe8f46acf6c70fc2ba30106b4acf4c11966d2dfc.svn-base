@@ -1,0 +1,16 @@
+/**
+ * 
+ */
+package br.net.walltec.api.negocio.servicos;
+
+import br.net.walltec.api.entidades.Usuario;
+import br.net.walltec.api.vo.UsuarioVO;
+
+/**
+ * @author wallace
+ *
+ */
+public interface UsuarioServico extends CrudPadraoServico<Usuario, UsuarioVO>  {
+
+
+}

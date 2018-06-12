@@ -1,0 +1,31 @@
+<!--https://github.com/angular/flex-layout-->
+<div>
+    <div class="container" fxLayout="row wrap" fxLayoutAlign="space-around center">
+        <h1>Acesso ao Sistema</h1>
+    </div>
+
+    <div class="container" fxLayout="row wrap" fxLayoutAlign="space-around center">
+            <form [formGroup]="rForm" (ngSubmit)="efetuarLogin(rForm.value)">
+
+                <mat-input-container>
+                    <input matInput placeholder="Login" formControlName="usuario">
+                    <mat-error *ngIf="!rForm.controls['usuario'].valid">
+                        Usuário é obrigatório
+                    </mat-error>
+                </mat-input-container>
+
+                <mat-input-container>
+                    <textarea matInput placeholder="Senha" 
+                    formControlName="senha"></textarea>
+                    <mat-error *ngIf="!rForm.controls['senha'].valid">
+                       Senha precisa ter mais de 8 a 15 caracteres
+                    </mat-error>
+                </mat-input-container>
+
+                <div>
+                    <button mat-raised-button type="button" [disabled]="!rForm.valid">Recuperar Senha</button>
+                    <button mat-raised-button   type="button" (click)="entrar()">Entrar</button>
+                </div>
+            </form>
+    </div>
+</div>

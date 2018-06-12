@@ -1,0 +1,45 @@
+rubricas
+	+ cadastro
+		component
+		html
+		css
+	+ listagem
+	+ services
+	component
+	routes
+	module
+
+dashboard
+	+ listagem
+	+ services	
+	component
+	routes
+	module
+
+lancamentos
+	+ geracao
+		component
+		html
+		css
+	+ consulta
+	+ mapa-mensal
+	+ services
+	component
+	routes
+	module
+
+conciliacao
+	+ associacao
+		component
+		html
+		css
+	+ services	
+	component
+	routes
+	module
+	
+home
+identificacao
+unauthorized
+	
+	

@@ -1,0 +1,21 @@
+import { Component, OnInit } from '@angular/core';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+  
+@Component({
+  selector: 'app-home-dashboard',
+  templateUrl: './home-dashboard.component.html',
+  styleUrls: ['./home-dashboard.component.css']
+})
+export class HomeDashboardComponent implements OnInit {
+
+  
+  @BlockUI() blockUI: NgBlockUI;
+
+  constructor() { }
+
+  ngOnInit() {
+      this.blockUI.start('Montando dashboards, aguarde...');
+      this.blockUI.stop();
+  }
+
+}

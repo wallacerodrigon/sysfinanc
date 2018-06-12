@@ -1,0 +1,39 @@
+import { Injectable } from '@angular/core';
+import { RubricaClass } from '../model/rubrica.class';
+import {Observable} from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
+import {HttpDataAbstract} from '../../../shared/abstract/http-data.abstract';
+import {API_BASE} from '../../../app.constants';
+
+@Injectable()
+export class RubricaService  extends HttpDataAbstract<RubricaClass> {
+
+  constructor(protected http: HttpClient) {
+    super(http, 'employers');
+  }
+
+  /**
+   * Envia com a ação de create
+   * @param {Array<Employer>} employers
+   */
+  sendCreate(employers: Array<RubricaClass>): Observable<RubricaClass> {
+    return this.http.post<RubricaClass>(`${API_BASE}/employers/${employers[0]}/send/create`, null);
+  }
+
+  /**
+   * Envia ação de update
+   * @param {Array<Employer>} employers
+   */
+  sendUpdate(employers: Array<RubricaClass>): Observable<RubricaClass> {
+    return this.http.post<RubricaClass>(`${API_BASE}/employers/${employers[0]}/send/update`, null);
+  }
+
+  /**
+   * Envia ação de delete
+   * @param {Array<Employer>} employers
+   */
+  sendDelete(employers: Array<RubricaClass>): Observable<RubricaClass> {
+    return this.http.post<RubricaClass>(`${API_BASE}/employers/${employers[0]}/send/delete`, null);
+  }
+
+}

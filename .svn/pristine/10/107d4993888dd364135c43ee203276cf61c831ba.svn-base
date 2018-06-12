@@ -1,0 +1,54 @@
+<div class="modal-dialog">
+        <div class="modal-content container-fluid" >
+            <div class="modal-header">
+              <button type="button" class="close" (click)="close()" >&times;</button>
+              <h4>Editar Lançamento</h4>
+            </div>
+      
+            <div class="modal-body">
+                <form class=" form-group">
+                    <div class="row">
+                        <div class="col col-md-4 col-xs-12 col-lg-4">
+                            <label for="dataUtilizacao"  class="obrigatorio">Data Vencimento</label>                
+                            <input type="text" class="form-control" #dataVencimento id="dataVencimento" name="dataVencimento">
+                        </div>
+                        <div class="col col-md-4 col-xs-12 col-lg-4">
+                                <label for="valorStr" class="obrigatorio">Valor</label>                
+                                <input type="text" class="form-control"  
+                                [textMask]="{mask: mascaraValor}" name="valorStr"
+                                [(ngModel)]="valorStr">
+                        </div>
+                        <div class="col col-md-4 col-xs-12 col-lg-4">
+                                <label for="numDocumento">Documento</label>                
+                                <input type="text" class="form-control"  
+                                name="numDocumento"
+                                [(ngModel)]="lancamento.numDocumento">
+                        </div>                        
+                    </div>
+    
+                    <div class="row">
+                        <div class="col col-md-8 col-xs-12 col-lg-8 ">
+                                <label for="descricao" class="obrigatorio">Descrição</label>                
+                                <input type="text" class="form-control" id="descricao"
+                                    [(ngModel)]="lancamento.descricao"
+                                maxlength="50" required name="descricao">
+                        </div>
+
+                        <div class="col col-md-4 col-xs-12 col-lg-4">
+                                <label for="bolPaga">Pago?</label>                
+                                <input type="checkbox" class="checkbox" 
+                                    [(ngModel)]="lancamento.bolPaga" [disabled]="estaPago"
+                                maxlength="50"  name="bolPaga">
+                        </div>
+                        
+                    </div>
+                    
+                    <hr>
+                    <div class="row">
+                        <button class="btn btn-success col col-md-6 col-xs-12 col-lg-5 col-lg-offset-1 text-left" (click)="salvar()">Salvar</button>
+                        <button class="btn btn-primary col col-md-6 col-xs-12 col-lg-5 col-lg-offset-1 text-right" (click)="fechar()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+    </div>    
+

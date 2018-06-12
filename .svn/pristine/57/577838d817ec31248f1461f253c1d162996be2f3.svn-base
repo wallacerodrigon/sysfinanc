@@ -1,0 +1,82 @@
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
+import { LancamentoService } from '../lancamento.service';
+import { Constantes } from '../../utilitarios/constantes';
+import { LancamentoVO } from '../../dominio/vo/lancamento-vo';
+import { Formatadores } from '../../utilitarios/formatadores';
+import { AlertaComponent } from '../../componentes/mensagens/alert.component';
+import { UtilObjeto } from '../../utilitarios/util-objeto';
+
+
+declare var jQuery: any;
+
+@Component({
+  selector: 'app-edicao',
+  templateUrl: './edicao.component.html',
+  styleUrls: ['./edicao.component.css']
+})
+export class EdicaoComponent extends DialogComponent<null, LancamentoVO> implements OnInit {
+ 
+  @ViewChild("dataVencimento") dataVencimento: ElementRef;
+
+  public lancamento: LancamentoVO = new LancamentoVO();
+  public lancamentoOld: LancamentoVO = new LancamentoVO();
+
+  protected mascaraValor: string = Constantes.MASCARA_MONETARIA_MILHAR;
+  protected valorStr: string = "0,00";
+  protected estaPago: boolean = false;
+
+  constructor(protected dialogService: DialogService, 
+        protected lancamentoService: LancamentoService ) { 
+      super(dialogService);
+  }
+
+ 
+  ngOnInit() {
+    jQuery(this.dataVencimento.nativeElement).datepicker();
+    UtilObjeto.transformar(this.lancamentoOld, this.lancamento);
+
+    this.dataVencimento.nativeElement.value = this.lancamento.dataVencimentoStr;
+    this.valorStr = Formatadores.formataMoeda(this.lancamento.valor);
+    this.estaPago = this.lancamento.bolPaga;
+
+
+  }
+
+  fechar(){
+    this.close();
+  }  
+
+  salvar(){
+      if (this.lancamento.dataVencimentoStr == "" || this.valorStr == null ||
+          this.valorStr == "" ||
+          this.lancamento.descricao.trim().length == 0 ){
+         new AlertaComponent(this.dialogService).exibirMensagem("Informe os dados obrigatórios");
+         return false;
+      }
+
+      this.lancamento.bolPaga = this.lancamento.numDocumento != null && 
+                                this.lancamento.numDocumento != 0 &&
+                                this.lancamento.bolPaga == false ? true : this.lancamento.bolPaga;
+
+      this.lancamento.dataVencimentoStr = this.dataVencimento.nativeElement.value;
+      this.lancamento.bolConciliado = this.lancamento.numDocumento != null;
+      if (this.lancamento.despesa){
+        this.lancamento.valorDebitoStr = this.valorStr;
+      } else {
+        this.lancamento.valorCreditoStr = this.valorStr;
+      }
+      this.lancamentoService.alterar(this.lancamento)
+          .then(()=> {
+            new AlertaComponent(this.dialogService).exibirMensagem("Registro alterado com sucesso");
+
+            this.result = this.lancamento;
+            this.fechar();
+          })
+          .catch(erro => {
+            new AlertaComponent(this.dialogService).exibirMensagem("Erro ao alterar o registro:" + erro._body);
+          });
+
+  }
+
+}

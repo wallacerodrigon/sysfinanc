@@ -1,0 +1,22 @@
+<div>
+  <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(form)">
+    <mat-form-field>
+      <mat-select placeholder="Ação" formControlName="action">
+        <mat-option *ngFor="let data of options" [value]="data.value">
+          {{ data.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="flex-end">
+      <div class="app-margin-right">
+        <button type="button" mat-raised-button (click)="cancel()">Cancelar</button>
+      </div>
+      <div>
+        <button mat-button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+          Enviar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

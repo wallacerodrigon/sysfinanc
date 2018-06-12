@@ -1,0 +1,33 @@
+<project name="wallet" default="gera-pacote">
+
+	<property name="node.dir" value="E:\Desenvolvimento\nodejs\node\"/>
+	<property name="node.exe" value="node.exe"/>
+	<property name="destino.dir" value="WebContent" />
+	<property name="dist.dir" value="angular-web/dist"/>
+	
+	<target name="build-angular-dois" >
+		<exec executable="gera-build.bat">
+		</exec>
+	</target>
+	
+	<target name="apaga-webcontent" depends="build-angular-dois">
+		<delete>
+			<fileset dir="${destino.dir}" id="id">
+			    <include name="*.bundle*"/>
+				<include name="*.ico"/>
+				<include name="*.html"/>
+			</fileset>
+
+		</delete>
+	</target>
+	
+	<target name="copia-angular-dois" depends="apaga-webcontent">
+		<copy todir="${destino.dir}" >
+			<fileset dir="${dist.dir}"  />
+		</copy>
+	</target>
+	
+	<target name="gera-pacote" depends="copia-angular-dois" >
+		<exec executable="gera-maven.bat"></exec>
+	</target>
+</project>

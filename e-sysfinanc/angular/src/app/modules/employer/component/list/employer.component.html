@@ -1,0 +1,92 @@
+<app-loading [display]="isLoadingResults || isSendAction"></app-loading>
+<mat-card>
+  <app-content-header title="Empregadores" [selection]="selection">
+    <button mat-icon-button *ngIf="!selection.isEmpty()"
+            (click)="onRemove(selection.selected[0])"
+            matTooltip="Excluir">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="onRemove(selection.selected[0])"
+              [disabled]="!selection.hasValue()">
+        <mat-icon>delete</mat-icon>
+        <span>Excluir</span>
+      </button>
+
+      <button mat-menu-item (click)="onSend()"
+              [disabled]="!selection.hasValue()">
+        <mat-icon>send</mat-icon>
+        <span>Enviar</span>
+      </button>
+      <button mat-menu-item (click)="onAdd()">
+        <mat-icon>add</mat-icon>
+        <span>Incluir</span>
+      </button>
+
+      <button mat-menu-item (click)="onTeste()"
+            >
+          <mat-icon>send</mat-icon>
+          <span>Teste API</span>
+      </button>      
+    </mat-menu>
+  </app-content-header>
+
+  <mat-card-content class="card-content-list">
+    <mat-table #table [dataSource]="dataSource" class="configuration-table" *ngIf="!isLoadingResults"
+               matSort matSortActive="created"
+               matSortDisableClear
+               matSortDirection="asc">
+
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef fxFlex="45px">#</mat-header-cell>
+        <mat-cell *matCellDef="let row" fxFlex="45px">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Razão Social</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{ row.name }}</mat-cell>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef [style.text-align]="'center'" fxFlex="180px">Ações</mat-header-cell>
+        <mat-cell *matCellDef="let row" [style.text-align]="'center'" fxFlex="180px">
+          <button mat-icon-button (click)="onRemove(row)" matTooltip="Excluir">
+            <mat-icon>delete</mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="onSend([row])" matTooltip="Enviar">
+            <mat-icon>send</mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="onEdit(row)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button *ngIf="row.event" mat-icon-button (click)="eventDetail(row)" matTooltip="Detalhe do Evento">
+            <mat-icon>event_available</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></mat-row>
+    </mat-table>
+
+
+    <mat-paginator [length]="resultsLength" [pageSize]="pageSize" [pageIndex]="pageIndex"></mat-paginator>
+  </mat-card-content>
+</mat-card>

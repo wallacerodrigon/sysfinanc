@@ -1,0 +1,21 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {AlertaComponent} from './mensagens/alert.component';
+import {ConfirmComponent} from './mensagens/confirm.component';
+import {CrudComponente} from './crud-componente/crud-componente.component';
+import {FormsModule} from '@angular/forms';
+import {NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import { TabelaConsultasComponent } from './tabela-consultas/tabela-consultas.component';
+import { BlockUIModule } from 'ng-block-ui';
+
+@NgModule({
+  imports:[FormsModule, CommonModule, NgbModule.forRoot(), BootstrapModalModule, BlockUIModule],
+  exports: [CrudComponente, AlertaComponent, ConfirmComponent, TabelaConsultasComponent],
+  declarations: [AlertaComponent, ConfirmComponent, CrudComponente, TabelaConsultasComponent],
+  entryComponents: [AlertaComponent, ConfirmComponent, CrudComponente, TabelaConsultasComponent]
+})
+export class ComponentesModule { }
+
+
+

@@ -1,0 +1,26 @@
+label.obrigatorio:after { 
+    content:""; 
+    background: url("../img/icone-obrigatorio.gif") repeat-x center center;  
+    width:5px; 
+    height: 5px; 
+    margin:5px 5px 0 5px ; 
+    position: absolute; 
+}
+
+.modal-responsivo {
+     height: 500px;
+     width: 80%
+}
+
+.modal-responsivo-lg {
+}
+
+.msg-loading{
+    color: red;
+    margin: auto;
+    top: 0;
+    left: 0;
+    font-size: 24px;
+    border: 1px 1px 1px 0.5 #666;
+
+}

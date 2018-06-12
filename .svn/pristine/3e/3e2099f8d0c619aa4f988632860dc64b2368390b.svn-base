@@ -1,0 +1,25 @@
+import { Injectable } from '@angular/core';
+import {HttpInterceptor} from './http-interceptor';
+import {DashboardVO} from '../dominio/vo/dashboard-vo';
+import { Observable } from 'rxjs';
+import {AbstractServicos} from './abstract.servicos';
+
+@Injectable()
+export class DashBoardService extends AbstractServicos<DashboardVO> {
+
+  protected uri: string = '/dashboard';
+
+  constructor(protected http: HttpInterceptor) { 
+      super();
+  }
+
+  public montarDashboards(): any {
+      return this.http.get(this.uri)
+           .map(dados => dados.json());        
+  }
+
+  public transformar(element: any): DashboardVO {
+       return null;
+  };  
+
+}

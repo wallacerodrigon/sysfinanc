@@ -1,0 +1,14 @@
+import { Component } from '@angular/core';
+
+@Component({
+  template: `
+  <div class="content">
+    <home-component></home-component>
+    <h1>Lançamentos</h1>
+    <router-outlet></router-outlet>
+  </div>
+  `
+})
+export class LancamentoOuterLink {
+
+}

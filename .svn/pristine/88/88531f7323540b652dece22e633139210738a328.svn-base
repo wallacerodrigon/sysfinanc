@@ -1,0 +1,24 @@
+<div class="container-fluid">
+  <block-ui>   
+    <div class="row">
+        <div class="list-group col-md-4">
+          <a class="list-group-item disabled">
+            Aniversariantes recentes 
+          </a>
+        </div>
+
+        <div class="list-group col-md-4">
+          <a class="list-group-item disabled">
+            Atestados a vencer nos próximos 15 dias
+          </a>
+        </div>
+
+        <div class="list-group col-md-4">
+          <a class="list-group-item disabled">
+            Atestados vencidos
+          </a>
+        </div>
+      
+    </div>
+  </block-ui>
+</div>    

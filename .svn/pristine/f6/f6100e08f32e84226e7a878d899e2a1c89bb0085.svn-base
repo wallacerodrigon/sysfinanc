@@ -1,0 +1,21 @@
+<!--
+<img src="assets/logo_sistema_completo.png" class="header_container">
+<button mat-button>Sair</button>
+<button mat-button routerLink="/">Página Inicial</button>
+<button mat-button [matMenuTriggerFor]="cadastros"  >Cadastros</button>
+<button mat-button [matMenuTriggerFor]="lancamentos" >Lançamentos</button>
+
+<mat-menu #cadastros="matMenu" [overlapTrigger]="false">
+  <button mat-menu-item routerLink="/tipoConta" routerLinkActive="active"><mat-icon> notifications_off</mat-icon>Tipos de Contas</button>
+  <button mat-menu-item><mat-icon> notifications_off </mat-icon>Rubricas</button>
+</mat-menu>
+
+<mat-menu #lancamentos="matMenu" [overlapTrigger]="false">
+  <button mat-menu-item><mat-icon> notifications_off </mat-icon>Geração</button>
+  <button mat-menu-item><mat-icon> notifications_off </mat-icon>Consulta</button>
+  <button mat-menu-item><mat-icon> notifications_off </mat-icon>Mapa Mensal</button>
+  <button mat-menu-item><mat-icon> notifications_off </mat-icon>Conciliação de Banco</button>
+</mat-menu>
+-->
+<router-outlet></router-outlet>
+

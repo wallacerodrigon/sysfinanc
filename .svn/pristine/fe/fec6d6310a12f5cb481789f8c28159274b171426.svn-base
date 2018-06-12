@@ -1,0 +1,98 @@
+package br.net.walltec.api.rest;
+
+import br.net.walltec.api.dto.GeracaoParcelasDto;
+import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.excecoes.WebServiceException;
+import br.net.walltec.api.negocio.servicos.ContaServico;
+import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
+import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
+import br.net.walltec.api.vo.ContaVO;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+
+
+@Path("/contas")
+@Produces(value=MediaType.APPLICATION_JSON)
+public class ContasRest extends RequisicaoRestPadrao<ContaVO> {
+
+    @Inject
+    private ContaServico contaServico;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@GET
+	public Response listarContas(@QueryParam(value="idUsuario") Integer idUsuario){
+        try {
+            return Response.ok().entity(contaServico.listarTudo()).build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        }
+    }
+
+	
+	@POST
+	@Path(value="/gerarLancamentos")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response gerarLancamentos(GeracaoParcelasDto dtoGeracaoParcelas){
+        try {
+            return Response.ok().entity(contaServico.criarParcelas(dtoGeracaoParcelas)).build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        }
+	}
+
+    @Override
+    public CrudPadraoServico<?, ?> getServico() {
+        return contaServico;
+    }
+
+    @Override
+    public Response incluir(ContaVO objeto) throws WebServiceException {
+        try {
+            contaServico.incluirVO(objeto);
+            return Response.ok().build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Response alterar(ContaVO objeto) throws WebServiceException {
+        try {
+            contaServico.alterarVO(objeto);
+            return Response.ok().build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Response excluir(Integer idChaveObjeto) throws WebServiceException {
+        try {
+            contaServico.excluir(idChaveObjeto);
+            return Response.ok().build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+        }
+	}
+}

@@ -1,0 +1,17 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MenuComponent } from './menu/menu.component';
+import {HomeComponents} from './home-components.component';
+import {HomeRoutes} from './home-routes';
+
+
+@NgModule({
+  imports: [
+    CommonModule, 
+    HomeRoutes
+  ],
+  exports: [MenuComponent],
+  declarations: [HomeComponents, MenuComponent],
+  entryComponents: [MenuComponent]
+})
+export class HomeModule { }

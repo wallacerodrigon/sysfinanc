@@ -1,0 +1,64 @@
+<div class="row">
+    <block-ui>
+        <div class="col col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button class="btn btn-info  glyphicon glyphicon-chevron-left" (click)="filtrarAnterior()"></button>
+                                <label class="text-info">{{mes + '/'+ ano}}</label>
+                                <button class="btn btn-info glyphicon glyphicon-chevron-right" (click)="filtrarProximo()"></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-body">
+                        <div class="row" *ngFor="let resumo of resumos">
+                            <label class="col-md-8 col-lg-6 col-xs-12">{{resumo.nome}}:</label>
+                            <a href="javascript:void(0)" class="col-md-4  col-lg-6 col-xs-12 text-right" 
+                                (click)="filtrarLancamentos(resumo.filtro)">{{resumo.valor}} <i class="glyphicon glyphicon-search"></i></a>
+                        </div>
+                    </div>
+                            
+                </div>
+        </div>
+        
+        <div class="col col-md-9 col-lg-9 col-xs-12">
+                <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <button type="button" class="btn btn-primary" (click)="filtrar()">
+                                <i class="glyphicon glyphicon-filter"></i> Listar Tudo</button> 
+
+                            <button type="button" id='btnBaixa' class="btn btn-success" (click)="baixarLista()"  data-loading-text="Baixando Lançamento..." autocomplete="off">
+                                    <i class="glyphicon glyphicon-ok"></i> Baixar Marcados</button>
+                            
+                            <button type="button" class="btn btn-default" (click)="novoCadastro()">
+                                            <i class="glyphicon glyphicon-plus"></i> Novo Lançamento</button>
+                                </div>
+                </div>
+                
+                    
+                    <app-crud-componente #crudComponente [nomesColunas]="colunas" 
+                            [listaDados]="listagem" 
+                            [tamanhoListagem]="tamanhoListagem"
+                            [atributosColunas]="atributos"
+                            [exibeAcoes]="true"
+                            [exibeExcluir]="true"
+                            [exibeEditar]="true"
+                            [listaAcoes]="listaAcoes"
+                            [exibeCheckboxes]="true"
+                            [exibeTotalizadores]="true"
+                            [totalizadores]="totalizadores"
+                            (onExcluir)="excluir($event)"
+                            (onEditar)="editar($event)" >
+            </app-crud-componente>
+        </div>
+    </block-ui>
+</div>
+<script>
+    $('#btnBaixa').on('click', function () {
+      var $btn = $(this).button('loading')
+      $btn.button('reset')
+    })
+  </script>
+

@@ -1,0 +1,81 @@
+<div class="container-fluid">
+    <form name="frmGeracao" novalidate >
+        <fieldset>
+            <legend>Geração de Lançamentos</legend>
+                <div class="row">
+                    <div class="col col-md-6">
+                        <label for="banco" class="obrigatorio">Rubrica</label>
+                        <input type="text" [(ngModel)]="rubricaSelecionada" class="form-control" id="rubrica" name="rubrica" 
+                        list="listaRubricas">
+                        <datalist id="listaRubricas">
+                            <select>
+                                <option  *ngFor="let r of listaRubricas" value="{{r.descricaoCombo}}"></option>
+                            </select>
+                        </datalist> 
+                    </div>
+                    <!--<div class="row" *ngIf="frmGeracao.rubrica.invalid && frmGeracao.rubrica.errors.required">
+                        <span class="alert alert-danger">Rubrica é de preenchimento obrigatório</span>
+                    </div>-->      
+                    
+                    <div class="col-md-2">
+                        <label for="vencimento" class="obrigatorio">Vencimento Base</label>
+                        <input type="text"  class="form-control" #dataVencimento>
+                    </div>
+
+                    <div class='col-md-2'>
+                        <label for="quantidade" class="obrigatorio">Quantidade</label>
+                        <input type="number" id="quantidade" name="quantidade" class="form-control" [(ngModel)]="quantidade">
+                    </div>
+
+                    <div class='col-md-2'>
+                        <label for="valor" class="obrigatorio">Valor</label>
+                        <input type="text" id="valor" class="form-control" #valorStr
+                        onkeypress="moeda(this);"
+                        onkeyup="moeda(this);"                                 
+                  >
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <label class="obrigatorio">Descrição</label>
+                        <input type="text" class="form-control" [(ngModel)]="descricao" name="descricao">
+                    </div>
+                
+                    <div class="col-md-4">
+                        <label>Modo de geração</label>
+                        <div class="form-control">
+                            <input type="radio" class="radio-inline" name="parcial" value="S" checked [(ngModel)]="bolParcial">Somente visualizar
+                            <input type="radio" class="radio-inline" name="parcial" value="N" [(ngModel)]="bolParcial">Efetivar a geração
+
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <hr/>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="text-center">
+                        <button class="btn btn-default" (click)="gerarLancamentos()">Gerar</button>
+                    </div>
+                </div>
+            </div>
+    </form>
+
+    <div class="row" >
+        <div class="table-responsive">
+            <app-crud-componente #crudComponente [nomesColunas]="colunas" 
+                        [listaDados]="listagem" 
+                        [tamanhoListagem]="tamanhoListagem"
+                        [atributosColunas]="atributos"
+                        [exibeTotalizadores]="true"
+                        [totalizadores]="totalizadores">
+            </app-crud-componente>
+
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,118 @@
+/**
+ * 
+ */
+package br.net.walltec.api.dto;
+
+import java.util.Date;
+
+
+import br.net.walltec.api.vo.UsuarioVO;
+
+/**
+ * @author Wallace
+ *
+ */
+public class GeracaoParcelasDto extends DtoPadrao {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Integer idConta;
+	private Integer quantidade;
+	private Date dataVencimentoInicial;
+	private Double valorVencimento; 
+	private Integer idFormaPagamento;
+	private Integer idParcelaOrigem;
+	private Boolean parcial;
+	private UsuarioVO usuarioVo;
+	private String descricaoParcela;
+	
+	/**
+	 * @return the quantidade
+	 */
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+	/**
+	 * @param quantidade the quantidade to set
+	 */
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
+	/**
+	 * @return the dataVencimentoInicial
+	 */
+	public Date getDataVencimentoInicial() {
+		return dataVencimentoInicial;
+	}
+	/**
+	 * @param dataVencimentoInicial the dataVencimentoInicial to set
+	 */
+	public void setDataVencimentoInicial(Date dataVencimentoInicial) {
+		this.dataVencimentoInicial = dataVencimentoInicial;
+	}
+	/**
+	 * @return the valorVencimento
+	 */
+	public Double getValorVencimento() {
+		return valorVencimento;
+	}
+	/**
+	 * @param valorVencimento the valorVencimento to set
+	 */
+	public void setValorVencimento(Double valorVencimento) {
+		this.valorVencimento = valorVencimento;
+	}
+	/**
+	 * @return the idFormaPagamento
+	 */
+	public Integer getIdFormaPagamento() {
+		return idFormaPagamento;
+	}
+	/**
+	 * @param idFormaPagamento the idFormaPagamento to set
+	 */
+	public void setIdFormaPagamento(Integer idFormaPagamento) {
+		this.idFormaPagamento = idFormaPagamento;
+	}
+	/**
+	 * @return the idConta
+	 */
+	public Integer getIdConta() {
+		return idConta;
+	}
+	/**
+	 * @param idConta the idConta to set
+	 */
+	public void setIdConta(Integer idConta) {
+		this.idConta = idConta;
+	}
+	public Integer getIdParcelaOrigem() {
+		return idParcelaOrigem;
+	}
+	public void setIdParcelaOrigem(Integer idParcelaOrigem) {
+		this.idParcelaOrigem = idParcelaOrigem;
+	}
+	public Boolean getParcial() {
+		return parcial;
+	}
+	public void setParcial(Boolean parcial) {
+		this.parcial = parcial;
+	}
+	public UsuarioVO getUsuarioVo() {
+		return usuarioVo;
+	}
+	public void setUsuarioVo(UsuarioVO usuarioVo) {
+		this.usuarioVo = usuarioVo;
+	}
+	public String getDescricaoParcela() {
+		return descricaoParcela;
+	}
+	public void setDescricaoParcela(String descricaoParcela) {
+		this.descricaoParcela = descricaoParcela;
+	}	
+	
+	
+}

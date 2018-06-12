@@ -1,0 +1,70 @@
+import { slideInOutAnimation } from '../../../_animation/slide-in-out.animation';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { LotacoesDatabase } from '../lotacoes-database';
+import { Lotacao } from '../lotacao';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, HostBinding, OnInit } from '@angular/core';
+
+
+@Component({
+  selector: 'app-lotacoes-editar',
+  templateUrl: './lotacoes-editar.component.html',
+  styleUrls: ['./lotacoes-editar.component.css'],
+  animations: [slideInOutAnimation],
+})
+export class LotacoesEditarComponent implements OnInit {
+  @HostBinding('@slideInOutAnimation') slideInOutAnimation = true;
+
+  rForm: FormGroup;
+  lotacao: number;
+
+  constructor(
+    private fb: FormBuilder,
+    private _lotacoesDatabase: LotacoesDatabase,
+    private router: Router,
+    private route: ActivatedRoute
+   ) { }
+
+  ngOnInit() {
+    this.inicializarForm();
+    this.carregarForm();
+  }
+
+  editarLotacao(post) {
+    const lotacao = <Lotacao>{};
+    lotacao.lotacao = this.lotacao;
+    lotacao.sigla = post.sigla;
+    lotacao.descricao = post.descricao;
+
+    this._lotacoesDatabase.editar(lotacao);
+    this.router.navigate(['/lotacoes']);
+  }
+
+  carregarForm() {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.lotacao = Number(params.get('id'));
+      this._lotacoesDatabase.dataChange.subscribe((data) => data.forEach((local) => {
+        if (Number(local.lotacao) === this.lotacao) {
+          this.rForm.setValue({
+            sigla : local.sigla,
+            descricao: local.descricao
+          });
+        }
+      }));
+    });
+  }
+
+  inicializarForm() {
+    this.rForm = this.fb.group({
+      'sigla': [null, Validators.required],
+      'descricao': [null,
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(4000)
+        ])
+      ],
+    });
+  }
+
+}

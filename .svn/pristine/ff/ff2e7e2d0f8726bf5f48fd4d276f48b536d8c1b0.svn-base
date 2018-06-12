@@ -1,0 +1,14 @@
+import {Injectable} from '@angular/core';
+//import {EmployerService} from '../service/employer.service';
+import {ResolverAbstract} from '../../../shared/abstract/resolver.abstract';
+import { RubricaClass } from '../model/rubrica.class';
+import { RubricaService } from '../service/rubrica.service';
+
+@Injectable()
+export class RubricaResolver extends ResolverAbstract<RubricaClass> {
+
+  constructor(private rubricaService: RubricaService) {
+    super(rubricaService);
+  }
+
+}

@@ -1,0 +1,317 @@
+<app-loading [display]="isLoading"></app-loading>
+<mat-card>
+  <app-content-header title="{{ isUpdate ? 'Editar' : 'Adicionar' }} Empregador">
+    <button mat-raised-button (click)="goBack()">Voltar</button>
+  </app-content-header>
+
+  <form [formGroup]="form" novalidate class="app-form" (ngSubmit)="onSave()">
+
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <div>
+        <h3>Informações Básicas</h3>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="start">
+      <div fxLayout fxLayout.xs="column" fxLayoutWrap fxLayoutGap="25px">
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <input placeholder="Período de Inicio" matInput [matDatepicker]="period_start" formControlName="period_start">
+          <mat-datepicker-toggle matSuffix [for]="period_start"></mat-datepicker-toggle>
+          <mat-datepicker #period_start></mat-datepicker>
+          <mat-error *ngIf="form.controls['period_start'].errors?.required">
+            Preenchimento obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <input placeholder="Período de Fim" matInput [matDatepicker]="period_end" formControlName="period_end">
+          <mat-datepicker-toggle matSuffix [for]="period_end"></mat-datepicker-toggle>
+          <mat-datepicker #period_end></mat-datepicker>
+          <mat-error *ngIf="form.controls['period_end'].errors?.required">
+            Preenchimento obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <input matInput placeholder="Nome Social" formControlName="social_name">
+          <mat-error *ngIf="validationErros.social_name">
+            {{validationErros.social_name}}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <mat-select placeholder="Classificação Tributária" formControlName="classification_tax">
+            <mat-option *ngFor="let data of optionsList.CLASSIFICATION_TAX_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <mat-select placeholder="Natureza Jurídica" formControlName="legal_nature">
+            <mat-option *ngFor="let data of optionsList.LEGAL_NATURE_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <mat-select placeholder="Cooperativa" formControlName="corporate">
+            <mat-option *ngFor="let data of optionsList.CORPORATE_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <mat-select placeholder="Construção" formControlName="construction">
+            <mat-option *ngFor="let data of optionsList.CONSTRUCTION_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <mat-select placeholder="Indicativo de Desoneração da Folha" formControlName="sheet_discharge">
+            <mat-option *ngFor="let data of optionsList.SHEET_DISCHARGE_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <mat-select placeholder="Registro Eletrônico de Empregados" formControlName="employee_electronic_record">
+            <mat-option *ngFor="let data of optionsList.ELETRONIC_RECORD_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(50% - 25px)">
+          <mat-select placeholder="Indicativo de Entidade Educativa" formControlName="school_entity_code">
+            <mat-option *ngFor="let data of optionsList.QUESTION_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(25% - 25px)">
+          <mat-select placeholder="Existe Acordo Internacional" formControlName="international_organizations">
+            <mat-option *ngFor="let data of optionsList.INTERNATIONAL_ORGANIZATIONS_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Indicativo da Existência de Acordo Internacional para Isenção de Multa</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(25% - 25px)">
+          <mat-select placeholder="Informações Complementárias" formControlName="complementary_info">
+            <mat-option *ngFor="let data of optionsList.COMPLEMENTARY_INFO_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="calc(25% - 25px)">
+          <mat-select placeholder="Trabalho Temporário" formControlName="temporary_job">
+            <mat-option *ngFor="let data of optionsList.TEMPORARY_JOB_OPTIONS" [value]="data.value">
+              {{ data.value }} - {{ data.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex="calc(25% - 25px)">
+          <input matInput placeholder="Número do Trabalho " formControlName="temporary_job_number">
+          <mat-hint align="end">Número do registro da empresa de trabalho temporário no ministério do trabalho
+          </mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div formGroupName="contact" fxLayout="column" fxLayoutAlign="start">
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <div>
+            <h3>Contato</h3>
+          </div>
+        </div>
+
+        <mat-form-field>
+          <input matInput placeholder="Nome" formControlName="name">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="CPF" formControlName="cpf" [textMask]="{mask: mask.CPF}"
+                 [appUnmask]="mask.CPF_UNMASK">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Telefone" formControlName="phone" [textMask]="{mask: mask.TELEFONE}"
+                 [appUnmask]="mask.TELEFONE_UNMASK">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Telefone Celular" formControlName="mobile" [textMask]="{mask: mask.TELEFONE}"
+                 [appUnmask]="mask.TELEFONE_UNMASK">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="E-mail" formControlName="email">
+        </mat-form-field>
+      </div>
+
+      <div formGroupName="software_house" fxLayout="column" fxLayoutAlign="start">
+
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <div>
+            <h3>Fábrica de Software</h3>
+          </div>
+        </div>
+
+        <mat-form-field>
+          <input matInput placeholder="Razão Social" formControlName="social_name">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Nome Fantasia" formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="CNPJ" formControlName="cnpj" [textMask]="{mask: mask.CNPJ}"
+                 [appUnmask]="mask.CNPJ_UNMASK">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Telefone" formControlName="phone" [textMask]="{mask: mask.TELEFONE}"
+                 [appUnmask]="mask.TELEFONE_UNMASK">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="E-mail" formControlName="email">
+        </mat-form-field>
+      </div>
+
+      <div formGroupName="public_agency" fxLayout="column" fxLayoutAlign="start">
+
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <div>
+            <h3>Orgão Público</h3>
+          </div>
+        </div>
+
+
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <div>
+            <mat-slide-toggle formControlName="displayPublicAgency">Sim</mat-slide-toggle>
+          </div>
+        </div>
+
+        <div *ngIf="displayPublicAgency()">
+          <mat-form-field>
+            <input matInput placeholder="SIAFI" formControlName="siafi">
+          </mat-form-field>
+
+
+          <div formGroupName="federally_responsible">
+            <div fxLayout="row" fxLayoutAlign="space-between">
+              <div>
+                <h3>Entidade Federativa Responsável</h3>
+              </div>
+            </div>
+            <mat-form-field>
+              <mat-select placeholder="Ente Federativo Responsável" formControlName="indicative">
+                <mat-option *ngFor="let data of optionsList.FEDERAL_RESPONSIBLE_OPTIONS" [value]="data.value">
+                  {{ data.value }} - {{ data.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="CNPJ" formControlName="cnpj" [textMask]="{mask: mask.CNPJ}"
+                     [appUnmask]="mask.CNPJ_UNMASK">
+            </mat-form-field>
+
+            <div formGroupName="federative">
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <div>
+                  <h3>Entidade Federativa</h3>
+                </div>
+              </div>
+              <mat-form-field>
+                <input matInput placeholder="Nome do Ente Federativo" formControlName="name">
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-select placeholder="UF" formControlName="uf">
+                  <mat-option *ngFor="let data of ufs" [value]="data.value">
+                    {{ data.value }} - {{ data.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput placeholder="Código do Município" formControlName="ibge">
+                <mat-hint align="end">Preencher com o código do município, conforme tabela do IBGE</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-select placeholder="Regime Próprio de Previdência Social?"
+                            formControlName="regime_social_security">
+                  <mat-option *ngFor="let data of optionsList.QUESTION_OPTIONS" [value]="data.value">
+                    {{ data.value }} - {{ data.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-hint align="end">Informar se o ente público possui Regime Próprio de Previdência Social - RPPS.
+                </mat-hint>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-select placeholder="Poder" formControlName="subtetus">
+                  <mat-option *ngFor="let data of optionsList.SUBTETUS_OPTIONS" [value]="data.value">
+                    {{ data.value }} - {{ data.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-hint align="end">Preencher com o poder a que se refere o subteto</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput placeholder="Valor do subteto" formControlName="subtetus_value">
+                <mat-hint align="end">Preencher com o valor do subteto</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div formGroupName="new_validity" fxLayout="column" fxLayoutAlign="start">
+
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <div>
+            <h3>Validade das Informações</h3>
+          </div>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="25px">
+          <mat-form-field>
+            <input placeholder="Data de Inicio" matInput [matDatepicker]="startDate" formControlName="start">
+            <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+            <mat-datepicker #startDate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input placeholder="Data de Fim" matInput [matDatepicker]="endDate" formControlName="end">
+            <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+            <mat-datepicker #endDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="flex-end">
+      <div class="app-margin-right">
+        <button type="button" mat-raised-button (click)="goBack()">Cancelar</button>
+      </div>
+      <div>
+        <button mat-raised-button color="primary" type="submit">Salvar</button>
+      </div>
+    </div>
+  </form>
+</mat-card>

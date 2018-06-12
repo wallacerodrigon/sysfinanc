@@ -1,0 +1,45 @@
+/**
+ * 
+ */
+package br.net.walltec.api.vo;
+
+/**
+ * @author wallace
+ *
+ */
+public class VersaoVO {
+
+	private String versao;
+	
+	private String dataHoraUltimaVersao;
+
+	/**
+	 * @return the versao
+	 */
+	public String getVersao() {
+		return versao;
+	}
+
+	/**
+	 * @param versao the versao to set
+	 */
+	public void setVersao(String versao) {
+		this.versao = versao;
+	}
+
+	/**
+	 * @return the dataHoraUltimaVersao
+	 */
+	public String getDataHoraUltimaVersao() {
+		return dataHoraUltimaVersao;
+	}
+
+	/**
+	 * @param dataHoraUltimaVersao the dataHoraUltimaVersao to set
+	 */
+	public void setDataHoraUltimaVersao(String dataHoraUltimaVersao) {
+		this.dataHoraUltimaVersao = dataHoraUltimaVersao;
+	}
+	
+	
+}

@@ -1,0 +1,186 @@
+package br.net.walltec.api.relatorios;
+
+
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import br.net.walltec.api.enums.EnumRelatorios;
+import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.rest.dto.filtro.FiltroRelatorioDTO;
+import br.net.walltec.api.utilitarios.Constantes;
+import br.net.walltec.api.utilitarios.UtilData;
+
+
+
+public abstract class GeradorRelatorioAbstract implements RelatorioIF {
+
+	Logger logRelatorio = Logger.getLogger(GeradorRelatorioAbstract.class.getName());
+	
+	private String pathRelatorios;
+	private EnumRelatorios enumRelatorios;
+	private FiltroRelatorioDTO filtro;
+	private Collection<?> listaDados;
+	private byte[] bytesRelatorioGerado;
+	private String urlGerado;
+
+	private String destFileName;
+	
+	/**
+	 * @return the listaDados
+	 */
+	public Collection<?> getListaDados() {
+		return listaDados;
+	}
+
+/*	@Override
+	public String gerarRelatorio() throws NegocioException {
+		try {
+			validaFiltro(this.filtro);
+			this.listaDados = listarDados(this.filtro);
+			if (this.listaDados == null || this.listaDados.isEmpty()){
+				throw new ConsultaSemResultadoException("Não foram encontrados registros com esses filtros!");
+			}
+			
+			if (filtro.isImprime()){
+				gerarPDF();
+				urlGerado = filtro.getRequest().getContextPath() + "/reports/"+ destFileName;
+			}
+			return urlGerado;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NegocioException(e.getMessage());
+		}
+	}
+*/
+	/**
+	 * @param filtro2
+	 * @return
+	 */
+	protected abstract Collection<?> listarDados(FiltroRelatorioDTO filtro) throws NegocioException;
+
+	
+	/**
+	 * @throws JRException
+	 * @throws Exception
+	 */
+	/*private void gerarPDF() throws JRException, Exception {
+		this.pathRelatorios = this.obterPathRelatorios();
+		logRelatorio.info(pathRelatorios);
+		JasperPrint printer = JasperFillManager.fillReport(
+								getInputStream(), 
+								montarParametros(), 
+								new JRBeanCollectionDataSource(listaDados));
+		//this.bytesRelatorioGerado = JasperExportManager.exportReportToPdf(printer); //, pathRelatorios+enumRelatorios.getNomeSaida());
+		destFileName = UUID.randomUUID().toString()+ ".pdf";
+		
+		JasperExportManager.exportReportToPdfFile(printer, filtro.getRequest().getRealPath("reports")+"/"+ destFileName);
+	}*/
+
+	/**
+	 * @return
+	 */
+	private Map<String, Object> montarParametros() {
+		Map<String, Object> mapaParametros = getParametros(); 
+		if (mapaParametros == null){
+			mapaParametros = new HashMap<String, Object>();
+		}
+		//TODO: deixar dinâmico e puxando da academia
+		String fileNameLogo = this.obterPathLogos() + "logo-stillo.jpg";
+		try {
+			InputStream logo = new FileInputStream(fileNameLogo);
+			mapaParametros.put("imagemLogo", logo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		mapaParametros.put("dataHoraEmissao", UtilData.getDataHoraFormatada(new Date()));
+		mapaParametros.put("SUBREPORT_DIR", pathRelatorios);
+		mapaParametros.put("filtroPeriodo", montarFiltroPeriodo());
+		mapaParametros.put("tituloRelatorio", this.enumRelatorios.getTituloRelatorio());
+		return mapaParametros;
+	}
+
+	/**
+	 * @return
+	 */
+	private String montarFiltroPeriodo() {
+		if (this.filtro != null && this.filtro.getDataInicial() != null && filtro.getDataFinal() != null){
+			return " De: " + this.filtro.getDataInicial()+
+				   " Até: " + this.filtro.getDataFinal();
+		}
+		return null;
+	}
+
+	private String obterPathRelatorios() {
+		return filtro.getRequest().getRealPath(Constantes.REAL_PATH_RELATORIOS)+"/";
+	}
+
+	String obterPathLogos() {
+		return filtro.getRequest().getRealPath(Constantes.REAL_PATH_LOGOS)+"/";
+	}
+
+	byte[] getBytes(String fileName) {
+		File f = new File(fileName);
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(f);
+			byte[] bytes = new byte[(int)f.length()];
+			fis.read(bytes);
+			fis.close();
+			return bytes;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	private InputStream getInputStream() throws Exception {
+		return new FileInputStream(pathRelatorios + this.enumRelatorios.getNomeRelatorio());
+	}
+
+	public abstract Map<String, Object> getParametros();
+
+	protected void setEnumRelatorios(EnumRelatorios enumRelatorios) {
+		this.enumRelatorios = enumRelatorios;
+	}
+
+	/**
+	 * @return the filtro
+	 */
+	public FiltroRelatorioDTO getFiltro() {
+		return filtro;
+	}
+
+	/**
+	 * @param filtro the filtro to set
+	 */
+	protected void setFiltro(FiltroRelatorioDTO filtro) {
+		this.filtro = filtro;
+	}
+
+	/**
+	 * @param listaDados the listaDados to set
+	 */
+	protected void setListaDados(Collection<?> listaDados) {
+		this.listaDados = listaDados;
+	}
+
+	/**
+	 * @return the bytesRelatorioGerado
+	 */
+	public byte[] getBytesRelatorioGerado() {
+		return bytesRelatorioGerado;
+	}
+
+	public String getUrlRelatorioGerado() {
+		return this.urlGerado; 
+	}
+
+}

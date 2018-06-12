@@ -1,0 +1,24 @@
+import { trigger, state, animate, transition, style } from '@angular/animations';
+
+export const fadeInAnimation =
+  // end state styles for route container (host)
+  trigger('fadeInAnimation', [
+    state('*', style({
+      // the view covers the whole screen with a semi tranparent background
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.0)'
+  })),
+        // route 'enter' transition
+        transition(':enter', [
+
+            // styles at start of transition
+            style({ opacity: 0 }),
+
+            // animation and styles at end of transition
+            animate('.5s', style({ opacity: 1 }))
+        ]),
+    ]);

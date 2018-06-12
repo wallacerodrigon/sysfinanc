@@ -1,0 +1,299 @@
+/*
+	Sistema: E-precatorio
+	Data de Cria��o: 27.02.2013
+	Descri��o: Css respons�vel pela estiliza��o geral das p�ginas do sistema
+	
+*/
+
+/* tags Gerais */
+body { font-size: 11px; color: #24354A; font-family: Verdana, Arial, Helvetica, sans-serif; background-color: #f8f8f8; margin:0; padding:0;  }
+fieldset { border: 1px solid #B1B1B1; padding:10px 0 10px 10px; margin-bottom: 10px; }
+
+/*Rich faces*/
+	/*menu*/
+	.rich-menu-list-border { border-color: #EBEBEB; background: #FFFFFF; }
+	.rich-menu-list-bg { background-color: #FFFFFF; background-image: none; margin-left: -10px; }
+	.dr-toolbar-ext { background: #FFFFFF; background-image: none; }
+	
+	
+	/*calendario*/
+	.rich-calendar-input { width: 80% !important; }
+	.rich-calendar-exterior tr td { padding:0 !important; }
+	.rich-calendar-tool { background-color: #576F91; color: #E5E5E5; font-family: Arial,Verdana,sans-serif; font-size: 11px; font-weight: bold; }
+	.rich-calendar-weekends { color: white; }
+	.rich-calendar-days { background: none repeat scroll 0 0 #7F97B7; border-bottom-color: #BED6F8; border-right-color: #BED6F8; font-family: Arial,Verdana,sans-serif; font-size: 11px; }
+	.rich-calendar-holly { background-color: #FFEBDA; color: #FF7800; }
+	.rich-calendar-toolfooter { background: url("/richfaces-demo/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.CalendarSeparator/DATB/eAFjYGAAAAADAAE_.jsf") no-repeat scroll right center #7F97B7; font-family: Arial,Verdana,sans-serif; font-size: 11px; }
+	.rich-calendar-week { background: none repeat scroll 0 0 #F5F5F5; border-bottom-color: #BED6F8; border-right-color: #BED6F8; font-family: Arial,Verdana,sans-serif; font-size: 11px; }
+	.rich-calendar-boundary-dates { color: #A0A0A0; }
+	.rich-calendar-cell { background-color: #FFFFFF; border-bottom-color: #BED6F8; border-right-color: #BED6F8; font-family: Arial,Verdana,sans-serif; font-size: 11px; }
+	.rich-calendar-today { background-color: #DCFF73; color: #7CA600; font-weight: bold; }
+	.rich-calendar-month { background-color: #576F91; color: #E5E5E5; font-family: Arial,Verdana,sans-serif; font-size: 11px; font-weight: bold; white-space: nowrap; }
+	.rich-calendar-hover { background-color: #ccc; color:#333; }
+	.rich-calendar-tool-btn-hover { background-color: #7F97B7; color:white; border:none; }
+	.rich-calendar-exterior { border-color: #DEDEDE; box-shadow: 3px 8px 10px #CCCCCC; }
+	.rich-calendar-tool-close { background-image: url("/precatorio/a4j/g/3_3_1.SP3org.richfaces.renderkit.html.iconimages.CalendarSeparator/DATB/eAFjYGAAAAADAAE_"); background-position: left center; background-repeat: no-repeat; padding: 2px 2px 2px 4px; font-weight: bold; color:white;}
+	.rich-calendar-time-layout, .rich-calendar-date-layout, .rich-calendar-time-layout input { font-family: Arial,Verdana,sans-serif; font-size: 11px; background-color: white; }
+	.rich-calendar-date-layout-ok { background: none repeat scroll 0 0 #7F97B7; border-top: 1px solid #BED6F8; padding: 5px 1px 5px 5px; }
+	.rich-calendar-date-layout-cancel { background: none repeat scroll 0 0 #7F97B7; border-top: 1px solid #BED6F8; padding: 5px 5px 5px 1px;}
+	.rich-calendar-editor-btn-selected { background-color: #DCFF73; border: 0 none; color: #7CA613; cursor: default; font-weight: bold; padding: 2px; }
+	.rich-calendar-time-btn { border:none; font-weight:bold; cursor: pointer; padding: 2px; text-align: center; white-space: nowrap; width: 45px; }
+	.rich-calendar-time-btn:hover { color:white; }
+	.rich-calendar-time-btn-press { background-color: transparent; }
+	.calendarButton{  
+    display:none;  
+} 
+	
+	/*table*/
+	.dr-table { width:100%; }
+	.dr-table-subheadercell { padding: 3px; white-space: normal; color:white; /*background: url("../img/bg-header-table.png") repeat-x center center; border: 1px solid #7DAC81;*/ background-color: #415361; /*background-color: #7F97B7;*/ border: 1px solid #486080;}
+	.dr-table-footercell { color:white;  background: url("../img/bg-titulo.jpg") repeat-x center center; border: 1px solid #486080; }
+	.dr-dscr-t { border:none; }
+	.rich-datascr-button-dsbld, .rich-datascr-button-dsbld .rich-datascr-button-content, .rich-datascr-button-dsbld a.rich-datascr-button-content:hover, .rich-datascr-inact .rich-datascr-button-content, .rich-datascr-inact a.rich-datascr-button-content:hover { color: black; }
+	.dr-dscr-button, .dr-dscr-sepctrl { border:none; }
+	.dr-table-subheadercell div label { margin-bottom:0 !important; }
+	
+/*valida��o*/
+label.obrigatorio:after { content:""; background: url("../img/icone-obrigatorio.gif") repeat-x center center;  width:5px; height: 5px; margin:5px 5px 0 5px ; position: absolute; }
+
+/*classes de corre��o e incremento*/
+.bold { font-weight: bold !important; }
+.fLeft { float:left !important; }
+.fRight { float:right !important; }
+.fNone { float: none !important; }
+.dNone { display: none; }
+.bRed { border:1px solid #D90000 !important; }
+.bRightSilver { border-right: 1px solid #ccc; }
+
+/*Tabula��o, tamanhos e espa�amento*/
+.linhaB5 { width:100%; margin-bottom:5px; overflow:auto; }
+.linhaB10 { width:100%; margin-bottom:10px; }
+.linhaB15 { width:100%; margin-bottom:15px; }
+.w100pc { width:100% !important; }
+.w80pc { width:80% !important; }
+.w50pc { width:50% !important; }
+.w30pc { width:30% !important; }
+.w25pc { width:25% !important; }
+.w15pc { width:15% !important; }
+.tACenter { text-align: center; }
+.tARight { text-align: right; }
+.mTop2px { margin-top:2px !important; }
+.mTop4px { margin-top:4px !important; }
+.mTop10px { margin-top:10px !important; }
+.mTop18px { margin-top:18px !important; }
+.mBottom10px { margin-bottom:10px !important; }
+.mBottom20px { margin-bottom:20px !important; }
+.mRight4px { margin-right:4px !important; }
+.mLeft4px { margin-left: 4px !important; }
+.mZero { margin:0 !important; }
+.coluna33pc { float:left; width: 33%; }
+
+/*titulos e respostas*/
+.lblTitulo190px { width:190px !important; font-weight: bold; text-align: left; }
+.lblTitulo155px { width:155px !important; font-weight: bold; text-align: left; }
+.lblTitulo130px { width:130px !important; font-weight: bold; text-align: left; }
+.lbltitulo100px { width:100px !important; font-weight: bold; text-align: left; }
+.lblResposta { width:auto !important; }
+
+/*bot�es*/
+.btn-normal { background: url("../img/bg-botao.png") repeat-x center center; height: 25px; border:1px solid #1B2B4B; color:white; font-size: 11px; padding: 0 10px 4px; cursor: pointer;  margin:0 auto;   }
+.btn-normal:hover { background: url("../img/bg-botao-hover.png") repeat-x center center; }
+
+.btn-inserir { background: url("../img/bg-botao.png") repeat-x center center; height: 25px; border:1px solid #1B2B4B; color:white; float:right; font-size: 11px; padding: 0 10px 4px; cursor: pointer;   }
+.btn-inserir:hover { background: url("../img/bg-botao-hover.png") repeat-x center center; }
+
+.btn-proximo { background: url("../img/bg-botao.png") repeat-x center center; height: 25px; border:1px solid #1B2B4B; color:white; float:right; font-size: 11px; padding: 0 10px 4px; cursor: pointer;   }
+.btn-proximo:hover { background: url("../img/bg-botao-hover.png") repeat-x center center; }
+.btn-proximo:after {content:""; background: url("../img/icone-proximo.png") no-repeat center center;  width:12px; height: 11px; margin:5px 5px 0 5px ; position: absolute; }
+
+.btn-sair { background: url("../img/icone-sair.png") no-repeat left center; border:none; height: 25px; color:white; font-size: 11px; padding: 0 10px 4px 16px; cursor: pointer;  margin:0 auto;   }
+.btn-sair:hover { background: url("../img/icone-sair-hover.png") no-repeat left center; }
+
+.btn-ajuda { background: url("../img/icone-ajuda.png") no-repeat left center; border:none; height: 25px; color:white; font-size: 11px; padding: 0 10px 4px 18px; cursor: pointer;  margin:0 auto; text-decoration: none; position: relative; top: 4.9px;  }
+.btn-ajuda:hover { background: url("../img/icone-ajuda-hover.png") no-repeat left center; }
+
+.btn-fechar { background: url("../img/popupclose.gif") no-repeat left center; border:none; height: 25px; color:white; font-size: 11px; padding: 0 10px 4px 18px; cursor: pointer;  margin:0 auto;   }
+
+.btn-resolucao { background: url("../img/icone-resolucao.png") no-repeat left center; border:none; height: 25px; color:white; font-size: 11px; padding: 0 10px 4px 20px; cursor: pointer;  margin:0 auto; text-decoration: none; position: relative; top: 4.9px;}
+
+.btn-adicionar { background: url("../img/icone-adicionar.png") no-repeat center center; height: 25px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+.btn-adicionar:hover { background: url("../img/icone-adicionar-hover.png") no-repeat center center; }
+
+.btn-detalhar { background: url("../img/icone-detalhar.png") no-repeat center center; height: 25px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+.btn-detalhar:hover { background: url("../img/icone-detalhar-hover.png") no-repeat center center; }
+
+.btn-conferir { background: url("../img/btn-conferencia.png") no-repeat center center; height: 25px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+
+
+.btn-red { background: url("../img/icone-pdf.png") no-repeat center center; height: 25px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+
+.btn-atualizarprecatorio { background: url("../img/ico_alterar_status.gif") no-repeat center center; height: 25px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+.btn-atualizarprecatorio:hover { background: url("../img/ico_alterar_status.gif") no-repeat center center; }
+
+.btn-deletar { background: url("../img/icone-deletar.png") no-repeat center center; height: 25px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+.btn-deletar:hover { background: url("../img/icone-deletar-hover.png") no-repeat center center; }
+
+.btn-copiar { background: url("../img/btn-copiar.png") no-repeat center center; height: 25px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+
+.btn-editar { background: url("../img/icone-editar.png") no-repeat center center; height: 25px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+.btn-editar:hover { background: url("../img/icone-editar-hover.png") no-repeat center center; }
+	
+.btn-adiciona-credor { background: url("../img/adiciona_credor.png") no-repeat; height: 30px; width: 50px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+.btn-cancela-credor { background: url("../img/cancela_credor.png") no-repeat center center; height: 32px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+.btn-salva-credor { background: url("../img/salvar.png") no-repeat center center; height: 32px; float:right; font-size: 11px; padding: 0 10px 4px; border:none; cursor: pointer;   }
+
+
+
+.btn-adiciona-credor:after {
+	content: 'Incluir';
+	position: relative;
+}
+
+.btn-cancela-credor:after {
+	content: 'Cancelar';
+	top: 20px;
+	
+}
+
+	
+/*Topo*/
+#topo { width:100%; background: url(../img/header_fundo_v1.gif) repeat-x center center; float:left; height: 97px; }
+#topo .painelTopo { float:right; width: 60%;  }
+#topo .painelTopo .infoLogin {float: right; margin-right: 20px; margin-top: 52px; background: url(../img/icone-usuario.png) no-repeat left center;  padding:0 0 0 20px;}
+#topo .painelTopo .infoLogin a { color:white; cursor:pointer; overflow:auto; font-size:10px;}
+#topo .painelTopo .infoLogin label { color:white; font-weight: normal; font-size:10px; }
+#topo .painelTopo .infoLogin label.titulo { font-weight: bold; margin-left:20px; }
+#topo .painelTopo .controles { float:right; width:100%; margin-right:10px; text-align: right }
+#topo .painelTopo .controles  input { float:right; }
+
+/*Menu*/
+.itemMenu { padding-top: 9px; font-family: sans-serif; font-size: 11px; font-weight: lighter; border-bottom: 1px solid #d2d2d2; height: 21px; margin: 0px; }
+.itemMenuSelect { padding-top: 9px;  border-bottom: 1px solid #C0C0C0; font-family: sans-serif; font-size: 11px; font-weight: lighter; color: white; border: 1px solid #607E9A; background-color: #607E9A; height: 21px; vertical-align: middle; }
+.menu { height: 28px; border-bottom: 1px solid #C0C0C0; border-top: 1px solid #C0C0C0; background: white url(../img/bottom_menu_bg.png) repeat-x center center; float:left; }
+#botoesmenu { width: auto; height: 0px; size: auto; font: lighter; }
+#menu img { border-style: none; padding: 0; margin: 0; }
+.status { position:absolute; right: 0; margin-top:-12px; margin-right:10px; }
+.toolBarra { border-right: 1px solid #D2D2D2; margin: 0px; padding: 0px; padding-left: 4px; padding-right: 4px; }
+.botoesmenu { font-family: Verdana; padding: 7px 10px 5px 5px; margin: 0px; vertical-align: middle; }
+.selectdrop { background-image: url(../img/bottom_menu_bg2.png); border: none; vertical-align: middle; left: -11px; }
+
+/*Migalha*/
+.migalha { width: 100%; float: left; height: 23px; margin-bottom: 20px; }
+
+/*Conte�do*/
+	
+	/*Login*/
+	h1 { background: url("../img/bg-tituloH1.jpg") no-repeat center center; color: #343F5F; font-size: 16px; font-weight: bold; height: 23px; margin: 10px 0; text-align: center; width: 100%; }
+	.centralizarLogin { height: 185px; margin: 6% auto 0; position: relative; width: 550px; }
+	.centralizarLogin table.tabulacao { margin-bottom:15px; width: 100%; }
+	.centralizarLogin table.tabulacao input[type="text"] { font-size: 11px; margin:0; height: 25px; color:#333; border: 1px solid #B1B1B1; font-family: Arial, Helvetica, sans-serif; padding: 0 0 0 2px; width: 99%; background: url("../img/bg-input.png") repeat-x center center;}
+	.centralizarLogin table.tabulacao input[type="password"] { font-size: 11px; margin:0; height: 25px; color:#333; border: 1px solid #B1B1B1; font-family: Arial, Helvetica, sans-serif; padding: 0 0 0 2px; width: 99%; background: url("../img/bg-input.png") repeat-x center center;}
+	.centralizarLogin table.tabulacao select { margin:0; width:100%; background: url("../img/bg-input.png") repeat-x center center; height: 27px; border: 1px solid #ABABAB; padding: 4px 4px 4px 2px; vertical-align: middle; color:#333; font-size: 11px; }
+	.centralizarLogin fieldset { background-color: white; padding:20px 60px 5px 60px; }
+	.centralizarLogin .infoValidacao { float:right; margin:10px -55px 0px 0px; }
+	.centralizarLogin .infoValidacao label { font-weight: bold; }
+	.centralizarLogin .infoValidacao img { vertical-align: -1px; }
+	
+	/*tela de erro*/
+	.centralizarErro { height: auto; margin: 6% auto 0; position: relative; width: 350px; background-color: white; border:1px solid #ccc; box-shadow: 5px 5px 5px #ccc; padding:20px; }
+	.centralizarErro h1 { background: url("../img/icone-erroSistema.png") no-repeat scroll 11px center transparent; border-bottom: 1px solid #CCCCCC; color: red; font-size: 18px; font-weight: bold; height: 37px; margin: 0 0 10px; padding: 18px 10px 10px 45px; text-align: center; width: 85%; }	
+	
+	/*tela de consulta*/
+	.centralizarConsulta { width: 90%; margin-top: 10px; position: relative; margin:0 auto; }	
+	.centralizarConsulta .titulo { height:17px; padding:5px; background: url("../img/bg-titulo.jpg") repeat-x center center; width: 100%; width:-moz-available; border:1px solid #001A33; color: white;   }
+	.centralizarConsulta .abas { height:34px; margin-bottom: -1px; }
+	.centralizarConsulta .conteudo { margin-bottom: 10px; padding:10px; border: 1px solid #C0C0C0; min-height: 410px; background-color: white; box-shadow: 5px 5px 5px #ccc; }
+	.centralizarConsulta fieldset.blocoMedio { float:left; margin:0 8px 5px 0; padding: 10px; width: 46.5%; height: 150px; }
+	.centralizarConsulta fieldset.blocoGrande { float:left; margin:0 10px 5px 0; padding: 10px; width: 96.2%; width:-moz-available; }
+	.centralizarConsulta fieldset.blocoGrande1 { float:left; margin:0 10px 5px 0; padding: 10px; width: 80.2%; width:-moz-available; }
+	.centralizarConsulta fieldset.blocoGrande2 { float:left; margin:0 0 5px 0; padding: 5px; width: 100%; width:-moz-available; }
+	.centralizarConsulta table.tabulacao { margin-bottom:15px; width: 100%; }
+	.centralizarConsulta table.tabulacao tr td { padding: 5px 5px -1px 0;  }
+	.centralizarConsulta table.tabulacao label { float:left; width: 100%; margin-bottom:5px; }
+	.centralizarConsulta table.tabulacao input[type="text"],.organiza_input input[type=text] { font-size: 11px; margin:0; height: 25px; color:#555555; border: 1px solid #B1B1B1; font-family: Arial, Helvetica, sans-serif; padding: 0 0 0 2px; width: 99%; width:-moz-available; background: url("../img/bg-input.png") repeat-x center center;}
+	.centralizarConsulta table.tabulacao select { margin:0; width:100%; background: url("../img/bg-input.png") repeat-x center center; height: 27px; border: 1px solid #ABABAB; padding: 4px 4px 4px 2px; vertical-align: middle; color:#333; font-size: 11px; }
+	.centralizarConsulta table.tabulacao textarea { width:-moz-available; width:98.8%; height: 120px; }
+	.centralizarConsulta table.tabulacao textarea.txtAreaPequeno { width:-moz-available; width:98.8%; height: 33px; }
+	.centralizarConsulta table.tabulacao tr td table.radioT1 { width: 80%; }
+	.centralizarConsulta table.tabulacao tr td table.radioT1 tr td { width:25%; padding:0; }
+	.centralizarConsulta table.tabulacao tr td table.radioT1 tr td input { float:left;  }
+	.centralizarConsulta table.tabulacao tr td table.radioT1 tr td label { width: auto; margin-top:3px; margin-left:5px;  }
+	.centralizarConsulta table.tabulacao tr td table.radio { width: 100%; }
+	.centralizarConsulta table.tabulacao tr td table.radio tr td { padding:0; }
+	.centralizarConsulta table.tabulacao tr td table.radio tr td input { float:left;  }
+	.centralizarConsulta table.tabulacao tr td table.radio tr td label { width: auto; margin-top:3px; margin-left:5px;  }
+	
+	/*Geral*/
+	#conteudo { float:left; width:100%; min-height: 450px; }
+	.centralizar { width: 1000px; margin-top: 10px; position: relative; margin:0 auto; }
+	.centralizar .titulo { height:17px; padding:5px; background: url("../img/bg-titulo.jpg") repeat-x center center; width: 100%; width:-moz-available; border:1px solid #001A33; color: white;   }
+	.centralizar .abas { height:34px; margin-bottom: -1px; }
+	.centralizar .conteudo { margin-bottom: 10px; padding:10px; border: 1px solid #C0C0C0; min-height: 410px; background-color: white; box-shadow: 5px 5px 5px #ccc; }
+	.centralizar fieldset.blocoMedio { float:left; margin:0 8px 5px 0; padding: 10px; width: 46.5%; height: 150px; }
+	.centralizar fieldset.blocoGrande { float:left; margin:0 10px 5px 0; padding: 10px; width: 96.2%; width:-moz-available; }
+	.centralizar fieldset.blocoGrande1 { float:left; margin:0 10px 5px 0; padding: 10px; width: 80.2%; width:-moz-available; }
+	.centralizar fieldset.blocoGrande2 { float:left; margin:0 0 5px 0; padding: 5px; width: 100%; width:-moz-available; }
+	.centralizar table.tabulacao { margin-bottom:15px; width: 100%; }
+	.centralizar table.tabulacao tr td { padding: 5px 5px -1px 0;  }
+	/*.centralizar table.tabulacao tr td { padding: 5px 5px 10px 0;  }*/
+	.centralizar table.tabulacao label { float:left; width: 100%; margin-bottom:5px; }
+	.centralizar table.tabulacao input[type="text"],.organiza_input input[type=text] { font-size: 11px; margin:0; height: 25px; color:#555555; border: 1px solid #B1B1B1; font-family: Arial, Helvetica, sans-serif; padding: 0 0 0 2px; width: 99%; width:-moz-available; background: url("../img/bg-input.png") repeat-x center center;}
+	.centralizar table.tabulacao select { margin:0; width:100%; background: url("../img/bg-input.png") repeat-x center center; height: 27px; border: 1px solid #ABABAB; padding: 4px 4px 4px 2px; vertical-align: middle; color:#333; font-size: 11px; }
+	.centralizar table.tabulacao textarea { width:-moz-available; width:98.8%; height: 120px; }
+	.centralizar table.tabulacao textarea.txtAreaPequeno { width:-moz-available; width:98.8%; height: 33px; }
+	.centralizar table.tabulacao tr td table.radioT1 { width: 80%; }
+	.centralizar table.tabulacao tr td table.radioT1 tr td { width:25%; padding:0; }
+	.centralizar table.tabulacao tr td table.radioT1 tr td input { float:left;  }
+	.centralizar table.tabulacao tr td table.radioT1 tr td label { width: auto; margin-top:3px; margin-left:5px;  }
+	.centralizar table.tabulacao tr td table.radio { width: 100%; }
+	.centralizar table.tabulacao tr td table.radio tr td { padding:0; }
+	.centralizar table.tabulacao tr td table.radio tr td input { float:left;  }
+	.centralizar table.tabulacao tr td table.radio tr td label { width: auto; margin-top:3px; margin-left:5px;  }
+	.centralizarDadoTabela{margin-left: 50%;}
+	.centralizadorSituacao{margin-left: 35%;}
+	.mascaraData {color:grey;}
+	.labelExemplo {color:grey;}
+
+/*Rodap�*/
+
+#rodape { background-color: #001A33; text-align:center; color:white; position: fixed; bottom: 0px; width:100%; height:25px; min-width: 100%; line-height:23px;}
+
+
+/*Mensagens do sistema*/
+.popUpMensagemStatus { top: 0; left: 50%; margin-left: -190px; position: fixed; z-index:1; width: 30%; height:9%;padding:5px; display:block; border-radius: 0px 0px 5px 5px; background: -moz-linear-gradient(top, #FFFFFF, #191970); border-bottom:1px solid #000000; border-left:1px solid #000000; border-right:1px solid #000000; box-shadow: 1px -2px 23px #888888;}
+.popUpMensagemStatus h2.msgSucesso { background: url("../img/icone-mensagem-sucesso.gif") no-repeat scroll left center transparent; font-size: 12px; height: 29px; margin: 0 auto; padding-left: 40px; padding-top: 13px; text-align: center; width: -moz-fit-content }
+.popUpMensagemStatus h2.msgErro { background: url("../img/icone-mensagem-erro.gif") no-repeat scroll left center transparent; font-size: 12px; height: 29px; margin: 0 auto; padding-left: 40px; padding-top: 13px; text-align: center; width: -moz-fit-content; color:red;  }
+.popUpMensagemStatus input.fecharPopUpMsg { left: -5px; margin-bottom: 13%; margin-left: 50%; position: relative; padding-top: 8%}
+
+.overlayDiv { background-image: url(../img/bg_loading.png); position: fixed; left: 0px; top: 0px; right: 0px; bottom: 0px; height: 100%; width: 100%; z-index: 2; visibility: hidden; }
+.overlayDiv .mensagem {  background-color: #FFFFFF; border: 1px solid #CCCCCC; border-radius: 5px 5px 5px 5px; left: 50%; margin-left: -75px; margin-top: -22px; padding: 10px; position: fixed; top: 50%; }
+
+/*Div organizadora de conteudo*/
+.organiza_input { float:left; margin: 10px 5px 10px 0; }
+.organiza_input label { padding: 5px 20px 5px 0; display:block; }
+.organiza_input_container { padding: 5px 5px 10px 0; overflow:hidden; clear:both; }
+
+
+.exibeComponentes {
+	display: block;
+}
+
+.escondeComponentes {
+	display: none;
+}
+
+.popup{
+	display: inline-block; position: fixed; top: 130px; right: 40px; border: 1px solid black; background-color: #001A33; width: 350px; height: 25px;
+}
+.popupBarraAzul{
+	font-size:14px; color: white; margin: 0; position: absolute; top: 45%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);
+}
+.popupBtnFechar{
+	font-size:14px; color: white; margin: 0; position: absolute; top: 45%; left: 95%; margin-right: -50%; transform: translate(-50%, -50%);
+}
+.popupConteudo{
+	display: inline-block; position: fixed; top: 155px; right: 40px; border: 1px solid black; background-color: #ffffff; width: 350px; height: 60px;
+}
+.popupTextoConteudo{
+	font-size:14px; color: red; margin: 0; position: absolute; top: 45%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);
+}

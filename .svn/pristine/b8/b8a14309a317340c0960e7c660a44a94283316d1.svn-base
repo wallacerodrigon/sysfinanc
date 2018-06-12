@@ -1,0 +1,43 @@
+<project name="wallet" default="gera-pacote">
+
+	<property name="node.dir" value="E:\Desenvolvimento\nodejs\node\"/>
+	<property name="node.exe" value="node.exe"/>
+	<property name="destino.dir" value="WebContent" />
+	<property name="dist.dir" value="angular-web/dist"/>
+
+	<target name="copia-app-component">
+		<copy overwrite="true" file="angular-web/src/app/app.component.html" tofile="angular-web/src/app/app.component.html.bkp">
+		</copy>
+	</target>
+
+	<target name="volta-app-component">
+		<move file="angular-web/src/app/app.component.html.bkp" tofile="angular-web/src/app/app.component.html"/>
+	</target>
+	
+	
+	<target name="build-angular-dois" >
+		<exec executable="gera-build.bat">
+		</exec>
+	</target>
+	
+	<target name="apaga-webcontent" depends="build-angular-dois">
+		<delete>
+			<fileset dir="${destino.dir}" id="id">
+			    <include name="*.bundle*"/>
+				<include name="*.ico"/>
+				<include name="*.html"/>
+			</fileset>
+
+		</delete>
+	</target>
+	
+	<target name="copia-angular-dois" depends="apaga-webcontent">
+		<copy todir="${destino.dir}" >
+			<fileset dir="${dist.dir}"  />
+		</copy>
+	</target>
+	
+	<target name="gera-pacote" depends="copia-angular-dois" >
+		<exec executable="gera-maven.bat"></exec>
+	</target>
+</project>

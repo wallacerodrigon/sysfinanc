@@ -1,0 +1,16 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HomePageComponent } from './home/home.component';
+import { RouterModule, Routes }  from '@angular/router';
+import { HomeDashboardComponent } from './home-dashboard/home-dashboard.component';
+import { HomeRoutesModule } from './home-routes-module';
+import { BlockUIModule } from 'ng-block-ui';
+
+@NgModule({
+  imports: [
+    CommonModule , RouterModule, BlockUIModule, HomeRoutesModule
+  ],
+  declarations: [HomePageComponent, HomeDashboardComponent],
+  exports: [HomePageComponent, HomeDashboardComponent]
+})
+export class HomeModule { }

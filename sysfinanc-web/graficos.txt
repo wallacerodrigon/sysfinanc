@@ -1,0 +1,8 @@
+npm install chart.js --save
+<canvas id="myChart" width="400" height="400"></canvas>
+https://stackoverflow.com/questions/43151704/how-implement-chart-js-in-angular-2/43151705
+
+ou 
+
+npm install ng2-charts chart.js --save
+https://alligator.io/angular/chartjs-ng2-charts/

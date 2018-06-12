@@ -1,0 +1,29 @@
+package br.net.walltec.api.negocio.servicos;
+
+import br.net.walltec.api.dto.GeracaoParcelasDto;
+import br.net.walltec.api.entidades.Conta;
+import br.net.walltec.api.entidades.Parcela;
+import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
+import br.net.walltec.api.vo.ContaVO;
+
+import java.util.List;
+
+public interface ContaServico extends CrudPadraoServico<Conta, ContaVO> {
+
+	/**
+	 * Cria n parcelas e retorna as geradas
+	 * @param conta
+	 * @param qtd
+	 * @param dataVencimentoInicial
+	 * @param valorVencimento
+	 * @throws NegocioException
+	 */
+	List<Parcela> criarParcelas(GeracaoParcelasDto dto) throws NegocioException;
+
+	List<Parcela> obterParcelas(Conta conta) throws NegocioException;
+	
+	Integer recuperarNumeroUltimaParcela(Conta conta) throws NegocioException;
+	
+
+}

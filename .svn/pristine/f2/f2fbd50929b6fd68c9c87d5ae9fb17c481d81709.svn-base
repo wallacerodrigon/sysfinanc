@@ -1,0 +1,145 @@
+package br.net.walltec.api.persistencia.dao.impl;
+
+
+import br.net.walltec.api.entidades.Parcela;
+import br.net.walltec.api.enums.EnumEstadoParcela;
+import br.net.walltec.api.excecoes.PersistenciaException;
+import br.net.walltec.api.persistencia.dao.LancamentoDao;
+import br.net.walltec.api.persistencia.dao.comum.AbstractPersistenciaPadraoDao;
+import br.net.walltec.api.vo.HistoricoUtilizacaoMensalVO;
+import br.net.walltec.api.vo.ResumoLancamentosMesVO;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+
+@Named
+public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Parcela> implements LancamentoDao {
+
+    @Inject
+    private EntityManager em;
+
+	public LancamentoDaoImpl(EntityManager em) {
+		super(em);
+	}
+
+	public List<Parcela> listarParcelas(Date dataInicial, Date dataFinal, Integer idConta, String descConta,
+										EnumEstadoParcela estadoAtual, Boolean bolDespesas) throws PersistenciaException {
+        return null;
+	}
+	
+	public boolean baixarParcelas(Parcela...parcelas) throws PersistenciaException {
+		boolean ok = true;
+		for(Parcela p : parcelas){
+			//p.setDataPagamento(new Date());
+			//p.setValorPagamento(p.getValor());
+			p.setValorUtilizado(p.getValor());
+			try {
+				this.alterar(p);
+			} catch(PersistenciaException pe){
+				ok = false;
+				break;
+			}
+		}
+		return ok;
+	}
+	
+	public boolean excluirParcelas(Parcela...parcelas) throws PersistenciaException {
+		boolean ok = true;
+		for(Parcela p : parcelas){
+			//p.setDataPagamento(new Date());
+			//p.setValorPagamento(p.getValor());
+			try {
+				this.excluir(p);
+			} catch(PersistenciaException pe){
+				ok = false;
+				break;
+			}
+		}
+		return ok;
+	}	
+	
+
+	@Override
+	public ResumoLancamentosMesVO obterResumoLancamentos(Integer mes,
+															Integer ano) throws PersistenciaException {
+		String sql = "select case when ln_despesa then 'S' else 'N' end as tipo, sum(va_parcela) as total "
+				+ "   from parcela p "
+				+ "   join conta c on c.co_conta = p.co_conta "
+				+ "   where year(dt_vencimento) = ? and month(dt_vencimento)= ? " 
+				+ "   group by ln_despesa ";
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ano", ano);
+		params.put("mes", mes);
+		List<Object[]> result = listarQueryNativaWithParams(sql, params);
+		if (result != null){
+			ResumoLancamentosMesVO vo = new ResumoLancamentosMesVO();
+			
+			for(Object[] rows : result){
+				if (rows[0].toString().equals("S")){
+					vo.setTotalDespesas(new Double(rows[1].toString()));
+				} else {
+					vo.setTotalReceitas(new Double(rows[1].toString()));
+				}
+			}
+			
+			return vo; 
+		}
+		
+		return null;
+	}
+	
+
+	@Override
+	public List<HistoricoUtilizacaoMensalVO> listarHistoricoUtilizacao(
+			Date dataInicial, Date dataFinal) throws PersistenciaException {
+		
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("select CASE WHEN c.ln_despesa =1 then 'Despesa' else 'Receita' end as tipo, ");
+		buffer.append("       coalesce(p.co_parcelaorigem, p.co_parcela) as co_parcela, ");
+		buffer.append("       case when p.co_parcela != p.co_parcelaorigem then 'S' else 'N' end as utilizacao, ");
+		buffer.append("       p.dt_vencimento,  ");
+		buffer.append("       p.no_descricao,   ");
+		buffer.append("       p.va_parcela,     ");
+		buffer.append("       p.va_utilizado,   ");
+		buffer.append("       p.va_parcela - p.va_utilizado as saldo, "); 
+		buffer.append("       p.bolpaga  ");
+		buffer.append("from parcela p  ");
+		buffer.append("join conta c on (c.co_conta = p.co_conta) "); 
+		buffer.append("where p.dt_vencimento between :dataInicio and :dataFim ");
+        buffer.append("order by tipo, co_parcela, utilizacao ");
+
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("dataInicio", dataInicial);
+		params.put("dataFim", dataFinal);
+
+		List<Object[]> result = listarQueryNativaWithParams(buffer.toString(), params);
+		List<HistoricoUtilizacaoMensalVO> lista = null;
+		if (result != null){
+			lista = new ArrayList<HistoricoUtilizacaoMensalVO>();
+			for(Object[] rows : result){
+				HistoricoUtilizacaoMensalVO vo = new HistoricoUtilizacaoMensalVO();
+				vo.setTipo((String)rows[0]);
+				vo.setCodParcela( ((BigInteger)rows[1]).intValue() );
+				vo.setBolUtilizacao( ((String)rows[2]).equals("S") );
+				vo.setDataVencimento((Date)rows[3]);
+				vo.setDescConta((String)rows[4]);
+				vo.setValorLancamento((Double)rows[5]);
+				vo.setTotalUtilizado(((BigDecimal)rows[6]).doubleValue());
+				vo.setSaldo((Double)rows[7]);
+				vo.setBolPago(((Short)rows[8]).equals(Short.valueOf("1")));
+				
+				lista.add(vo);
+			}
+		}
+		
+		return lista;
+	}
+
+
+}

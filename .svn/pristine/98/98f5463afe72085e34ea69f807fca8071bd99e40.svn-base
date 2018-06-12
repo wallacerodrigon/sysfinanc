@@ -1,0 +1,46 @@
+import { RouterModule } from '@angular/router';
+import { AuthGuard } from './app.auth-guard';
+import { AppRoutingModule } from './app.routes';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MaterialModule } from './material.module';
+import { AppComponent } from './app.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { LoginModule } from './identificacao/login.module';
+
+//modulos
+import {HomeModule} from './home/home-module.module';
+import {DashboardModule} from './dashboard/dashboard.module';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    UnauthorizedComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpModule,
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    MaterialModule,
+    RouterModule,
+    AppRoutingModule,
+    LoginModule,
+    HomeModule,
+    DashboardModule
+
+  ],
+  providers: [
+    AuthGuard,
+  ],
+  exports: [
+    MaterialModule,
+  ],
+  bootstrap: [
+    AppComponent
+  ]
+})
+export class AppModule { }

@@ -1,0 +1,97 @@
+<div class="panel panel-default">
+    <div class="panel-heading" *ngIf="exibeNovo || exibeFiltro">
+        <div class="btn-toolbar" role="toolbar">
+            <div class="btn-group" role="group" aria-label="Novo">
+                <button title="Novo cadastro" *ngIf="exibeNovo" (click)="abrirNovoRegistro()" class="btn btn-success">
+                    <i class=" glyphicon glyphicon-plus"></i>&nbsp;Novo
+                </button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Busca"> 
+                <button title="Filtros" *ngIf="exibeFiltro" (click)="abrirFiltro()" class="btn btn-primary">
+                    <i class=" glyphicon glyphicon-filter"></i>&nbsp;Pesquisar
+                </button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Busca"> 
+                <button title="Filtros" *ngIf="exibeFiltro" (click)="limparFiltro()" class="btn btn-primary">
+                    <i class=" glyphicon glyphicon-search"></i>&nbsp;Listar Tudo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-md-8">Retornados {{listaDados.length}} Registros</label>
+        </div>
+        <table class="table table-striped table-hover table-bordered table-responsive">
+            <thead>
+                <th *ngIf="exibeCheckboxes" class="text-center"><input type="checkbox" id="selectAll" (click)="selectAll($event)"></th>
+                <th *ngFor="let col of nomesColunas">
+                    <span text-center>{{col}}</span>
+                </th>
+                <th colspan="2" class="text-center" *ngIf="exibeAcoes">
+                    Ações
+                </th>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let item of listaDados.slice( (paginaAtual-1)*itensPorPagina, (paginaAtual)*itensPorPagina); let indice=index" id="id_{{indice}}">
+                    <td *ngIf="exibeCheckboxes"  class="text-center">
+                        <input type="checkbox" [checked]="item.selecionado" class="chkbox" (click)="selectItem(item, indice)">
+                    </td>
+                    <td *ngFor="let campo of atributosColunas" >
+                        <span class='{{getClasse(item, campo)}}'>{{getValor(item, campo)}}</span>
+                    </td>
+                    
+                    <td colspan="2" class="text-center dropdown" *ngIf="exibeAcoes" >
+                        <button  class="btn btn-default dropdown-toggle" title="dropdownMenuAcoes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class=" glyphicon glyphicon-option-horizontal"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAcoes">
+
+                            <li>
+                                <a href="javascript:void(0)" *ngIf="exibeExcluir"
+                                   class="text-danger glyphicon glyphicon-trash" 
+                                   (click)="excluir(item, indice)"> Excluir
+                                </a>
+                            </li>
+                            <li><a href="javascript:void(0)"  *ngIf="exibeEditar"
+                                class="glyphicon glyphicon-edit" (click)="editar(item, indice)"> Editar</a>
+                            </li>
+
+                            <li *ngFor="let acao of listaAcoes">
+                                    <a href="javascript:void(0)"
+                                    class='{{acao.classeCss}}' 
+                                    (click)='executarAcao(item, indice, acao.eventoAcao)'> {{acao.nomeAcao}}</a>
+                            </li>
+                        </ul>                        
+                        <!--></button>-->
+                    </td>
+                </tr>
+            </tbody>
+
+            <tfoot *ngIf="exibeTotalizadores">
+                    <th *ngFor="let campo of totalizadores" class="text-center" >
+                        <span>{{campo}}</span>
+                    </th>
+                    <th colspan="2" *ngIf="exibeAcoes">
+                        &nbsp;
+                    </th>                    
+            </tfoot>
+
+        </table>
+
+        <div id="divLivre"></div>
+
+        <!--centralizar-->
+        <div class="text-center">
+            <div class="row"> 
+                <div class="col col-md-12 text-center">
+                    <ngb-pagination [collectionSize]="tamanhoListagem" [pageSize]="itensPorPagina" [ellipses]="true" [maxSize]="3"  
+                                [(page)]="paginaAtual" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>            
+                </div>                    
+            </div>
+        </div>
+
+    </div>
+</div>    

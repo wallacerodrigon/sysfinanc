@@ -1,0 +1,59 @@
+/**
+ * 
+ */
+package br.net.walltec.api.dto;
+
+import java.util.Date;
+
+import br.net.walltec.api.entidades.FormaPagamento;
+import br.net.walltec.api.entidades.Parcela;
+import br.net.walltec.api.vo.UsuarioVO;
+
+
+/**
+ * @author Administrador
+ *
+ */
+public class UtilizacaoParcelasDto extends DtoPadrao {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private double valorUtilizado; 
+	private Date dataUtilizacao; 
+	private FormaPagamento formaPagamento;
+	private Parcela parcelaOrigem;
+	private UsuarioVO usuarioVo;
+	
+	public double getValorUtilizado() {
+		return valorUtilizado;
+	}
+	public void setValorUtilizado(double valorUtilizado) {
+		this.valorUtilizado = valorUtilizado;
+	}
+	public Date getDataUtilizacao() {
+		return dataUtilizacao;
+	}
+	public void setDataUtilizacao(Date dataUtilizacao) {
+		this.dataUtilizacao = dataUtilizacao;
+	}
+	public FormaPagamento getFormaPagamento() {
+		return formaPagamento;
+	}
+	public void setFormaPagamento(FormaPagamento formaPagamento) {
+		this.formaPagamento = formaPagamento;
+	}
+	public Parcela getParcelaOrigem() {
+		return parcelaOrigem;
+	}
+	public void setParcelaOrigem(Parcela parcelaOrigem) {
+		this.parcelaOrigem = parcelaOrigem;
+	}
+	public UsuarioVO getUsuarioVo() {
+		return usuarioVo;
+	}
+	public void setUsuarioVo(UsuarioVO usuarioVo) {
+		this.usuarioVo = usuarioVo;
+	}
+}

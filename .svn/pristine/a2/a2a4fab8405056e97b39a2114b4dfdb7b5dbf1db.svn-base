@@ -1,0 +1,61 @@
+/**
+ * 
+ */
+package br.net.walltec.api.enums;
+
+/**
+ * @author wallace
+ *
+ */
+public enum EnumSituacaoFinanceira {
+	
+	A("A", "Adimplente"),
+	
+	I("I", "Inadimplente"),
+	
+	T("T", "Todos");
+	
+	private String sigla;
+	
+	private String descricao;
+	
+	/**
+	 * @param sigla
+	 * @param descricao
+	 */
+	private EnumSituacaoFinanceira(String sigla, String descricao) {
+		this.sigla = sigla;
+		this.descricao = descricao;
+	}
+
+	/**
+	 * @return the sigla
+	 */
+	public String getSigla() {
+		return sigla;
+	}
+
+	/**
+	 * @param sigla the sigla to set
+	 */
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
+	}
+
+	/**
+	 * @return the descricao
+	 */
+	public String getDescricao() {
+		return descricao;
+	}
+
+	/**
+	 * @param descricao the descricao to set
+	 */
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	
+	
+
+}

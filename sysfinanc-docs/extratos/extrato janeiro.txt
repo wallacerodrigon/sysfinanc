@@ -1,0 +1,114 @@
+                 SISBB - Sistema de Informações Banco do Brasil                 
+17/01/2018                       Auto-Atendimento                       00:55:12
+                            Extrato de conta corrente                           
+                                                                                
+Agência: 3380-4       Conta: 114667-X
+Cliente: WALLACE RODRIGO DO NASCIM
+================================================================================
+Data     Ag.Org  Histórico                 Documento                       Valor
+                                                                                
+29/12/17 000000  Saldo Anterior            0                          5.749,93 C
+02/01/18 3380-4  Compra com Cartão         25.748                       340,00 D
+                 02/01 13:43 PAPELARIA E LIVRARIA                               
+02/01/18 3380-4  Compra com Cartão         313.576                        3,60 D
+                 02/01 17:34 SUPERCEI                                           
+02/01/18 3380-4  Compra com Cartão         327.354                       15,00 D
+                 02/01 17:43 PAG*BolosDaJujuba                                  
+02/01/18 3380-4  Compra com Cartão         507.763                       21,00 D
+                 30/12 12:37 MAGIC GAMES EMPREEND                               
+02/01/18 3380-4  Compra com Cartão         629.005                       19,00 D
+                 31/12 11:27 ESTAPAR AERO BRASILI                               
+02/01/18 3380-4  Compra com Cartão         672.917                        4,20 D
+                 30/12 14:09 BRASILIA PARTICIPACO                               
+02/01/18 3380-4  Compra com Cartão         726.769                       10,00 D
+                 31/12 12:26 LILIAN APARECIDA FAG                               
+02/01/18 3380-4  Compra com Cartão         758.232                       46,02 D
+                 31/12 12:45 SUPERCEI                                           
+02/01/18 000000  Banco 24 Horas            1.128.000.282.019            360,00 D
+                 02/01 17:27 SUP CEI EQNL                                       
+03/01/18 3380-4  Compra com Cartão         360.298                        7,30 D
+                 03/01 17:46 PADARIA JOIA                                       
+04/01/18 3380-4  Compra com Cartão         678.072                      456,05 D
+                 04/01 21:28 OTIMA COMERCIO DE AL                               
+04/01/18 3380-4  Transferência enviada     521.231.000.344.200           30,00 D
+                 04/01 1231     344200-4 C C QE 38 GUAR                         
+04/01/18 000000  TED Transf.Eletr.Disponiv 10.401                        69,90 D
+                 237 0824 014135690000109 INTEGRATOR DO                         
+04/01/18 000000  Pagamento de Título       10.402                       364,50 D
+                 BRB - BANCO DE BRASILIA S.A.                                   
+04/01/18 000000  Pagamento de Título       10.403                       377,87 D
+                 BRB - BANCO DE BRASILIA S.A.                                   
+04/01/18 000000  Pgto conta água           10.404                        59,00 D
+                 CAESB                                                          
+04/01/18 000000  Pagamento de Título       10.405                       987,41 D
+                 CAIXA ECONOMICA FEDERAL                                        
+05/01/18 3380-4  Compra com Cartão         721.541                      100,00 D
+                 05/01 19:25 POSTO SOUSA E ALVES                                
+05/01/18 3380-4  Compra com Cartão         744.081                       22,00 D
+                 05/01 19:40 PAG*MIAUMIAU                                       
+08/01/18 3380-4  Compra com Cartão         143.675                        5,43 D
+                 06/01 09:44 SUPERCEI                                           
+08/01/18 3380-4  Compra com Cartão         746.404                       33,99 D
+                 07/01 15:46 SUPERCEI                                           
+08/01/18 000000  Banco 24 Horas            1.128.000.476.319            100,00 D
+                 06/01 09:37 SUP CEI EQNL                                       
+08/01/18 000000  Pagamento conta luz       10.801                        85,04 D
+                 CEB                                                            
+09/01/18 3380-4  Compra com Cartão         37.772                         5,00 D
+                 09/01 20:30 PADARIA METROPOLITAN                               
+10/01/18 000000  Pagto cartão crédito      100.183.911                  665,74 D
+                 ELO MAIS                                                       
+10/01/18 000000  Net Serviços de Comunicaç 41.843                       221,86 D
+11/01/18 3380-4  Compra com Cartão         334.314                      125,85 D
+                 11/01 10:15 SUPERCEI                                           
+12/01/18 3380-4  Compra com Cartão         839.524                        7,40 D
+                 12/01 16:10 UP BACK                                            
+15/01/18 3380-4  Compra com Cartão         192.067                       86,66 D
+                 14/01 20:01 OTIMA COMERCIO DE AL                               
+15/01/18 3380-4  Compra com Cartão         394.224                        7,99 D
+                 15/01 08:57 SUPERCEI                                           
+15/01/18 3380-4  Compra com Cartão         639.363                        5,85 D
+                 14/01 08:26 PANIFICADORA E CONFE                               
+15/01/18 3380-4  Compra com Cartão         684.286                       12,00 D
+                 14/01 10:00 TS DIAS DROG DA FAMI                               
+15/01/18 3380-4  Compra com Cartão         728.625                      169,70 D
+                 13/01 12:13 RIACHUELO 223                                      
+15/01/18 3380-4  Compra com Cartão         801.191                      189,99 D
+                 13/01 12:54 POLYELLE                                           
+15/01/18 3380-4  Compra com Cartão         874.356                       52,95 D
+                 13/01 13:39 LOJAS AMERICANAS 100                               
+16/01/18 4811-9  Saque no TAA              161.225.252.044.219           10,00 D
+                 16/01 12:25 SOP-ST.BANCARIO SUL                                
+17/01/18 000000  S A L D O                 0                            671,63 C
+--------------------------------------------------------------------------------
+Juros                                                                       0,00
+Data de Debito de Juros                                             1./02./20,18
+IOF                                                                         0,00
+Data de Debito de IOF                                               1./02./20,18
+CREDITO BB-MELHOR OFERTA*                                           117.239,00 C
+                                                                                
+                ------------------------------------------------                
+                VOCE PODE TER UMA CONTA ESPECIAL BB. PROCURE SUA                
+                AGENCIA E ASSINE O CONTRATO.                                    
+                Linhas de Crédito                       Crédito*                
+                ----------------- Crédito Novo -----------------                
+                BB Crd Consig em Folha**              117.239,00                
+                BB Crédito Salário                     35.573,00                
+                                                                                
+                -------- Financiamentos de Bens/Serviços -------                
+                BB Crd Imobiliário                    153.500,00                
+                BB Crd Veículo/Leasing                 75.087,00                
+                BB Crediário/Construção                27.765,00                
+                                                                                
+                *VALORES DE REFERÊNCIA. Representam as melhores                 
+                ofertas para você e estão sujeitas a confirmação                
+                no momento da contratação.                                      
+                **Disponível após confirmação da margem pelo                    
+                empregador.                                                     
+                ------------------------------------------------                
+                ------------------------------------------------                
+                OBSERVAÇÕES:                                                    
+                   - INFORMAÇÕES PRONAF INDISP. TEMPORARIAMENTE                 
+                ------------------------------------------------                
+                                                                                
+                                                                                

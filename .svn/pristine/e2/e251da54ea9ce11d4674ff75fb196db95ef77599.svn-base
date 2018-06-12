@@ -1,0 +1,66 @@
+export class Formatadores {
+
+    public static formatarCpf(cpf: string): string {
+        let v: string = cpf;
+        v=v.replace(/\D/g,"");             //Remove tudo o que não é dígito
+        v=v.replace(/^(\d{2})(\d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
+        v=v.replace(/(\d)(\d{4})$/,"$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
+        return v;
+    }
+
+    public static formatarTelefone(fone: string): string {
+        if (fone === null){
+            return '';
+        }
+        let v: string = fone;
+        v=v.replace(/\D/g,"");             //Remove tudo o que não é dígito
+        v=v.replace(/^(\d{2})(\d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
+        v=v.replace(/(\d)(\d{4})$/,"$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
+        return v;
+    }
+
+    public static formatarCelular(fone: string): string {
+        if (fone === null){
+            return '';
+        }
+        let v: string = fone;
+        v=v.replace(/\D/g,"");             //Remove tudo o que não é dígito
+        v=v.replace(/^(\d{2})(\d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
+        v=v.replace(/(\d)(\d{4})$/,"$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
+        return v;
+    }
+
+    public static formataNumero(valor: string): number {
+        if (valor && valor.trim().length > 0){
+            valor = valor.replace('.', '');
+            return Number.parseFloat( valor.replace(',', '.') );
+        } else {
+            return null;
+        }
+    }    
+
+    public static formataNumeroToString(valor: number): string {
+        if (valor){
+            return valor.toString().replace('.', ',');
+        } else {
+            return null;
+        }
+    }  
+
+    public static formataMoeda(valor: number): string {
+        if (valor){
+            let valorStr: string = valor.toString().replace('.', ',');
+            if (valorStr.indexOf(',') < 0){
+                return valorStr+",00";
+            } else if (valorStr.indexOf(',') > 0 && valorStr.substr(valorStr.indexOf(','), valorStr.length) == '') {
+                return valorStr+'00';
+            } else if (valorStr.indexOf(',') > 0 && valorStr.substr(valorStr.indexOf(',')+1, valorStr.length).length == 1) {
+                return valorStr+'0';
+            } else {
+                return valorStr;
+            }
+        } else {
+            return null;
+        }
+    }  
+}

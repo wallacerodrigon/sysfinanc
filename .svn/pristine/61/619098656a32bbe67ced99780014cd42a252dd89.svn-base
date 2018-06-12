@@ -1,0 +1,23 @@
+import { Component, OnInit } from '@angular/core';
+import { DialogComponent } from 'ng2-bootstrap-modal/dist/dialog.component';
+import { DialogService } from 'ng2-bootstrap-modal/dist/dialog.service';
+import { LancamentoVO } from 'app/dominio/vo/lancamento-vo';
+
+@Component({
+  selector: 'app-visao-usos',
+  templateUrl: './visao-usos.component.html',
+  styleUrls: ['./visao-usos.component.css']
+})
+export class VisaoUsosComponent extends DialogComponent<null, null> implements OnInit {
+
+  public lancamento: LancamentoVO = new LancamentoVO();
+  
+
+  constructor(protected dialogService: DialogService) {
+        super(dialogService);
+   }
+
+  ngOnInit() {
+  }
+
+}

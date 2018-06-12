@@ -1,0 +1,46 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ConsultaComponent } from './consulta/consulta.component';
+import { GeracaoComponent } from './geracao/geracao.component';
+import { EdicaoComponent } from './edicao/edicao.component';
+import { ComponentesModule } from '../componentes/componentes.module';
+import { FormsModule } from '@angular/forms';
+
+import { HomeModule } from '../home/home.module';
+import { LancamentoOuterLink } from '../lancamentos/lancamentos-outer-link';
+import { LancamentoService } from '../lancamentos/lancamento.service';
+
+import { AuthGuard } from '../servicos/auth-guard.service';
+import { RouterModule, Routes } from '@angular/router';
+import { UtilizacaoComponent } from './utilizacao/utilizacao.component';
+import { VisaoUsosComponent } from './visao-usos/visao-usos.component';
+import { UtilizacaoLancamentoVO } from '../dominio/vo/utilizacao-lancamento-vo';
+import { TextMaskModule } from 'angular2-text-mask';
+import { CadastroComponent } from './cadastro/cadastro.component';
+import { RubricasModule } from '../rubricas/rubricas.module';
+
+import { BlockUIModule } from 'ng-block-ui';
+ 
+const rotas: Routes = [
+  { path: '', 
+    component: LancamentoOuterLink,
+    canActivate: [AuthGuard],
+    children: [
+        {path: 'lancamentos', component: ConsultaComponent},
+        {path: 'geracao', component: GeracaoComponent, canActivate: [AuthGuard]}
+  ]}    
+];
+
+@NgModule({
+  imports: [
+    CommonModule,  HomeModule,ComponentesModule,
+    TextMaskModule,FormsModule, RubricasModule,BlockUIModule,
+    RouterModule.forChild(rotas)
+  ],
+  declarations: [ConsultaComponent, GeracaoComponent, EdicaoComponent, LancamentoOuterLink, 
+    UtilizacaoComponent, VisaoUsosComponent, CadastroComponent],
+  providers: [LancamentoService],
+  entryComponents: [VisaoUsosComponent, UtilizacaoComponent,CadastroComponent,EdicaoComponent],
+  exports: [RouterModule, VisaoUsosComponent, UtilizacaoComponent, LancamentoOuterLink]
+})
+export class LancamentosModule { }

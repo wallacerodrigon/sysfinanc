@@ -1,0 +1,6 @@
+<mat-select placeholder="Seccional" class="seccional-option" [(ngModel)]="currentSeccional" name="seccional"
+            (change)="change()">
+  <mat-option *ngFor="let data of options" [value]="data.value">
+    {{ data.label }}
+  </mat-option>
+</mat-select>

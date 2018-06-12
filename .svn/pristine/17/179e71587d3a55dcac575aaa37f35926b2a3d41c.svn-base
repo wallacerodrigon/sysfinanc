@@ -1,0 +1,42 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ConsultaComponent } from './consulta/consulta.component';
+import { GeracaoComponent } from './geracao/geracao.component';
+import { EdicaoComponent } from './edicao/edicao.component';
+import { ComponentesModule } from '../componentes/componentes.module';
+
+import { HomeModule } from '../home/home.module';
+import { LancamentoOuterLink } from 'app/lancamentos/lancamentos-outer-link';
+import { LancamentoService } from 'app/lancamentos/lancamento.service';
+
+import { AuthGuard } from 'app/servicos/auth-guard.service';
+import { RouterModule, Routes } from '@angular/router';
+import { UtilizacaoComponent } from './utilizacao/utilizacao.component';
+import { VisaoUsosComponent } from './visao-usos/visao-usos.component';
+import { UtilizacaoLancamentoVO } from 'app/dominio/vo/utilizacao-lancamento-vo';
+
+const rotas: Routes = [
+  {path: 'lancamentos', 
+    component: LancamentoOuterLink,
+    canActivate: [AuthGuard],
+    children: [
+        {path: 'consulta', component: ConsultaComponent},
+        {path: 'edicao', component: EdicaoComponent},
+        {path: 'geracao', component: GeracaoComponent}
+           //{path: 'mapa', component: },
+
+         ]
+  },
+];
+
+@NgModule({
+  imports: [
+    CommonModule,  HomeModule,ComponentesModule,
+    RouterModule.forChild(rotas)
+  ],
+  declarations: [ConsultaComponent, GeracaoComponent, EdicaoComponent, LancamentoOuterLink, UtilizacaoComponent, VisaoUsosComponent],
+  providers: [LancamentoService],
+  entryComponents: [VisaoUsosComponent, UtilizacaoComponent],
+  exports: [RouterModule, VisaoUsosComponent, UtilizacaoComponent]
+})
+export class LancamentosModule { }

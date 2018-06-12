@@ -1,0 +1,75 @@
+import { Injectable } from '@angular/core';
+import {HttpInterceptor} from './http-interceptor';
+import { Observable } from 'rxjs';
+import {Constantes} from '../utilitarios/constantes';
+
+/**classe abstrata com os serviços comuns dos cruds */
+
+export abstract class AbstractServicos<T> {
+
+  protected http: HttpInterceptor;
+  protected uri: string;
+
+  public ping(): Promise<any> {
+      return this.http
+            .get(this.uri)
+            .toPromise();
+  }
+
+  public listar(): Observable<T[]> {
+    return this.http
+      .get(this.uri)
+      .map(dados => {
+          let lista: Array<T> = [];
+
+          dados.json().forEach(element => {
+              lista.push(this.transformar(element));
+          });
+          return lista;
+    });
+  }
+
+  public pesquisar(url: string, payload: any = null): Observable<T[]> {
+    return this.http
+      .get(url, payload)
+      .map(dados => {
+          let lista: Array<T> = [];
+
+          dados.json().forEach(element => {
+              lista.push(this.transformar(element));
+          });
+          return lista;
+    });
+  }  
+
+
+  public excluir(id: number): Promise<any> {
+      return this
+          .http
+          .delete(this.uri+'/'+ id)
+          .toPromise();
+  }
+
+  public incluir(objeto: T): Promise<any> {
+      return this
+          .http
+          .post(this.uri, JSON.stringify(objeto))
+          .toPromise();
+  }  
+
+  public alterar(objeto: T): Promise<any> {
+      return this
+          .http
+          .put(this.uri, JSON.stringify(objeto))
+          .toPromise();
+  }
+
+  protected getURL(retorno: any){
+        return (Constantes.URL.indexOf('localhost') === -1) ?  retorno._body : Constantes.URL_LOCAL + retorno._body;
+  }
+    
+
+  /**transforma o resultado da lista em um objeto esperado */
+  public abstract transformar(element: any): T;
+  
+}

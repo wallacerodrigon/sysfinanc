@@ -1,0 +1,42 @@
+import { Component, OnInit } from '@angular/core';
+import {DashBoardService} from '../../servicos/dashboard.service';
+import {DashboardVO} from '../../dominio/vo/dashboard-vo';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+ 
+@Component({
+  selector: 'app-home-dashboard',
+  templateUrl: './home-dashboard.component.html',
+  styleUrls: ['./home-dashboard.component.css']
+})
+export class HomeDashboardComponent implements OnInit {
+
+  listaAniversariantesPorData: Array<DashboardVO> = [];
+  listaAtestadosPorData:  Array<DashboardVO> = [];
+  listaAtestadosVencidosPorData:  Array<DashboardVO> = [];
+  
+  @BlockUI() blockUI: NgBlockUI;
+
+  constructor(private _service: DashBoardService) { }
+
+  ngOnInit() {
+      this.blockUI.start('Montando dashboards, aguarde...');
+      this._service.montarDashboards()
+           .subscribe(lista => {
+                lista.mapaDashes.aniversariantes.forEach(dash =>{
+                    this.listaAniversariantesPorData.push(dash);
+                })
+                lista.mapaDashes.atestadosVencer.forEach(dash =>{
+                    this.listaAtestadosPorData.push(dash);
+                })
+                lista.mapaDashes.atestadosVencidos.forEach(dash =>{
+                    this.listaAtestadosVencidosPorData.push(dash);
+                })
+                this.blockUI.stop();
+            },
+            erro => {
+                console.log(erro._body);
+                this.blockUI.stop();
+            });      
+  }
+
+}

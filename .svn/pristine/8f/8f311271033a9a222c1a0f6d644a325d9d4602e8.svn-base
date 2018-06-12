@@ -1,0 +1,220 @@
+package br.net.walltec.api.negocio.servicos.impl;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import br.net.walltec.api.dto.FiltraParcelasDto;
+import br.net.walltec.api.dto.UtilizacaoParcelasDto;
+import br.net.walltec.api.entidades.Lancamento;
+import br.net.walltec.api.excecoes.CampoObrigatorioException;
+import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.excecoes.PersistenciaException;
+import br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao;
+import br.net.walltec.api.negocio.servicos.LancamentoServico;
+import br.net.walltec.api.persistencia.dao.ContaDao;
+import br.net.walltec.api.persistencia.dao.LancamentoDao;
+import br.net.walltec.api.persistencia.dao.impl.ContaDaoImpl;
+import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
+import br.net.walltec.api.utilitarios.UtilData;
+import br.net.walltec.api.vo.LancamentoVO;
+import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
+
+@Named
+public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento, LancamentoVO> implements LancamentoServico {
+
+    @Inject
+    private EntityManager em;
+
+    private ContaDao contaDao;
+
+    private LancamentoDao lancamentoDao;
+
+    @PostConstruct
+    public void init() {
+        contaDao = new ContaDaoImpl(em);
+        lancamentoDao = new LancamentoDaoImpl(em);
+        setDao(lancamentoDao);
+    }
+
+    @Override
+    protected Class getClasseEntidade() {
+        return Lancamento.class;
+    }
+
+    @Override
+    protected Class getClassePojo() {
+        return LancamentoVO.class;
+    }
+    
+    /* (non-Javadoc)
+     * @see br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao#alterarVO(br.net.walltec.api.vo.GerenciadorPadraoVO)
+     */
+    @Override
+    public void alterarVO(LancamentoVO objeto) throws NegocioException {
+    	Lancamento lancamento = (Lancamento) getConversor().converterPojoParaEntidade(objeto);
+    	
+    	Lancamento lancBanco = this.find(objeto.getId());
+    	
+    	lancamento.setFormaPagamento(lancBanco.getFormaPagamento());
+    	
+    	this.alterar(lancamento);
+    }
+
+    @Override
+    public List<LancamentoVO> listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException {
+        if (dtoFiltro == null || dtoFiltro.getMes() == null || dtoFiltro.getAno() == null){
+            throw new CampoObrigatorioException("FIltro não informado");
+        }
+        try {
+        	Date dataInicial = UtilData.createDataSemHoras(1, dtoFiltro.getMes(), dtoFiltro.getAno());
+         	Date dataFinal   = UtilData.asDate(UtilData.getUltimaDataMes(dtoFiltro.getMes(), dtoFiltro.getAno()));
+            return getConversor().converterEntidadeParaPojo(lancamentoDao.listarParcelas(dataInicial, dataFinal));
+        } catch (PersistenciaException e) {
+            throw new NegocioException(e);
+        }
+    }
+
+    @Override
+    public boolean baixarParcelas(List<Integer> idsLancamentos) throws NegocioException {
+        if (idsLancamentos == null || idsLancamentos.size() == 0){
+            throw new CampoObrigatorioException("Lista de lancamentos não informada!");
+        }
+        try {
+            for(Integer idLancamento : idsLancamentos) {
+            	Lancamento lancBanco = this.find(idLancamento);
+            	lancBanco.setBolPaga(true);
+            	this.alterar(lancBanco);
+            }
+            return true;
+        } catch (Exception e) {
+            throw new NegocioException(e);
+        }
+
+    }
+
+    @Override
+    public boolean excluirParcelas(List<Integer> idsLancamentos) throws NegocioException {
+        if (idsLancamentos == null || idsLancamentos.size() == 0){
+            throw new CampoObrigatorioException("Lista de lancamentos não informada!");
+        }
+        try {
+            for(Integer idLancamento : idsLancamentos) {
+            	this.excluir(idLancamento);
+            }
+            return true;
+        } catch (Exception e) {
+            throw new NegocioException(e);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao#excluir(java.io.Serializable)
+     */
+    @Override
+    public void excluir(Serializable id) throws NegocioException {
+    	Lancamento l = this.find(id);
+    	l.setValor(BigDecimal.ZERO);
+    	l.setDataVencimento(new Date(0));
+    	this.alterar(l);
+    }
+
+    @Override
+    public void utilizarLancamento(UtilizacaoParcelasDto dtoUtilizacao) throws NegocioException {
+        Lancamento lancamento = null;
+        try {
+            lancamento = lancamentoDao.find(dtoUtilizacao.getIdLancamentoOrigem());
+
+            BigDecimal novoValor = lancamento.getValor().subtract(dtoUtilizacao.getValorUtilizado());
+            lancamento.setValor(novoValor);
+            lancamento.setBolConciliado(false);
+            lancamentoDao.alterar(lancamento);
+
+                //incluir uma nova lancamento utilizando a de origem
+            incluirUtilizacaoParcela(lancamento, dtoUtilizacao);
+        } catch (PersistenciaException e) {
+            throw new NegocioException(e);
+        }
+    }
+
+    private void incluirUtilizacaoParcela(Lancamento lancamentoOrigem, UtilizacaoParcelasDto dtoUso) throws NegocioException {
+    	
+        Lancamento lancamentoUtilizada = new Lancamento();
+        lancamentoUtilizada.setBolPaga(true);
+        lancamentoUtilizada.setConta(lancamentoOrigem.getConta());
+        lancamentoUtilizada.setDataVencimento(UtilData.getData(dtoUso.getDataUtilizacaoStr(), UtilData.SEPARADOR_PADRAO));
+        lancamentoUtilizada.setDescricao(lancamentoOrigem.getDescricao());
+        lancamentoUtilizada.setFormaPagamento(lancamentoOrigem.getFormaPagamento());
+        lancamentoUtilizada.setNumero( obterProximoNumero(lancamentoOrigem) );
+        lancamentoUtilizada.setLancamentoOrigem(lancamentoOrigem);
+        lancamentoUtilizada.setValor(dtoUso.getValorUtilizado());
+        lancamentoUtilizada.setBolConciliado(false);
+        try {
+			lancamentoDao.incluir(lancamentoUtilizada);
+		} catch (PersistenciaException e) {
+			throw new NegocioException(e);
+		}
+    }
+
+    /**
+	 * @param lancamentoOrigem
+	 * @return
+     * @throws NegocioException 
+	 */
+	private Short obterProximoNumero(Lancamento lancamentoOrigem) throws NegocioException {
+		List<UtilizacaoLancamentoVO> usos = this.listarHistoricoUso(lancamentoOrigem.getId());
+		if (usos == null || usos.isEmpty()) {
+			return Short.valueOf("1");
+		} else {
+			final Comparator<UtilizacaoLancamentoVO> comp = (vo1, vo2) -> vo1.getNumeroParcela().compareTo(vo2.getNumeroParcela());
+			UtilizacaoLancamentoVO utilizacaoLancamentoVO = usos.stream().max(comp).get();
+			return Integer.valueOf(utilizacaoLancamentoVO.getNumeroParcela()+1).shortValue();
+		}
+	}
+
+	@Override
+    public List<UtilizacaoLancamentoVO> listarHistoricoUso(Integer idLancamento) throws NegocioException {
+		try {
+			return lancamentoDao.listarUsos(idLancamento);
+		} catch (PersistenciaException e) {
+			throw new NegocioException(e);
+		}
+
+    }
+
+	@Transactional(value= Transactional.TxType.REQUIRES_NEW)
+    private boolean baixarLancamento(LancamentoVO lancamentoVo) throws PersistenciaException {
+        Lancamento p = lancamentoDao.find(lancamentoVo.getId());
+        p.setBolPaga(true);
+        lancamentoDao.alterar(p);
+        return true;
+    }
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#gerarLancamentos(br.net.walltec.api.vo.LancamentoVO, java.util.Date)
+	 */
+	@Override
+	public void gerarLancamentos(LancamentoVO lancamentoOrigem, Date dataInicial,  Date dataFinal) throws NegocioException {
+		Date dataInicialAux = dataInicial; 
+		Short numParcela = lancamentoOrigem.getNumero();
+		while(dataInicialAux.before(dataFinal)) {
+			LancamentoVO lancamentoNovo = lancamentoOrigem;
+			lancamentoNovo.setId(null);
+			lancamentoNovo.setNumero(Integer.valueOf( ++numParcela).shortValue() );
+			lancamentoNovo.setIdParcelaOrigem(lancamentoOrigem.getId());
+			lancamentoNovo.setDataVencimentoStr(UtilData.getDataFormatada(dataInicialAux));
+			this.incluirVO(lancamentoNovo);
+			
+			dataInicialAux = UtilData.somarData(dataInicialAux, 1, ChronoUnit.MONTHS);
+		}
+	}
+}

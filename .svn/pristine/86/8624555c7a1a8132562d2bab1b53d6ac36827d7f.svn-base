@@ -1,0 +1,11 @@
+dropar: 
+Conta: ln_fixa, co_contareceita
+Lancamento: renomear Parcela para Lancamento
+       - va_utilizado
+	   
+	   
+ALTER TABLE conta DROP COLUMN ln_fixa
+ALTER TABLE conta DROP COLUMN co_contareceita
+
+ALTER TABLE lancamento DROP COLUMN va_utilizado
+	   

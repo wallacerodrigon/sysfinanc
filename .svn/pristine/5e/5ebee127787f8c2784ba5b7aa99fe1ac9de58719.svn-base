@@ -1,0 +1,54 @@
+/**
+ * 
+ */
+package br.net.walltec.api.relatorios;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.rest.dto.filtro.FiltroRelatorioDTO;
+
+/**
+ * @author wallace
+ *
+ */
+public class RelatorioAlunosTurma extends GeradorRelatorioAbstract {
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.relatorios.GeradorRelatorioAbstract#getParametros()
+	 */
+	@Override
+	public Map<String, Object> getParametros() {
+		Map<String, Object> mapParams = new HashMap<String, Object>();
+		mapParams.put("qtdAlunosTotal", Integer.valueOf(getListaDados().size()));
+		mapParams.put("qtdMensalidadesAbertoTotal", new Integer(0));
+		return mapParams;
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.relatorios.RelatorioIF#gerarRelatorio()
+	 */
+	@Override
+	public String gerarRelatorio() throws NegocioException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.relatorios.GeradorRelatorioAbstract#listarDados(br.net.walltec.api.rest.dto.filtro.FiltroRelatorioDTO)
+	 */
+	@Override
+	protected Collection<?> listarDados(FiltroRelatorioDTO filtro)
+			throws NegocioException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	
+}

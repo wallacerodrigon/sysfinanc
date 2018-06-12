@@ -1,0 +1,12 @@
+/**
+ * 
+ */
+package br.net.walltec.api.excecoes;
+
+/**
+ * @author tr301222
+ *
+ */
+public class PersistenciaPadraoException extends NegocioException {
+
+}

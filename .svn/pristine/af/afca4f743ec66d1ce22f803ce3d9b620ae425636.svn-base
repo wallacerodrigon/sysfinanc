@@ -1,0 +1,54 @@
+/**
+ * 
+ */
+package br.net.walltec.api.negocio.servicos.bean;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+
+import br.net.walltec.api.entidades.PlanoPagamento;
+import br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao;
+import br.net.walltec.api.negocio.servicos.PlanoPagamentoServico;
+import br.net.walltec.api.persistencia.dao.PlanoPagamentoDao;
+import br.net.walltec.api.persistencia.dao.impl.PlanoPagamentoDaoImpl;
+import br.net.walltec.api.vo.PlanoPagamentoVO;
+
+/**
+ * @author wallace
+ *
+ */
+@Named
+public class PlanoPagamentoServicoBean extends AbstractCrudServicoPadrao<PlanoPagamento, PlanoPagamentoVO> implements PlanoPagamentoServico {
+
+	@Inject
+	private EntityManager em;
+	
+	private PlanoPagamentoDao planoPagamentoDao;
+	
+	@PostConstruct
+	public void init(){
+		this.planoPagamentoDao = new PlanoPagamentoDaoImpl(em); 
+		setDao( planoPagamentoDao );
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao#getClasseEntidade()
+	 */
+	@Override
+	protected Class getClasseEntidade() {
+		// TODO Auto-generated method stub
+		return PlanoPagamento.class;
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao#getClassePojo()
+	 */
+	@Override
+	protected Class getClassePojo() {
+		// TODO Auto-generated method stub
+		return PlanoPagamentoVO.class;
+	}	
+	
+}

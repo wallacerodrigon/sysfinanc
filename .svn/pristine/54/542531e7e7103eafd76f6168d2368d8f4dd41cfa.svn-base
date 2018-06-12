@@ -1,0 +1,54 @@
+<app-loading [display]="isLoadingResults"></app-loading>
+<mat-card>
+  <app-content-header title="Usuários"></app-content-header>
+  <mat-table #table [dataSource]="dataSource" class="user-table" *ngIf="!isLoadingResults"
+             matSort matSortActive="created"
+             matSortDisableClear
+             matSortDirection="asc">
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <span>{{ row.id }}</span>
+      </mat-cell>
+    </ng-container>
+
+
+    <!-- Nome Column -->
+    <ng-container matColumnDef="first_name">
+      <mat-header-cell *matHeaderCellDef
+                       mat-sort-header
+                       disableClear="true">
+        Nome
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.first_name}}</mat-cell>
+    </ng-container>
+
+
+    <!-- Sobrenome Column -->
+    <ng-container matColumnDef="last_name">
+      <mat-header-cell *matHeaderCellDef>Sobrenome</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        {{ row.last_name }}
+      </mat-cell>
+    </ng-container>
+
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef fxFlex="180px">Ações</mat-header-cell>
+      <mat-cell *matCellDef="let row" fxFlex="180px">
+        <button mat-icon-button (click)="detail(row)" matTooltip="Detalhe">
+          <mat-icon>forward</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+
+  <mat-paginator [length]="resultsLength" [pageSize]="3" [pageIndex]="pageIndex"></mat-paginator>
+</mat-card>

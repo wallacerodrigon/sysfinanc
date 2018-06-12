@@ -1,0 +1,33 @@
+<div class="container-fluid">
+    <div class="panel panel-success col-md-6 col-md-offset-3" style="top:100px">
+        <div class="panel-heading">
+            <h4 class="text-center">Olá, seja bem vindo ao Sysfinanc. Identifique-se!</h4>
+        </div>
+
+        <div class="panel-body">  
+            <block-ui>          
+            <form class="row" (submit)="efetuarLogin($event)" >
+                <div class="form-group">
+                    <label>Usuário</label>
+                    <input class="form-control" 
+                           type="text" name="login" 
+                           [(ngModel)]="usuario.login" autofocus>
+                </div>
+
+                <div class="form-group">
+                     <label>Senha</label>
+                     <input class="form-control" 
+                            type="password" 
+                            name="senha" [(ngModel)]="usuario.senha">
+                </div>
+
+                <div class="form-group col-md-8 col-md-offset-4">
+                    <button name="btnLogin" class="btn btn-success" type="submit" autofocus #btnLogin [disabled]="efetuandoLogin" >Acessar o Sistema</button>
+                </div>
+            </form>
+            </block-ui>
+        </div>
+    </div>
+
+
+</div>

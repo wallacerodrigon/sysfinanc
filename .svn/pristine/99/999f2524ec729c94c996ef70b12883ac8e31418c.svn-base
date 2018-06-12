@@ -1,0 +1,148 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$app-base-color: (
+  50: #D4DADD,
+  100: #B0B7BB,
+  200: #8C949B,
+  300: #697379,
+  400: #4A545B,
+  500: #102027,
+  600: #102027,
+  700: #102027,
+  800: #102027,
+  900: #102027,
+  A100: #8C949B,
+  A200: #697379,
+  A400: #4A545B,
+  A700: #102027,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$app-primary-color: (
+  50: #e8f5e9,
+  100: #c8e6c9,
+  200: #a5d6a7,
+  300: #81c784,
+  400: #66bb6a,
+  500: #47895B,
+  600: #43a047,
+  700: #388e3c,
+  800: #2e7d32,
+  900: #1b5e20,
+  A100: #b9f6ca,
+  A200: #69f0ae,
+  A400: #00e676,
+  A700: #00c853,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $black-87-opacity,
+  )
+);
+
+$app-warn-color: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #AA1C14,
+  600: #e53935,
+  700: #d32f2f,
+  800: #c62828,
+  900: #b71c1c,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+@import 'ebony-clay';
+// Versao auto contraste
+@import 'ebony-clay-auto-contraste';
+
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+
+mat-card {
+  max-width: 90%;
+  margin: 2em auto;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.done {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+}
+
+.app-margin-right {
+  margin-right: 10px;
+}
+
+.app-form {
+  padding-left: 24px;
+}
+
+.seccional-option {
+  &.mat-select {
+    .mat-select-value {
+      color: rgba(255, 255, 255, 0.87);
+      display: inline;
+    }
+    .mat-select-placeholder, .mat-select-arrow {
+      color: rgba(255, 255, 255, 0.87);
+    }
+  }
+}

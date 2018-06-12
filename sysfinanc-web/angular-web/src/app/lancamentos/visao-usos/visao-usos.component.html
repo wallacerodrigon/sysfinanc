@@ -1,0 +1,21 @@
+<div class="modal-dialog"  style="width:80%">
+    <div class="modal-content" >
+        <div class="modal-header">
+          <button type="button" class="close" (click)="close()" >&times;</button>
+          <h4>Usos do Lançamento</h4>
+        </div>
+  
+        <div class="modal-body">
+                <app-crud-componente #crudComponente [nomesColunas]="colunas" 
+                                [listaDados]="listagem" 
+                                [tamanhoListagem]="tamanhoListagem"
+                                [atributosColunas]="atributos"
+                                (onExcluir)="excluir($event)" >
+                </app-crud-componente>     
+        </div>
+
+        <div class="modal-footer">
+                <label class="label label-info">Total: R$ {{totalStr}}</label>
+        </div>
+    </div>
+</div>    

@@ -1,0 +1,13 @@
+import { Component } from '@angular/core';
+
+@Component({
+  template: `
+  <div class="content">
+    <app-menu></app-menu>  
+    <router-outlet></router-outlet>
+  </div>
+  `
+})
+export class DashboardComponent { 
+    
+}

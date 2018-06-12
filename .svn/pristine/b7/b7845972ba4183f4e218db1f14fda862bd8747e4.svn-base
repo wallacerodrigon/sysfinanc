@@ -1,0 +1,11 @@
+import { DtoPadrao } from "app/dominio/dto/dto-padrao";
+
+export class UtilizacaoParcelasDto extends DtoPadrao {
+
+    constructor(public idLancamentoOrigem: number = null,
+                public valorUtilizado: number = null,
+                public dataUtilizacaoStr: string = null,
+                public descricao: string = null){
+        super();
+    }
+}

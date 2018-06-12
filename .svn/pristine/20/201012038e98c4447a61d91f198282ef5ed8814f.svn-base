@@ -1,0 +1,100 @@
+import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Http } from '@angular/http';
+import { Lotacao } from './lotacao';
+import { environment } from '../../../environments/environment';
+
+@Injectable()
+export class LotacoesDatabase {
+  /** Stream that emits whenever the data has been modified. */
+  dataChange: BehaviorSubject<Lotacao[]> = new BehaviorSubject<Lotacao[]>([]);
+  get data(): Lotacao[] { return this.dataChange.value; }
+
+  constructor(private http: Http, public snackBar: MatSnackBar) {
+    this.dataChange.next([]);
+    this.carregar();
+  }
+  carregar() {
+    this.http.get(environment.serviceBaseUrl + '/lotacoes')
+      .map(res => res.json())
+      .subscribe(lotacoes => {
+        const copiedData = this.data.slice();
+        copiedData.push(...lotacoes);
+        this.dataChange.next(copiedData);
+        }
+      , error => {
+          this.snackBar.open('Acesso Negado', 'Fechar', {
+          duration: 5000,
+          extraClasses: ['warn-snackbar']
+         });
+        });
+  }
+
+  incluir(lotacao: Lotacao) {
+    this.http.post(environment.serviceBaseUrl + '/lotacoes', lotacao)
+      .map(res => res.json())
+      .subscribe(local => {
+        const copiedData = this.data.slice();
+        copiedData.push(local);
+        this.dataChange.next(copiedData);
+        this.snackBar.open('Lotacao Salva com Sucesso', 'Fechar', {
+          duration: 3000,
+          extraClasses: ['success-snackbar']
+         });
+      }, error => {
+         this.snackBar.open('Acesso Negado', 'Fechar', {
+          duration: 5000,
+          extraClasses: ['warn-snackbar']
+         });
+      });
+  }
+
+  editar(lotacao: Lotacao) {
+    this.http.put(environment.serviceBaseUrl + '/lotacoes/' + lotacao.lotacao, lotacao)
+      .map(res => res.json())
+      .subscribe(local => {
+        const copiedData = this.data.slice();
+        copiedData.forEach((data, index) => {
+          if (data.lotacao === local.lotacao) {
+            copiedData.splice(index, 1, local);
+          }
+        });
+        this.dataChange.next(copiedData);
+        this.snackBar.open('Lotacao Salva com Sucesso', 'Fechar', {
+          duration: 3000,
+          extraClasses: ['success-snackbar']
+         });
+      }, error => {
+         this.snackBar.open('Acesso Negado', 'Fechar', {
+          duration: 5000,
+          extraClasses: ['warn-snackbar']
+         });
+      });
+  }
+
+  deletar(id: string) {
+    this.http.delete(environment.serviceBaseUrl + '/lotacoes/' + id)
+    .map(res => res.json())
+    .subscribe(lotacao => {
+        const copiedData = this.data.slice();
+        copiedData.forEach((data, index) => {
+          if (data.lotacao === lotacao) {
+            copiedData.splice(index, 1);
+          }
+        });
+        this.dataChange.next(copiedData);
+        this.snackBar.open('Lotacao Excluída com Sucesso', 'Fechar', {
+          duration: 3000,
+          extraClasses: ['success-snackbar']
+         });
+      }, error => {
+         this.snackBar.open('Acesso Negado', 'Fechar', {
+          duration: 5000,
+          extraClasses: ['warn-snackbar']
+         });
+      });
+  }
+
+}

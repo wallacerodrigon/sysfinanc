@@ -1,0 +1,38 @@
+<home-component></home-component>
+
+<div class="container-fluid">
+  <block-ui>   
+    <div class="row">
+        <div class="list-group col-md-4">
+          <a class="list-group-item disabled">
+            Aniversariantes recentes 
+          </a>
+          <a href="#/dashboard" class="list-group-item" *ngFor="let dash of listaAniversariantesPorData.slice(0,5)" >
+              <span class="badge">{{dash.quantidade}}</span>{{dash.descricao}}
+          </a>
+          <a   [routerLink]="['/rel-aniversariantes']" class="list-group-item text-center">Ver Mais...</a>
+        </div>
+
+        <div class="list-group col-md-4">
+          <a class="list-group-item disabled">
+            Atestados a vencer nos próximos 15 dias
+          </a>
+          <a href="#/dashboard" class="list-group-item" *ngFor="let dash of listaAtestadosPorData.slice(0,5)" >
+              <span class="badge">{{dash.quantidade}}</span>{{dash.descricao}}
+          </a>
+          <a  [routerLink]="['/rel-atestados', 'AV']"   class="list-group-item  text-center">Ver Mais...</a>
+        </div>
+
+        <div class="list-group col-md-4">
+          <a class="list-group-item disabled">
+            Atestados vencidos
+          </a>
+          <a href="#/dashboard" class="list-group-item" *ngFor="let dash of listaAtestadosVencidosPorData.slice(0,5)" >
+              <span class="badge">{{dash.quantidade}}</span>{{dash.descricao}}
+          </a>
+          <a  [routerLink]="['/rel-atestados', 'VE']" class="list-group-item  text-center">Ver Mais...</a>
+        </div>
+      
+    </div>
+  </block-ui>
+</div>    

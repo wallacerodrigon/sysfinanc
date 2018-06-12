@@ -1,0 +1,6 @@
+package br.net.walltec.api.persistencia.dao;
+
+
+public interface TipoContaDao {
+
+}

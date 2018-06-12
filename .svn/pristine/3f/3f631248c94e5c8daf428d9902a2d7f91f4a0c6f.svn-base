@@ -1,0 +1,16 @@
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+import {environment} from '../../environments/environment';
+
+export class Constantes { 
+    public static URL: string = environment.URL_SERVICOS;
+    public static DOMINIO : string = environment.DOMINIO;
+
+    public static MASCARA_MONETARIA = createNumberMask({ 
+              prefix: '', suffix: '', thousandsSeparatorSymbol:'.', allowDecimal:true, decimalSymbol:',', integerLimit:3,allowLeadingZeroes :true});
+
+    public static MASCARA_MONETARIA_MILHAR = createNumberMask({ 
+            prefix: '', suffix: '', thousandsSeparatorSymbol:'', allowDecimal:true, decimalSymbol:',', integerLimit:6,allowLeadingZeroes :true});
+  
+
+}

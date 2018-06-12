@@ -1,0 +1,24 @@
+/**
+ * 
+ */
+package br.net.walltec.api.excecoes;
+
+/**
+ * @author wallace 
+ *
+ */
+public class ConsultaSemResultadoException extends NegocioException {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	
+	/**
+	 * 
+	 */
+	public ConsultaSemResultadoException(String message) {
+		// TODO Auto-generated constructor stub
+	}	
+}

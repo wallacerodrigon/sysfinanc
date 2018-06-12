@@ -1,0 +1,37 @@
+import { NgModule } from '@angular/core';
+import { AuthGuard } from './app.auth-guard';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import {LoginComponent} from './identificacao/login/login.component';
+import { Routes, RouterModule } from '@angular/router';
+
+//modulos
+
+
+export const appRoutes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'unauthorized', component: UnauthorizedComponent, data: { state: 'unauthorized' } },
+  {
+    path: 'home',
+    loadChildren: 'app/home/home-module.module#HomeModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'dashboard',
+    loadChildren: 'app/dashboard/dashboard.module#DashboardModule',
+    canActivate: [AuthGuard]
+  },
+  
+  { path: '', pathMatch: 'full', redirectTo: '/login' },
+  { path: '**', redirectTo: '/login' }
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forRoot(
+      appRoutes,
+     // { enableTracing: true } // <-- debugging purposes only
+    )
+  ],
+})
+
+export class AppRoutingModule { }

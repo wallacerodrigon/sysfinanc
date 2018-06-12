@@ -1,0 +1,22 @@
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AppComponent} from './app.component';
+ 
+const defaultRoutes: Routes = [
+];
+
+/*export const routing = RouterModule.forRoot(defaultRoutes, {useHash: true, enableTracing: true});*/
+//forRoot apenas no módulo de rotas principal. Nos demais, forChild.
+@NgModule({
+  imports: [
+    RouterModule.forRoot(
+      defaultRoutes
+      //, { enableTracing: true } // <-- debugging purposes only
+    )
+  ],
+  exports: [
+    RouterModule
+  ]
+})
+export class RoutesRoutingModule {}
+ 

@@ -1,0 +1,5 @@
+export interface Lotacao {
+  lotacao: number;
+  sigla: string;
+  descricao: string;
+}

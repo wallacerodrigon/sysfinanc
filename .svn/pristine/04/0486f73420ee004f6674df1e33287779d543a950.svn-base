@@ -1,0 +1,22 @@
+package br.net.walltec.api.relatorios;
+
+
+
+import java.util.Collection;
+import java.util.Map;
+
+import br.net.walltec.api.excecoes.NegocioException;
+
+
+public interface RelatorioIF {
+
+	String gerarRelatorio() throws NegocioException;
+	
+	Map<String, Object> getParametros();
+	
+	Collection<?> getListaDados();
+	
+	byte[] getBytesRelatorioGerado();
+	
+	String getUrlRelatorioGerado();
+}

@@ -1,0 +1,74 @@
+import { DataSource } from '@angular/cdk/collections';
+import { LotacoesDatabase } from './lotacoes-database';
+import { Lotacao } from './lotacao';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/Rx';
+import { MatSort, MatPaginator } from '@angular/material';
+
+export class LotacoesDataSource extends DataSource<any> {
+  _filterChange = new BehaviorSubject('');
+  get filter(): string {
+      return this._filterChange.value;
+  }
+  set filter(filter: string) {
+      this._filterChange.next(filter);
+  }
+
+  constructor(private _lotacoesDatabase: LotacoesDatabase, private _sort: MatSort, private _paginator: MatPaginator) {
+    super ();
+  }
+
+
+  connect(): Observable<Lotacao[]> {
+   const displayDataChanges = [
+            this._lotacoesDatabase.dataChange,
+            this._filterChange,
+            this._sort.sortChange,
+            this._paginator.page
+        ];
+
+        return Observable.merge(...displayDataChanges).map(() => {
+            return this._lotacoesDatabase.data.slice().filter((item: Lotacao) => {
+                let searchStr = (item.lotacao + item.sigla + item.descricao).toLowerCase();
+                return searchStr.indexOf(this.filter.toLowerCase()) != -1;
+            });
+        })
+        .map((data) => this.getSortedData(data))
+        .map((data) => this.startPaginator(data));;
+    
+  }
+  disconnect() {}
+
+  getSortedData(data): Lotacao[] {
+    if (!this._sort.active || this._sort.direction == '') { return data; }
+
+    return data.sort((a, b) => {
+      let propertyA: number|string = '';
+      let propertyB: number|string = '';
+
+      switch (this._sort.active) {
+        case 'lotacao': [propertyA, propertyB] = [a.lotacao, b.lotacao]; break;
+        case 'sigla': [propertyA, propertyB] = [a.sigla, b.sigla]; break;
+        case 'descricao': [propertyA, propertyB] = [a.descricao, b.descricao]; break;
+      }
+
+      let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction == 'asc' ? 1 : -1);
+    });
+  }
+
+
+  startPaginator(data) : Lotacao[] {
+    // Pegue a fatia de dados da p�gina.
+    this._paginator.length = data.length;
+    const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+    if (startIndex !== 0 && startIndex >= data.length) {
+       this._paginator.pageIndex = Math.ceil(data.length / this._paginator.pageSize) - 1;
+   }
+    return data.splice(startIndex, this._paginator.pageSize);
+};
+
+
+}

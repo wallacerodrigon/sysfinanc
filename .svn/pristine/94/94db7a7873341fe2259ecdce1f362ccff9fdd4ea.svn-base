@@ -1,0 +1,12 @@
+export class RegistroExtratoDto {
+
+    constructor(public dataLancamento: string = null, 
+        public historico: string = null,   
+        public documento: string = null, 
+        public valor: string = null){}
+
+    public transformar(elem: any): RegistroExtratoDto {
+        Object.assign(this, elem);
+        return this;
+    } 
+}

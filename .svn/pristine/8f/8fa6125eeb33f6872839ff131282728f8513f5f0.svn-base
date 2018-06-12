@@ -1,0 +1,15 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { LoginComponent } from './login/login.component';
+import {FormsModule} from '@angular/forms';
+import { BlockUIModule } from 'ng-block-ui';
+import { AcessoNaoAutorizadoComponent } from './acesso-nao-autorizado/acesso-nao-autorizado.component';
+import { RouterModule, Routes }  from '@angular/router';
+
+@NgModule({
+  imports: [
+    CommonModule, FormsModule, BlockUIModule, RouterModule
+  ],
+  declarations: [LoginComponent, AcessoNaoAutorizadoComponent]
+})
+export class LoginModule { }

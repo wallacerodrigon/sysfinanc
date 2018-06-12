@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.net.walltec</groupId>
+  <artifactId>sysfinanc-api</artifactId>
+  <packaging>war</packaging>
+  <version>1.0.0</version>
+  <name>sysfinanc-api</name>
+  <url>http://maven.apache.org</url>
+
+	<properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	  	<jasper.version>6.4.1</jasper.version>
+	</properties>
+	  
+  <dependencies>
+
+  	<!-- basico JEE -->
+	<dependency>
+		<groupId>javax</groupId>
+		<artifactId>javaee-api</artifactId>
+		<version>7.0</version>
+		<scope>provided</scope>
+	</dependency>
+
+	
+	<!-- JWT -->
+	<dependency>
+	    <groupId>io.jsonwebtoken</groupId>
+	    <artifactId>jjwt</artifactId>
+	    <version>0.7.0</version>
+			<exclusions>
+				<exclusion> 
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+	</dependency>
+
+	<dependency>
+	  <groupId>commons-io</groupId>
+	  <artifactId>commons-io</artifactId>
+	  <version>2.4</version>
+	  <scope>provided</scope>		  
+	</dependency>	
+	
+	<dependency>
+		<groupId>commons-beanutils</groupId>
+		<artifactId>commons-beanutils</artifactId>
+		<version>1.8.2</version>
+	</dependency>
+	
+       <dependency>
+		<groupId>commons-logging</groupId>
+		<artifactId>commons-logging</artifactId>
+		<version>1.1.1</version>
+		<scope>provided</scope>	
+	</dependency>
+	
+	<!-- testes unitários -->
+  </dependencies>
+  
+  
+	<build>
+	    <finalName>sysfinanc-api</finalName>
+		<pluginManagement>
+			<plugins>
+				<!-- Plugin compiler para definicao da versao do java e encoding -->
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+	
+				<plugin>
+					<groupId>com.google.code.maven-replacer-plugin</groupId>
+					<artifactId>maven-replacer-plugin</artifactId>
+					<version>1.3.9</version>
+					<executions>
+						<execution>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>clean</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+			
+				
+			
+		</pluginManagement>
+	</build>  
+</project>

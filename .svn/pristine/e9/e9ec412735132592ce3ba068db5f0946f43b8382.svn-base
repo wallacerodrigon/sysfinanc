@@ -1,0 +1,215 @@
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { CrudComponente } from '../../componentes/crud-componente/crud-componente.component';
+import { ConciliacaoServiceService } from '../conciliacao-service.service';
+import { GravacaoArquivoDto } from '../../dominio/dto/gravacao-arquivo-dto';
+import { RequestOptionsArgs } from '@angular/http/src/interfaces';
+import { RegistroExtratoDto } from '../../dominio/dto/registro-extrato-dto';
+import { LancamentoVO } from '../../dominio/vo/lancamento-vo';
+import { LancamentoService } from '../../lancamentos/lancamento.service';
+import { FiltraParcelasDto } from '../../dominio/dto/filtra-parcelas-dto';
+import { UtilData } from '../../utilitarios/util-data';
+import { UtilObjeto } from '../../utilitarios/util-objeto';
+import { Formatadores } from '../../utilitarios/formatadores';
+
+declare var jQuery: any;
+
+@Component({
+  selector: 'app-processamento',
+  templateUrl: './processamento.component.html',
+  styleUrls: ['./processamento.component.css']
+})
+export class ProcessamentoComponent implements OnInit {
+  listaExtratoInteira: any;
+
+
+  private colunasPadrao: string[] = ["Descrição", "Data", "Documento", "Valor"];
+  private colunasNaoConciliados: string[] = ["Descrição","Vencimento", "Valor"];
+  private colunasVerificacao: string[] = ["Descrição","Vencimento", "Documento", "Valor", "Total Conciliado"];
+
+  private listagemExtrato: RegistroExtratoDto[] = [];
+  private listagemNaoConciliados: LancamentoVO[] = [];
+  private listagemConciliados: LancamentoVO[] = [];
+  private listagemVerificacao: RegistroExtratoDto[] = [];
+
+  private atributosExtrato: string[] = ["historico", "dataLancamento", "documento", "valor"];
+  private atributosNaoConciliados: string[] = ["descricao", "dataVencimentoStr", "valorStr"];
+  private atributosConciliados: string[] = ["descricao", "dataVencimentoStr", "numDocumento", "valorStr"];
+  private atributosTotalizadoresExt: string[] = ["","Total:", "", "0,00"];
+  private atributosTotalizadoresNConc: string[] = ["","Total:", "", "0,00"];
+  private atributosTotalizadoresConc: string[] = ["","Total:", "", "0,00"];
+  private atributosExtratoVerificacao: string[] = ["historico", "dataLancamento", "documento", "valor", "totalConciliadoStr"];
+
+  private tamanhoExtrato: number = 0;
+  private tamanhoNaoConciliados: number = 0;
+  private tamanhoConciliados: number = 0;
+  private tamanhoVerificacao: number = 0;
+
+  private conteudoArquivoBase64: string = null;
+  protected databaseFiltro: string;
+
+  @ViewChild("arquivo") arquivo: ElementRef;
+
+  @ViewChild("listaNaoConciliados") tabelaNaoConciliados: CrudComponente;
+  @ViewChild("database") database: ElementRef;
+
+  constructor(private servico: ConciliacaoServiceService, private lancamentoService: LancamentoService) { }
+
+  ngOnInit() {
+    this.databaseFiltro = UtilData.converterToString(new Date());
+    this.database.nativeElement.value = this.databaseFiltro;
+    
+    jQuery(this.database.nativeElement).datepicker();
+    this.tamanhoExtrato = 0;
+    this.tamanhoNaoConciliados = this.listagemNaoConciliados.length;
+    this.tamanhoConciliados = this.listagemConciliados.length;
+
+    this.buscarLancamentosConciliadosOuNao();
+  }
+
+  private separarDados(dados: Array<LancamentoVO>): Array<number> {
+      let totais: Array<number> = [0.00, 0.00];
+      this.listagemNaoConciliados = [];
+      this.listagemConciliados = [];    
+
+      dados.forEach( vo => {
+        if (vo.bolPaga && vo.numDocumento != null){
+          totais[0] += vo.valor;
+          this.listagemConciliados.push( vo );
+
+        } else if (vo.bolPaga && vo.numDocumento == null){
+          totais[1] += vo.valor;
+          this.listagemNaoConciliados.push( vo );
+        }
+      })
+
+      return totais;
+
+  }
+
+  private buscarLancamentosConciliadosOuNao(){
+      this.databaseFiltro = this.database.nativeElement.value;
+      let dadosData: string[] = this.databaseFiltro.split('/');
+
+      this.lancamentoService.filtrar(new FiltraParcelasDto(Number(dadosData[1]), Number(dadosData[2])))
+            .subscribe( dados => {
+                let totais:Array<number> = this.separarDados(dados);
+
+                this.tamanhoConciliados = this.listagemConciliados.length;
+                this.tamanhoNaoConciliados = this.listagemNaoConciliados.length;
+
+                if (this.tamanhoConciliados + this.tamanhoNaoConciliados === 0){
+                  alert('não há dados para conciliar')
+                }
+
+                this.atributosTotalizadoresNConc[3] = Formatadores.formataMoeda(totais[1]);
+                this.atributosTotalizadoresConc[3] = Formatadores.formataMoeda(totais[0]);
+            }, erro => {
+                console.log(erro);
+                alert(erro)
+            }  );
+  }
+
+  associarExtratoLancamento(){
+
+      let extratosMarcados: Array<any> = this.listagemExtrato.filter(extrato => extrato["selecionado"]);
+      let lancamentosNaoConciliados: Array<any> = this.listagemNaoConciliados.filter(extrato => extrato["selecionado"]);
+
+      if (extratosMarcados == null || extratosMarcados.length === 0 || 
+        lancamentosNaoConciliados == null || lancamentosNaoConciliados.length === 0){
+          alert('Selecione um extrato e um lançamento não conciliado');
+          return false;
+      }
+
+      if (extratosMarcados.length > 1){
+        alert('Selecione apenas um documento do extrato');
+        return false;
+      }
+      let numDocumento: string = extratosMarcados[0].documento;
+      lancamentosNaoConciliados = [];
+      this.listagemNaoConciliados.forEach(lancamento => {
+        if (lancamento["selecionado"]){
+          lancamento.numDocumento = numDocumento;
+          delete(lancamento["selecionado"]);
+
+          this.lancamentoService.alterar(lancamento)
+          .then(() => {
+              this.listagemConciliados.push(lancamento);
+            })
+          .catch(erro => alert(erro))
+        } else {
+          lancamentosNaoConciliados.push(lancamento);
+        }
+      })
+
+      this.listagemExtrato.forEach((data, index)=> {
+          if (data["selecionado"]){
+              this.listagemExtrato.splice(index, 1)
+          }
+      });
+      
+      this.tamanhoConciliados = this.listagemConciliados.length;
+
+      this.listagemNaoConciliados = lancamentosNaoConciliados;
+      this.tamanhoNaoConciliados = this.listagemNaoConciliados.length;
+      this.tamanhoExtrato = this.listagemExtrato.length;
+
+      this.gerarVerificacaoConciliados(this.listaExtratoInteira);
+   }
+
+   private isConciliado(numDocumento: string): boolean {
+     return this.listagemConciliados &&
+            this.listagemConciliados.filter(vo => vo.numDocumento == numDocumento).length > 0;
+   }
+
+   protected efetuarUpload(){
+        this.listagemExtrato = [];
+        this.tamanhoExtrato = 0;
+        this.listaExtratoInteira= [];
+        this.servico.enviarArquivo(
+                      new GravacaoArquivoDto(this.conteudoArquivoBase64)
+                    )
+            .subscribe(dados => {
+                dados.json().forEach(element => {
+                   let dto: RegistroExtratoDto = new RegistroExtratoDto().transformar(element);
+                    if (! this.isConciliado(dto.documento)){
+                        this.listagemExtrato.push(dto);            
+                    }
+                    this.listaExtratoInteira.push(dto);
+                });
+                this.tamanhoExtrato = this.listagemExtrato.length;
+                this.gerarVerificacaoConciliados(this.listaExtratoInteira);
+
+            },
+            erro => console.log(erro));
+   }
+
+   private gerarVerificacaoConciliados(extrato: RegistroExtratoDto[]): any {
+       this.listagemVerificacao = [];
+       this.tamanhoVerificacao = 0;
+
+       extrato.forEach(reg => {
+           let listaMesmoDocumento = this.listagemConciliados.filter(vo => vo.numDocumento.trim() == reg.documento.trim());
+           
+           let total: number = 0.00;
+           listaMesmoDocumento.forEach(vo => total += vo.valor);           
+           reg.totalConciliado = total;
+
+           this.listagemVerificacao.push(reg);
+       });
+
+       this.tamanhoVerificacao = this.listagemVerificacao.length;
+   }   
+
+   private onFileChange(event) {
+    let reader = new FileReader();
+    if(event.target.files.length > 0) {
+      let file = event.target.files[0];
+      this.conteudoArquivoBase64 = file;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+          this.conteudoArquivoBase64 = reader.result.split(',')[1];
+      };      
+    }
+  }   
+
+}

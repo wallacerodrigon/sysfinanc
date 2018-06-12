@@ -1,0 +1,91 @@
+package br.net.walltec.api.tokens;
+
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
+
+import br.net.walltec.api.utilitarios.Constantes;
+
+public class TokenManager {
+	
+
+	public String gerarToken(Integer idUsuario){
+		
+		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+		Date dataAtual = new Date();
+		//5 minutos
+		Calendar calDataHoraAtuais = Calendar.getInstance();
+		calDataHoraAtuais.setTime(dataAtual);
+		calDataHoraAtuais.set(Calendar.DAY_OF_MONTH, calDataHoraAtuais.get(Calendar.DAY_OF_MONTH));
+		calDataHoraAtuais.set(Calendar.HOUR_OF_DAY, 23);
+		calDataHoraAtuais.set(Calendar.MINUTE, 59);
+		Date dataExpiracao = calDataHoraAtuais.getTime();
+	
+		byte[] apiSecretBytes = codificarBase64(Constantes.FRASE_SECRETA);
+
+		byte[] loginCriptografado = codificarBase64(idUsuario.toString());
+		
+		JwtBuilder builder = Jwts.builder()
+						.setIssuedAt(dataAtual)
+						.setSubject(new String(loginCriptografado))
+						.setExpiration(dataExpiracao)
+						.signWith(signatureAlgorithm, apiSecretBytes);
+		
+		return builder.compact();
+	}
+
+	/**
+	 * @param texto
+	 * @return
+	 */
+	private byte[] codificarBase64(String texto) {
+		return Base64.getEncoder().encode(texto.getBytes());
+	}
+	
+	public Boolean isTokenValido(String token){
+		try {
+			Claims claims = Jwts.parser()
+					.setSigningKey(codificarBase64(Constantes.FRASE_SECRETA))
+					.parseClaimsJws(token).getBody();
+			if ( claims.getExpiration().before(new Date()) ){
+				return false;
+			}
+			return true;
+		} catch(ExpiredJwtException e){		
+			System.out.println("Token inv�lido");
+			return false;
+		}
+	}
+	
+	
+	public String getSubject(String token){
+		try {
+			Claims claims = Jwts.parser()
+					.setSigningKey(codificarBase64(Constantes.FRASE_SECRETA))
+					.parseClaimsJws(token).getBody();
+			String subjectDescriptografado = new String(decodificarBase64(claims.getSubject()) );
+
+			return subjectDescriptografado;
+		} catch(ExpiredJwtException e){		
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * @param texto
+	 * @return
+	 */
+	private byte[] decodificarBase64(String texto) {
+		return Base64.getDecoder().decode(texto.getBytes());
+	}
+
+
+}

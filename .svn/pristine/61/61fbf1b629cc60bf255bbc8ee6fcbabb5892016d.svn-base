@@ -1,0 +1,14 @@
+.texto {
+    top: 20px;
+    padding: 5px;
+    font-size: 25px;
+    text-align: center;
+  	opacity:0.65;
+	-moz-opacity: 0.65;
+	filter: alpha(opacity=65);
+}
+
+.imagem-centro {
+    position: fixed;
+    margin: 0px auto;
+}

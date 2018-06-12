@@ -1,0 +1,38 @@
+/**
+ * 
+ */
+package br.net.walltec.api.utilitarios;
+
+/**
+ * @author wallace
+ *
+ */ 
+public class Constantes {
+	
+	public static final String URI_WEBSERVICES =  "http://localhost:8080/academia-api/sg";
+
+	public static final String PERSISTENCE_UNIT ="puAcademia";
+	
+	public static final String PERSISTENCE_UNIT_TESTES ="puAcademiaTestes";
+	
+	public static final String FRASE_SECRETA = "21styllegymsw2017mngrJuly";
+
+	public static final long TEMPO_EXPIRACAO_TOKEN = 1L; //57600000L;// 2 horas minutos
+	
+	public static final int REGISTROS_POR_FILTRO = 50;
+	
+	public static final String TAG_TOKEN = "x-access-token";
+	
+	public static final int QTD_MESES_PERMITIDO_REATIVACAO = 3;
+
+	public static final int PRAZO_ATESTADO_A_VENCER = 15;
+
+	public static final String REAL_PATH_RELATORIOS = "relatorios";
+
+	public static final String REAL_PATH_LOGOS = "logos";
+	
+	public static final int PLANO_PAGAMENTO_AVISTA = 1;
+	
+	public static final String ARQUIVO_CONFIGURACAO = "/config/propriedades.properties";
+
+}

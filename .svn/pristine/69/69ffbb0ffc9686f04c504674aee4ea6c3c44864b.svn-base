@@ -1,0 +1,153 @@
+/**
+ * 
+ */
+package br.net.walltec.api.rest;
+
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import br.net.walltec.api.dto.FiltraParcelasDto;
+import br.net.walltec.api.dto.UtilizacaoParcelasDto;
+import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.excecoes.WebServiceException;
+import br.net.walltec.api.negocio.servicos.LancamentoServico;
+import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
+import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
+import br.net.walltec.api.rest.dto.BaixaLancamentoDTO;
+import br.net.walltec.api.vo.LancamentoVO;
+import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
+
+
+/**
+ * @author Administrador
+ * 
+ */
+
+//TODO: atualizar as urls para n?o ter infinitivo e sim substantivos.
+//TODO: Seguir a seguinte padroniza??o: PUT - atualiza; POST - cria;
+@Path("/lancamentos")
+@Produces(value=MediaType.APPLICATION_JSON)
+public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Inject
+	private LancamentoServico servico;
+
+
+	@POST
+    @Path(value="/buscarLancamentos")
+	public Response buscarLancamentos(FiltraParcelasDto dto){
+        try {
+            return Response.ok(servico.listarParcelas(dto)).build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+        }
+	}	
+
+	@POST
+	@Path(value="/baixar")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response baixarLancamento(BaixaLancamentoDTO dto){
+        try {
+            servico.baixarParcelas(dto.getListaIdsLancamentos());
+            return Response.accepted().build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        }
+    }
+	
+	
+	@POST
+	@Path(value="/utilizar")
+	public Response utilizarLancamento(UtilizacaoParcelasDto dto){
+        try {
+            servico.utilizarLancamento(dto);
+            return Response.accepted().build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        }
+		
+	}	
+
+	@GET
+	@Path(value="/listarHistoricoUso")
+	public Response listarHistoricoUsos(@QueryParam("idLancamento") Integer idLancamento){
+        try {
+            List<UtilizacaoLancamentoVO> listarHistoricoUso = servico.listarHistoricoUso(idLancamento);
+			return Response.ok(listarHistoricoUso).build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        }
+    }
+
+
+	@Override
+	public CrudPadraoServico<?, ?> getServico() {
+		return servico;
+	}
+
+	@Override
+	public Response incluir(LancamentoVO objeto) throws WebServiceException {
+        try {
+            servico.incluirVO(objeto);
+            return Response.ok().build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+        }
+	}
+
+	@Override
+	public Response alterar(LancamentoVO objeto) throws WebServiceException {
+        try {
+            servico.alterarVO(objeto);
+            return Response.ok(objeto.getId().toString()).build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+        }
+	}
+
+	@Override
+	public Response excluir(Integer idChaveObjeto) throws WebServiceException {
+        try {
+            servico.excluir(idChaveObjeto);
+            return Response.ok().build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+        }
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.rest.RequisicaoRestPadrao#listar()
+	 */
+	@Override
+	public Response listar() throws WebServiceException {
+		return Response.noContent().build();
+	}
+}
+
+

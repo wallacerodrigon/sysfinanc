@@ -1,0 +1,63 @@
+
+.caixa-menu {
+    height: 80px;
+    width: 100%;
+    top: 0px;
+    vertical-align: middle;
+   	box-shadow: 5px 5px 5px rgba(0,0,0, 0.5);
+
+}
+
+.img-header-transp {
+    float: left;  
+    position: relative;
+    height: 80px;    
+    margin-left: 0px;
+}
+
+.caixa-dados {
+  	opacity:0.65;
+	-moz-opacity: 0.65;
+	filter: alpha(opacity=65);
+
+}
+
+.sistema-autor {
+    position: absolute;
+    top:0px;
+    right: 0px;
+    font-size: 18px;
+    height: 80px;
+    text-align: right;    
+    margin-right: 0px
+}
+
+.topright {
+    top:0px;
+}
+
+.centerright {
+    top:30px;
+}
+
+.bottomright {
+    top:60px;
+}
+
+@media(max-width:768px){
+    .caixa-menu {
+        height: 80px;
+        width: 100%;
+        top: 0px;
+        vertical-align: middle;
+    }
+
+    .img-header-transp {
+        height: 80px;    
+    }
+
+    .sistema-autor {
+        display: none;
+    }
+
+}

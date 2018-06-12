@@ -1,0 +1,54 @@
+<div class="row">
+    
+    <div class="col col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button class="btn btn-info  glyphicon glyphicon-chevron-left" (click)="filtrarAnterior()"></button>
+                            <label class="text-info">{{mes + '/'+ ano}}</label>
+                            <button class="btn btn-info glyphicon glyphicon-chevron-right" (click)="filtrarProximo()"></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-body">
+                    <div class="row" *ngFor="let resumo of resumos">
+                        <label class="col-md-8 col-lg-6 col-xs-12">{{resumo.nome}}:</label>
+                        <a href="javascript:void(0)" class="col-md-4  col-lg-6 col-xs-12 text-right" 
+                            (click)="filtrarLancamentos(resumo.filtro)">{{resumo.valor}} <i class="glyphicon glyphicon-search"></i></a>
+                    </div>
+                
+                    <div class="row">
+                        <div>
+                            <button type="button" class="btn btn-info col col-md-5 col-lg-5 col-xs-12" (click)="filtrar()">
+                                <i class="glyphicon glyphicon-filter"></i> Listar Tudo</button> 
+
+                            <button type="button" class="btn btn-success col col-md-5 col-lg-5 col-xs-12 col-md-offset-1" (click)="baixarLista()">
+                                <i class="glyphicon glyphicon-ok"></i> Baixar</button>
+                        </div> 
+                    </div>
+                </div>
+                        
+            </div>
+    </div>
+    
+    <div class="col col-md-9">
+        <app-crud-componente #crudComponente [nomesColunas]="colunas" 
+                        [listaDados]="listagem" 
+                        [tamanhoListagem]="tamanhoListagem"
+                        [atributosColunas]="atributos"
+                        [exibeAcoes]="true"
+                        [exibeExcluir]="true"
+                        [exibeEditar]="true"
+                        [listaAcoes]="listaAcoes"
+                        [exibeCheckboxes]="true"
+                        [exibeTotalizadores]="true"
+                        [totalizadores]="totalizadores"
+                        (onExcluir)="excluir($event)"
+                        (onEditar)="editar($event)" >
+        </app-crud-componente>
+    </div>
+</div>
+
+

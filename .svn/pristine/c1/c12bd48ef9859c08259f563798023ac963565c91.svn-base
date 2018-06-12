@@ -1,0 +1,22 @@
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+
+export class Constantes {
+//teste 
+    public static URL_LOCAL: string = "http://localhost:8080";
+    public static URL_BASE: string = "/academia-api/sg";
+    public static URL1: string = Constantes.URL_LOCAL + Constantes.URL_BASE;
+    public static URL: string = Constantes.URL_BASE;
+
+    public static MASCARA_TELEFONE = ['(', /[1-9]/, /\d/, ')', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+    public static MASCARA_CELULAR_COM_NOVE = ['(', /[1-9]/, /\d/, ')',/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+    public static MASCARA_CPF = [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-',/\d/, /\d/];        
+    public static MASCARA_DATA = [/\d/,/\d/,'/',/\d/,/\d/,'/',/\d/,/\d/,/\d/,/\d/ ];        
+    public static MASCARA_HORA = [/[0-2]/,/\d/,':',/[0-5]/,/[0-9]/];     
+
+    public static MASCARA_MONETARIA = createNumberMask({ 
+              prefix: '', suffix: '', thousandsSeparatorSymbol:'.', allowDecimal:true, decimalSymbol:',', integerLimit:3,allowLeadingZeroes :true});
+
+
+
+}

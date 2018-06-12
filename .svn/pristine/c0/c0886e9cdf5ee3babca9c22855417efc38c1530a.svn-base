@@ -1,0 +1,19 @@
+export class UsuarioVO {
+
+	constructor(public idUsuario: number = null,
+                public nomeUsuario: string = null,
+                public descLogin: string = null,
+                public perfil: string = null,
+                public situacao: string = 'A',
+                public descPerfil: string = null){
+    }
+
+    public transformar(element: any){
+        Object.assign(this, element);
+    }
+
+    public get descSituacao(){
+        return this.situacao ==='A' ? 'Ativa': 'Inativa';
+    }
+
+}

@@ -1,0 +1,26 @@
+<img src="../assets/logo_sistema_completo.png" class="demo-avatar">
+<div class="container-fluid centralizarLogin">
+<form [formGroup]="rForm" (ngSubmit)="efetuarLogin(rForm.value)">
+    
+  <div class="row">
+    <div class="col-md-12">
+      <mat-input-container class="input-basic">
+        <input matInput placeholder="Login" formControlName="login">
+      </mat-input-container>
+     </div>
+     <div class="col-md-12">
+        <mat-input-container class="input-basic" >
+          <input matInput placeholder="Senha" formControlName="senha">
+        </mat-input-container>
+     </div>
+
+     <div class="col-md-12">
+        <button mat-raised-button>Entrar</button>     
+     </div>
+
+ </div>
+
+
+ </form>
+
+</div>

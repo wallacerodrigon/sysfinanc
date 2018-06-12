@@ -1,0 +1,77 @@
+/**
+ * 
+ */
+package br.net.walltec.api.enums;
+
+/**
+ * @author wallace
+ *
+ */
+public enum EnumRelatorios {
+	
+	LISTA_ANIVERSARIANTES("relatorio-aniversariantes.jasper", "aniversariantes.pdf", "Relatório de Aniversariantes"),
+	
+	LISTA_TURMA("relatorio-alunos-turma.jasper", "alunos-turma.pdf", "Relatório de Alunos por Turma"),
+	
+	LISTA_ATESTADOS("relatorio-atestados.jasper", "atestados.pdf", "Relatório de Atestados"),
+	
+	LISTA_AULAS_EXPERIMENTAIS("relatorio-aulas-experimentais.jasper", "aula-experimentais.pdf", "Relatório de Aulas Experimentais"), 
+	
+	LISTA_RECEBIMENTOS("relatorio-recebimentos-diversos.jasper", "relatorio-recebimentos-diversos.pdf", "Relatório de Recebimentos"),
+	
+	RECIBO_PAGAMENTO("relatorio-recibo.jasper", "recibo.pdf", "Recibo"),
+	
+	LISTA_MENSALIDADES_GERADAS("relatorio-mensalidades-geradas.jasper", "mensalidades.pdf", "Relatório de Mensalidades"),
+	
+	LISTA_RECEBIMENTOS_PROFESSOR("relatorio-recebimentos-professor.jasper", "relatorio-professor.pdf", "Relatório de Recebimentos por Professor");
+	
+	
+	private String nomeRelatorio;
+	
+	private String nomeSaida;
+	
+	private String tituloRelatorio;
+
+	private EnumRelatorios(String nomeRelatorio, String nomeSaida, String tituloRelatorio) {
+		this.nomeRelatorio = nomeRelatorio;
+		this.setTituloRelatorio(tituloRelatorio);
+		this.setNomeSaida(nomeSaida);
+	}
+
+	public String getNomeRelatorio() {
+		return nomeRelatorio;
+	}
+
+	public void setNomeRelatorio(String nomeRelatorio) {
+		this.nomeRelatorio = nomeRelatorio;
+	}
+
+	/**
+	 * @return the nomeSaida
+	 */
+	public String getNomeSaida() {
+		return nomeSaida;
+	}
+
+	/**
+	 * @param nomeSaida the nomeSaida to set
+	 */
+	public void setNomeSaida(String nomeSaida) {
+		this.nomeSaida = nomeSaida;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getTituloRelatorio() {
+		// TODO Auto-generated method stub
+		return tituloRelatorio;
+	}
+
+	/**
+	 * @param tituloRelatorio the tituloRelatorio to set
+	 */
+	public void setTituloRelatorio(String tituloRelatorio) {
+		this.tituloRelatorio = tituloRelatorio;
+	}
+}

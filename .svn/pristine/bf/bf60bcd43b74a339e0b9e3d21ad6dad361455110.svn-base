@@ -1,0 +1,14 @@
+import { SistraFrontendPage } from './app.po';
+
+describe('sistra-frontend App', () => {
+  let page: SistraFrontendPage;
+
+  beforeEach(() => {
+    page = new SistraFrontendPage();
+  });
+
+  it('should display message saying app works', () => {
+    page.navigateTo();
+    expect(page.getParagraphText()).toEqual('app works!');
+  });
+});

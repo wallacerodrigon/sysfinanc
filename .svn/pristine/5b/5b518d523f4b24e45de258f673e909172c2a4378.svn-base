@@ -1,0 +1,58 @@
+<div>
+
+    <form>
+      <div class="form-group">
+          <div class="row">
+              <div class="col col-md-4">
+                  <label for="rubricas">Rubrica</label>
+                  <select id="rubricas" class="form-control">
+                      <option>selecione</option>
+                  </select>
+              </div>
+
+              <div class="col-md-2">
+                  <label for="vencimento">Vencimento Base</label>
+                  <input type="text"  class="form-control">
+              </div>
+
+              <div class='col-md-2'>
+                  <label for="qtdGerar">Qtd. a gerar</label>
+                  <input type="number"  class="form-control">
+              </div>
+
+              <div class='col-md-2'>
+                  <label for="qtdGerar">Valor</label>
+                  <input type="number"  class="form-control">
+              </div>
+          </div>
+      </div>
+
+      <div class="row">
+          <div class="col-md-8">
+              <label>Descrição</label>
+              <input type="text" class="form-control">
+          </div>
+
+          <div class="col-md-4">
+              <label>Parcial?</label>
+              <input type="radio" class="radio-inline" name="parcial" value="S">Sim
+              <input type="radio" class="radio-inline" name="parcial" value="N">Não
+          </div>
+
+      </div>
+
+      <div class="row">
+          <button class="btn btn-success">Gerar</button>
+      </div>
+
+      <div class="row">
+    
+      </div>
+
+      <div class="row">
+    
+      </div>
+                    
+    </form>
+
+</div>

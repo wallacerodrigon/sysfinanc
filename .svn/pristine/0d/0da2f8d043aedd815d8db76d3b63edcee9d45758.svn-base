@@ -1,0 +1,50 @@
+package br.net.walltec.api.importacao.estrategia;
+
+import br.net.walltec.api.dto.RegistroExtratoDto;
+import br.net.walltec.api.excecoes.WalltecException;
+import com.sun.xml.internal.ws.wsdl.writer.document.Import;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ImportadorBB implements ImportadorArquivo {
+    @Override
+    public List<RegistroExtratoDto> importar(String nomeArquivo, byte[] dadosArquivo) throws WalltecException {
+        BufferedReader reader = null;
+        List<RegistroExtratoDto> linhas = new ArrayList<RegistroExtratoDto>();
+        try {
+            reader = new BufferedReader(new FileReader(nomeArquivo));
+            String linha = null;
+            int row = 0;
+            while( (linha = reader.readLine()) != null){
+                ++row;
+
+                if (linha.contains("S A L D O")){
+                    break;
+                }
+                if (row >= 10){
+
+                    if (linha.substring(0,16).trim().isEmpty()) {
+                        RegistroExtratoDto dto = linhas.get(linhas.size()-1);
+                        dto.setHistorico( dto.getHistorico() + " " +linha.trim());
+                    } else {
+                        RegistroExtratoDto dto = new RegistroExtratoDto();
+                        dto.setDataLancamento(linha.substring(0,8));
+                        dto.setHistorico(linha.substring(17, 43).trim());
+                        dto.setDocumento(linha.substring(43, 66).trim());
+                        dto.setValor( linha.substring(67,78).trim() );
+                        linhas.add(dto);
+                    }
+                }
+            }
+            reader.close();
+        } catch (java.io.IOException e) {
+            throw new WalltecException(e.getMessage());
+        }
+
+        return linhas;
+    }
+}

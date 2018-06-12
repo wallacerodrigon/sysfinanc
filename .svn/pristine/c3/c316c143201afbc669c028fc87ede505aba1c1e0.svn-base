@@ -1,0 +1,16 @@
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+
+@Component({
+  selector: 'app-mapa-mensal',
+  templateUrl: './mapa-mensal.component.html',
+  styleUrls: ['./mapa-mensal.component.css'],
+  encapsulation: ViewEncapsulation.None
+})
+export class MapaMensalComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}

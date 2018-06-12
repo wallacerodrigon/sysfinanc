@@ -1,0 +1,17 @@
+import { LotacoesListComponent } from '../lotacoes-list/lotacoes-list.component';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
+
+@Component({
+  selector: 'app-lotacoes-excluir',
+  templateUrl: './lotacoes-excluir.component.html',
+  styleUrls: ['./lotacoes-excluir.component.css']
+})
+export class LotacoesExcluirComponent implements OnInit {
+
+  constructor(public dialogRef: MatDialogRef<LotacoesListComponent>) { }
+
+  ngOnInit() {
+  }
+
+}

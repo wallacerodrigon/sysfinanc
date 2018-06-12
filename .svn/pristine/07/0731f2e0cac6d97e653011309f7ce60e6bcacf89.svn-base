@@ -1,0 +1,15 @@
+import { GerenciadorPadraoVO } from "app/dominio/vo/gerenciador-padrao-vo";
+
+export class ContaVO extends GerenciadorPadraoVO {
+
+    constructor(public id: number = null,
+        public dataCadastroStr: string = null,
+        public descricao: string = null,
+        public idTipoConta: number = null,
+        public descTipoConta: string = null,
+        public despesa: boolean = true){
+            super();
+        }
+
+    
+}

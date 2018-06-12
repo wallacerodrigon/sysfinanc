@@ -1,0 +1,39 @@
+/**
+ * 
+ */
+package br.net.walltec.api.conversores;
+
+import java.util.Date;
+
+import org.apache.commons.beanutils.BeanUtilsBean;
+
+import br.net.walltec.api.entidades.Usuario;
+import br.net.walltec.api.enums.EnumSimNao;
+import br.net.walltec.api.vo.UsuarioVO;
+
+/**
+ * @author tr301222
+ *
+ */
+public class TestaConversores {
+
+	public static void main(String[] args) {
+		
+		AbstractConverter<Usuario, UsuarioVO> conversorPadrao = new AbstractConverter<Usuario, UsuarioVO>() {
+		};
+	
+		Usuario usuario = new Usuario();
+		usuario.setDataInclusao(new Date());
+		usuario.setDataUltimoAcesso(new Date());
+		usuario.setDescLogin("descLogin");
+		usuario.setDescSenha("descSenha");
+		usuario.setIdUsuario(100);
+		usuario.setNomeUsuario("nomeUsuario");
+		usuario.setPerfil("perfil");
+		usuario.setPrimeiroAcesso(EnumSimNao.S);
+		usuario.setQtdAcessos(100L);
+		usuario.setSituacao("situacao");
+		
+		UsuarioVO vo = conversorPadrao.converterEntidadeParaPojo(usuario);
+	}
+}

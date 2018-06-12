@@ -1,0 +1,63 @@
+import {RouterModule, Routes} from '@angular/router';
+import {AppComponent} from './app.component';
+import {HomePageComponent} from './home/home/home.component';
+import {LoginComponent} from './login/login/login.component';
+import {ModalidadeComponent} from './cadastros/modalidade/modalidade/modalidade.component';
+import {ProfessorComponent} from './cadastros/professor/professor/professor.component';
+import {AlunoComponent} from './cadastros/alunos/aluno/aluno-componente/aluno.component';
+import {AlteracaoSenhaComponent} from './cadastros/usuarios/alteracao-senha/alteracao-senha.component';
+import {AlteracaoPrimeiraSenhaComponent} from './cadastros/usuarios/alteracao-primeira-senha/alteracao-primeira-senha.component';
+import { UsuarioComponent } from './cadastros/usuarios/usuario/usuario.component';
+import {HomeDashboardComponent} from './dashboard/home-dashboard/home-dashboard.component';
+import { TurmaComponent } from './cadastros/turma/turma/turma.component';
+import { PlanoPagamentoComponent } from './cadastros/plano-pagamento/plano-pagamento/plano-pagamento.component';
+import { AulaExperimentalComponent } from './cadastros/aula-experimental/aula-experimental/aula-experimental.component';
+import { PagamentoMensalidadeAlunoComponent } from './financeiro/financeiro/pagamento-mensalidade/pagamento-mensalidade-aluno/pagamento-mensalidade-aluno.component';
+import { PagamentoAvulsoComponent } from './financeiro/financeiro/pagamento-avulso/pagamento-avulso/pagamento-avulso.component';
+
+import {RelAniversariantesComponent} from './relatorios/rel-aniversariantes/rel-aniversariantes.component';
+import {RelAtestadosComponent} from './relatorios/rel-atestados/rel-atestados.component';
+import { RelTurmaComponent } from './relatorios/rel-turma/rel-turma.component';
+import { RelMensalidadesComponent } from './relatorios/rel-mensalidades/rel-mensalidades.component';
+import { RelAulasExperimentaisComponent } from './relatorios/rel-aulas-experimentais/rel-aulas-experimentais.component';
+import { RelPagamentosProfessorComponent } from './relatorios/rel-pagamentos-professor/rel-pagamentos-professor.component';
+
+const appRoutes: Routes = [
+    {path: '', redirectTo: '/login',  pathMatch: 'full'},
+    {path: 'login', component: LoginComponent},
+
+    /**home */
+    {path: 'dashboard', component: HomeDashboardComponent},
+
+    /**cadastros */
+    {path: 'modalidade', component: ModalidadeComponent},
+    {path: 'professor', component: ProfessorComponent},
+    {path: 'aluno', component: AlunoComponent},
+    {path: 'turma', component: TurmaComponent},
+    {path: 'plano-pagamento', component: PlanoPagamentoComponent},
+    {path: 'usuario', component: UsuarioComponent},
+    {path: 'aula-experimental', component: AulaExperimentalComponent},
+
+    /**relatorios */
+    {path: 'rel-aniversariantes', component: RelAniversariantesComponent},
+    {path: 'rel-atestados/:tipoInicializacao', component: RelAtestadosComponent},
+    {path: 'rel-atestados', component: RelAtestadosComponent},
+    {path: 'rel-turma', component: RelTurmaComponent},
+    {path: 'rel-aulas', component: RelAulasExperimentaisComponent},
+    {path: 'rel-mensalidade', component: RelMensalidadesComponent},
+    {path: 'rel-pagamento-professor', component: RelPagamentosProfessorComponent},
+
+    /**financeiro */
+    {path: 'pagamento-aluno', component: PagamentoMensalidadeAlunoComponent},
+    {path: 'pagamento-avulso', component: PagamentoAvulsoComponent},
+
+    /**usuarios*/    
+    {path: 'altera-senha-primeiro-acesso', component: AlteracaoPrimeiraSenhaComponent},
+    {path: 'altera-senha', component: AlteracaoSenhaComponent},
+    
+
+];
+
+export const routing = RouterModule.forRoot(appRoutes, {useHash: true});
+
+ 

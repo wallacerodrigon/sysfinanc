@@ -1,0 +1,15 @@
+import { TestBed, inject } from '@angular/core/testing';
+
+import { RubricasServiceService } from './rubricas-service.service';
+
+describe('RubricasServiceService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [RubricasServiceService]
+    });
+  });
+
+  it('should be created', inject([RubricasServiceService], (service: RubricasServiceService) => {
+    expect(service).toBeTruthy();
+  }));
+});

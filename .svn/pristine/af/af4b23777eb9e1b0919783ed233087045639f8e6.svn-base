@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
+
+	<persistence-unit name="puSysfinanc" transaction-type="JTA">
+		<jta-data-source>java:/sysfinanc-ds</jta-data-source>
+		<class>br.net.walltec.api.entidades.Conta</class>
+		<class>br.net.walltec.api.entidades.Lancamento</class>
+		<class>br.net.walltec.api.entidades.ParcelaUtilizacao</class>
+		<class>br.net.walltec.api.entidades.Usuario</class>
+		<class>br.net.walltec.api.entidades.FormaPagamento</class>
+		<class>br.net.walltec.api.entidades.TipoConta</class>
+
+		
+		<properties>
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+		</properties>
+	</persistence-unit>
+
+</persistence>

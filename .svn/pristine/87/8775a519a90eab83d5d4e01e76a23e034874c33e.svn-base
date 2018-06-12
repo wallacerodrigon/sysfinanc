@@ -1,0 +1,4 @@
+package br.net.walltec.api.vo;
+
+public class ContaVO extends GerenciadorPadraoVO {
+}

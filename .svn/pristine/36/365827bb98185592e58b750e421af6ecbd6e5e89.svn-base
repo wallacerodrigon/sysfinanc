@@ -1,0 +1,25 @@
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { LotacoesEditarComponent } from './lotacoes-editar.component';
+
+describe('LotacoesEditarComponent', () => {
+  let component: LotacoesEditarComponent;
+  let fixture: ComponentFixture<LotacoesEditarComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ LotacoesEditarComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(LotacoesEditarComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
+});
