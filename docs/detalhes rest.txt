@@ -1,0 +1,52 @@
+(advanced rest Client)
+CRUD COM REST
+
+INCLUIR
+ (post)
+ - 201 criado com a url do recurso (find)
+ - (put) no caso de chaves naturais (cpf, p.exeplo)
+ALTERAR
+  (put)
+ - 204 (sucesso);
+ - 400 (quando ifnormação invliada for inforamada)
+ - 404 (not found)
+DELETAR
+  - 200 ok  
+  - 404 not found (retorna void)
+LISTAR
+ GET
+ - 200 ok
+ - 204 Nao content		
+FIND
+ GET
+ - 200 ok
+ - 404 not found
+
+ AUTENTICAÇÃO:
+(No web.xml)
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+      version="3.0">
+	  
+<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/rest/*
+			<web-resource-name>teste
+		<auth-constraint>
+			<role-name>*
+	  
+<login-config>
+		<auth-method>BASIC
+
+<security-role>
+			<role-name>*
+			
+			
+(No jboss)
+/bin do jboss adduser.bat
+
+
+no html:
+<headers>
+	"authorization": "BASIC senha com base 64"

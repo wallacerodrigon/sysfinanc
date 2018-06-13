@@ -1,0 +1,12 @@
+http://www.fabiovelloso.com.br/palestras/javaonebr2010.pdf
+ 
+http://www.tdstecnologiasp.com.br/rest-client-part-ii/
+ 
+https://demoisellelab.wordpress.com/2014/05/26/rest-e-autenticacao-basic/
+ 
+http://michalcodes4life.wordpress.com/2013/08/20/jaas-form-and-basic-authentication-on-jboss-7/
+ 
+ 
+http://stackoverflow.com/questions/17393845/securing-rest-api-in-jboss
+ 
+http://docs.jboss.org/resteasy/docs/2.3.1.GA/userguide/html/Authentication.html

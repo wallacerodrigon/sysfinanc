@@ -1,0 +1,3 @@
+mvn jboss-as:deploy
+mvn jboss-as:redeploy
+mvn jboss-as:undeploy

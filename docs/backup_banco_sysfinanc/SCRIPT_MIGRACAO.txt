@@ -1,0 +1,76 @@
+use wallace_personalControl;
+
+SET FOREIGN_KEY_CHECKS=0;
+
+truncate TABLE conta;
+truncate TABLE formapagamento;
+truncate TABLE listacompras;
+truncate TABLE naturezaproduto;
+truncate TABLE parcela;
+truncate TABLE produto;
+truncate TABLE produtocompras;
+truncate TABLE tipoconta;
+truncate TABLE tipolista;
+truncate TABLE usuario;
+
+#ALTER TABLE listacompras ADD ln_gerado BIT NOT NULL DEFAULT 0;
+#ALTER TABLE listacompras ADD dt_geracao TIMESTAMP NULL;
+
+INSERT INTO `usuario` (co_usuario, no_usuario, no_login, no_senha, email, dt_inclusao, dt_alteracao, 
+dt_ultimoAcesso, qt_acessos, ln_ativo, co_perfil) VALUES (1, 'wallace rodrigo', 'wal', '829a56cc8ffa56209e3a10b80d0bbdf8', 'wallacerodrigon@gmail.com', '2014-07-04 22:10:45', '2013-08-29 01:14:32', NULL, 1, 1,1);
+INSERT INTO `tipolista` (co_tipolista, no_tipolista) VALUES (1, 'Feira');
+INSERT INTO `tipolista` (co_tipolista, no_tipolista) VALUES (2, 'verduras/frutas');
+
+use contas;
+
+
+--migração de forma de pagamento
+INSERT INTO wallace_personalControl.formapagamento(co_formapagamento, no_formapagamento, ln_privado, co_usuario)
+SELECT co_forma, tx_forma, 1, 1 AS co_usuario FROM formapagto WHERE co_forma IN (SELECT co_formapagto FROM parcela);
+
+--tipoconta
+INSERT INTO wallace_personalControl.tipoconta
+SELECT co_tipoconta, no_tipoconta, 1 AS co_usuario FROM tipoconta ORDER BY no_tipoconta;
+
+--conta
+INSERT INTO wallace_personalControl.conta(co_conta, co_usuario,dt_cadastro,no_descricao,co_tipoConta,ln_fixa,ln_despesa)
+SELECT Co_Conta, 1 AS co_usuario, dt_cadastro, Descricao, Co_TipoConta, 1, CASE WHEN Classificacao = 'D' THEN 1 ELSE 0 END AS ln_despesa
+FROM conta;
+
+--parcela
+INSERT INTO wallace_personalControl.parcela(co_parcela,co_conta,nu_parcela,dt_vencimento,va_parcela,co_formapagamento,co_parcelaOrigem,dt_pagamento,va_pagamento)
+SELECT Nu_Parcela, Co_Conta, Co_Parcela, Dt_Venc, Val_Venc, Co_FormaPagto, 
+       case when Nu_ParcelaOrigem = 0 then null else nu_parcelaorigem end, 
+       Dt_Pagto, Val_Pagto
+FROM parcela;
+
+--naturezaproduto
+INSERT INTO wallace_personalControl.naturezaproduto(co_natureza, no_natureza)
+SELECT co_grupo, no_grupo FROM grupoproduto;
+
+--wallace_personalControl.listacompras
+INSERT INTO wallace_personalControl.listacompras(co_lista, co_tipolista,dt_compra,va_disponivel,co_usuario,dt_cadastro,dt_fechamento,co_tipogeracao,co_tipopreco, ln_gerado, dt_geracao)
+SELECT co_lista, 1 AS co_tipolista, dt_compra, va_disponivel, 1 AS co_usuario, dt_inclusao AS dt_cadastro, dt_encerrado AS dt_fechamento,1,1,
+       case when dt_encerrado is not null then 1 else 0 end as ln_gerado, dt_encerrado as dt_geracao
+FROM listacompras;
+
+--produto
+INSERT INTO wallace_personalControl.produto(co_produto,no_produto,va_unitario,dt_inclusao,dt_alteracao,ln_obrigatorio,bytes_imagem,ln_ativo,co_usuario,co_natureza)
+SELECT co_produto, no_produto, 0.00 AS va_unitario, now() AS dt_inclusao, now() AS dt_alteracao,
+       CASE WHEN In_Essencial = 'S' THEN 1 ELSE 0 END AS ln_obrigatorio, 
+       NULL AS bytes_imagem,
+       CASE WHEN In_Status ='A' THEN 1 ELSE 0 END AS ln_ativo,
+       1 AS co_usuario,
+       co_grupo AS co_natureza 
+FROM produto;
+
+
+--itenslista
+INSERT INTO wallace_personalControl.produtocompras(co_lista,co_produto,va_unitario,qt_unidade,va_orcado,dt_inclusao,dt_alteracao,ln_comprado, qt_orcado)
+SELECT co_lista,co_produto,va_produto,qt_produto,va_anterior,CASE WHEN dt_inclusao IS NULL THEN now() ELSE dt_inclusao END, dt_alteracao,
+CASE WHEN In_adquirido = 'S' THEN 1 ELSE 0 END AS ln_comprado, qt_produto
+FROM itenslista;
+
+use wallace_personalControl;
+
+SET FOREIGN_KEY_CHECKS=1;
