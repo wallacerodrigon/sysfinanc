@@ -1,7 +1,7 @@
 export class Constantes {
 
-    public static URL_BASE: string = "http://www.walltec.net.br/sysfinanc-api/rest";
-	//public static URL_BASE: string =  "http://localhost:8080/sysfinanc-api/rest";
+    //public static URL_BASE: string = "http://www.walltec.net.br/sysfinanc-api/rest";
+	public static URL_BASE: string =  "http://localhost:8080/sysfinanc-api/rest";
     //
    // 
     //"http://www.walltec.net.br/sysfinanc/rest";

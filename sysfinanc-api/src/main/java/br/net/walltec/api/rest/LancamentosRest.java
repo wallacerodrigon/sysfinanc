@@ -241,11 +241,6 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 		try {
 			ResumoMesAnoDTO retorno = servico.obterResumoMesAno(dtoFiltro);
-			retorno.setAno(ano);
-			retorno.setMes(mes);
-			retorno.setSaldoFinal(BigDecimal.TEN);
-			retorno.setTotalDespesas(BigDecimal.ONE);
-			retorno.setTotalReceitas(BigDecimal.ZERO);
 			return Response.ok().entity(retorno).build();
 		} catch (NegocioException e) {
 			e.printStackTrace();
@@ -263,17 +258,6 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 		try {
 			ResumoDetalhadoMesAnoDTO retorno = servico.obterResumoDetalhadoMesAno(dtoFiltro);
-			retorno.setAno(ano);
-			retorno.setMes(mes);
-			retorno.setSaldoFinal(BigDecimal.TEN);
-			retorno.setTotalDespesas(BigDecimal.ONE);
-			retorno.setTotalPagar(BigDecimal.TEN);
-			retorno.setTotalPago(BigDecimal.TEN);
-			
-			retorno.setTotalReceitas(BigDecimal.ZERO);
-			retorno.setTotalReceber(BigDecimal.TEN);
-			retorno.setTotalRecebido(BigDecimal.TEN);
-			
 			return Response.ok().entity(retorno).build();
 		} catch (NegocioException e) {
 			e.printStackTrace();

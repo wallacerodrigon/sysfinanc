@@ -27,7 +27,7 @@ export class LancamentoService {
   }
 
   private _getUriResumoMes(mes:Number, ano:Number){
-    return this._urlLancamentos + `/resumo-mes/${mes}/${ano}`;
+    return this._urlLancamentos + `/obter-resumo-mes/${mes}/${ano}`;
   }
 
   recuperarSaldo(dataReferencia: Date) {
@@ -39,7 +39,8 @@ export class LancamentoService {
         //.map(res => res.json())
         //.toPromise()
         .then(resumo => new SaldoLancamento(dataReferencia, parseFloat(resumo.totalReceitas), 
-                                            parseFloat(resumo.totalDespesas) ) );
+                                            parseFloat(resumo.totalDespesas),
+                                            parseFloat(resumo.saldoFinal) ) );
 
   }
 
@@ -62,7 +63,7 @@ export class LancamentoService {
              let lancFiltrados = lista.json().filter(item => item.despesa === isDespesa);
 
              lancFiltrados.forEach( dado => {
-                lancamentos.push( new LancamentoVO(dado.id, dado.descConta, dado.dataVencimentoStr, 
+                lancamentos.push( new LancamentoVO(dado.id, dado.descricao, dado.dataVencimentoStr, 
                                      dado.valor, 0, dado.bolPaga));
              });
 
@@ -75,11 +76,12 @@ export class LancamentoService {
           .post(this._urlLancamentos + "/gera", JSON.stringify(dtoGeracao));
   }
 
-  usarLancamentos(idLancOrigem:number, dataUtilizacao:Date, valorUtilizado:number){
+  usarLancamentos(idLancOrigem:number, dataUtilizacao:string, valorUtilizado:number){
+      let dataAux: string[] = dataUtilizacao.split("-");
       let dto = {
         "idLancamentoOrigem":idLancOrigem,
         "valorUtilizado": valorUtilizado,
-        "dataUtilizacaoStr": dataUtilizacao,
+        "dataUtilizacaoStr": dataAux[2]+"/"+ dataAux[1]+"/"+dataAux[0],
         "descricao":"utilizando parte do lançamento"
       };
       return this.http
@@ -123,22 +125,18 @@ export class LancamentoService {
 	}		
 
     recuperarResumoGeral(dataReferencia: Date) {
-
+        let mes: number = dataReferencia.getMonth();
+        let ano: number = dataReferencia.getFullYear();
         return this.http
-            .get(this._urlLancamentos +"?idUsuario=1&dataBase="+this._montarStrDataBase(dataReferencia))
-            .then(lancamentos => {
+            .get(this._urlLancamentos + `/obter-resumo-mes-detalhe/${mes}/${ano}`)
+            .then(retorno => {
                     let resumo : ResumoVO = new ResumoVO();
-                    
-                    lancamentos.forEach(item => {
-                        if (item.bolPaga){
-                            resumo.recPagas += item.bolDespesa ? 0.00 : item.valorVencimento;
-                            resumo.despPagas += item.bolDespesa ? item.valorVencimento : 0.00;
-                        } else {
-                            resumo.recNaoPagas += item.bolDespesa ? 0.00 : item.valorVencimento;
-                            resumo.despNaoPagas+= item.bolDespesa ? item.valorVencimento : 0.00;
-                        }
-                    });
-
+                    resumo.recPagas = retorno.totalRecebido;
+                    resumo.despPagas = retorno.totalPago;
+                    resumo.recNaoPagas = retorno.totalReceber;
+                    resumo.despNaoPagas= retorno.totalPagar;
+                    resumo.despesaTotal = retorno.totalDespesas;
+                    resumo.receitaTotal =retorno.totalReceitas;
                     return resumo;
             });        
         

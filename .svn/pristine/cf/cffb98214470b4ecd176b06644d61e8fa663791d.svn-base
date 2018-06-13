@@ -1,9 +1,0 @@
-export class UtilObjeto {
-
-    public static clonarObjeto(objeto: any): any {
-        let jsonObject: string = JSON.stringify(objeto);
-        let novoObjeto: any = JSON.parse(jsonObject);
-        return novoObjeto;
-    }
-
-}

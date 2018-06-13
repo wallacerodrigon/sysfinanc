@@ -15,7 +15,7 @@ export class LancamentoUtilizarPage {
     private _lancamentoOrigem: LancamentoVO;
     private _parent: LancamentoPage;
 
-    public dataUtilizacao:Date = new Date();
+    public dataUtilizacao:string = "";
     public valorUtilizado:number;   
 
 

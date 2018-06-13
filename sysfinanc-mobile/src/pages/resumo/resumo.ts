@@ -47,12 +47,12 @@ export class ResumoPage implements OnInit {
       return this._service
         .recuperarResumoGeral(this._dataReferencia)
         .then(resumo => {
-            this.resumoVO.despNaoPagas = resumo.despNaoPagas;
-            this.resumoVO.despPagas = resumo.despPagas;
+            // this.resumoVO.despNaoPagas = resumo.despNaoPagas;
+            // this.resumoVO.despPagas = resumo.despPagas;
 
-            this.resumoVO.recNaoPagas = resumo.recNaoPagas;
-            this.resumoVO.recPagas = resumo.recPagas;
-            
+            // this.resumoVO.recNaoPagas = resumo.recNaoPagas;
+            // this.resumoVO.recPagas = resumo.recPagas;
+            this.resumoVO = resumo;
             loader.dismiss();
         })
         .catch(erro => {

@@ -393,8 +393,8 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 		BigDecimal saldo = new BigDecimal(mapTotais.get(true)).subtract(new BigDecimal(mapTotais.get(false)));
 		
 		ResumoMesAnoDTO dto = new ResumoMesAnoDTO();
-		dto.setTotalDespesas(new BigDecimal(mapTotais.get(true)).setScale(2, RoundingMode.CEILING));
-		dto.setTotalReceitas(new BigDecimal(mapTotais.get(false)).setScale(2,RoundingMode.CEILING));
+		dto.setTotalDespesas(new BigDecimal(mapTotais.get(false)).setScale(2, RoundingMode.CEILING));
+		dto.setTotalReceitas(new BigDecimal(mapTotais.get(true)).setScale(2,RoundingMode.CEILING));
 		dto.setSaldoFinal(saldo);
 		
 		return dto;
