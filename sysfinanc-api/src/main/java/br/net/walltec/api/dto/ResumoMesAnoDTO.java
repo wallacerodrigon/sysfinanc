@@ -18,6 +18,8 @@ public class ResumoMesAnoDTO {
 	private BigDecimal totalDespesas;
 	
 	private BigDecimal totalReceitas;
+	
+	private BigDecimal saldoFinal;
 
 	/**
 	 * @return the ano
@@ -126,6 +128,14 @@ public class ResumoMesAnoDTO {
 	public String toString() {
 		return String.format("ResumoMesAnoDTO [ano=%s, mes=%s, totalDespesas=%s, totalReceitas=%s]", ano, mes,
 				totalDespesas, totalReceitas);
+	}
+
+	public BigDecimal getSaldoFinal() {
+		return saldoFinal;
+	}
+
+	public void setSaldoFinal(BigDecimal saldoFinal) {
+		this.saldoFinal = saldoFinal;
 	}
 	
 	

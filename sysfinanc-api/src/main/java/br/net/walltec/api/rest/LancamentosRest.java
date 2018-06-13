@@ -3,6 +3,7 @@
  */
 package br.net.walltec.api.rest;
 
+import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
@@ -16,6 +17,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -25,6 +27,8 @@ import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.GravacaoArquivoDto;
 import br.net.walltec.api.dto.RegistroExtratoDto;
+import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
+import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.WalltecException;
@@ -226,6 +230,56 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 		
 	}
+	
+	@GET
+	@Path("/obter-resumo-mes/{mes}/{ano}")
+	public Response gerarResumoMes(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
+		
+		FiltraParcelasDto dtoFiltro = new FiltraParcelasDto();
+		dtoFiltro.setMes(mes);
+		dtoFiltro.setAno(ano);
+		
+		try {
+			ResumoMesAnoDTO retorno = servico.obterResumoMesAno(dtoFiltro);
+			retorno.setAno(ano);
+			retorno.setMes(mes);
+			retorno.setSaldoFinal(BigDecimal.TEN);
+			retorno.setTotalDespesas(BigDecimal.ONE);
+			retorno.setTotalReceitas(BigDecimal.ZERO);
+			return Response.ok().entity(retorno).build();
+		} catch (NegocioException e) {
+			e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+		}
+	}
+	
+	@GET
+	@Path("/obter-resumo-mes-detalhe/{mes}/{ano}")
+	public Response gerarResumoMesDetalhado(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
+		
+		FiltraParcelasDto dtoFiltro = new FiltraParcelasDto();
+		dtoFiltro.setMes(mes);
+		dtoFiltro.setAno(ano);
+		
+		try {
+			ResumoDetalhadoMesAnoDTO retorno = servico.obterResumoDetalhadoMesAno(dtoFiltro);
+			retorno.setAno(ano);
+			retorno.setMes(mes);
+			retorno.setSaldoFinal(BigDecimal.TEN);
+			retorno.setTotalDespesas(BigDecimal.ONE);
+			retorno.setTotalPagar(BigDecimal.TEN);
+			retorno.setTotalPago(BigDecimal.TEN);
+			
+			retorno.setTotalReceitas(BigDecimal.ZERO);
+			retorno.setTotalReceber(BigDecimal.TEN);
+			retorno.setTotalRecebido(BigDecimal.TEN);
+			
+			return Response.ok().entity(retorno).build();
+		} catch (NegocioException e) {
+			e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+		}
+	}	
 
 }
 
