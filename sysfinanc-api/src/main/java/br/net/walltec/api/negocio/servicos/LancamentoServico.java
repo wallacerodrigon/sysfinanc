@@ -34,7 +34,7 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	
 	List<UtilizacaoLancamentoVO> listarHistoricoUso(Integer idLancamento) throws NegocioException;
 	
-	List<LancamentoVO>  gerarLancamentos( LancamentoVO lancamentoOrigem, Date dataInicial, Date dataFinal, boolean isParcial) throws NegocioException;
+	List<LancamentoVO>  montarListaLancamentos( LancamentoVO lancamentoOrigem, Date dataInicial, Date dataFinal, boolean isParcial) throws NegocioException;
 	
 	MapaDashboardDTO montarDashboards(Integer mes, Integer ano) throws NegocioException;
 	

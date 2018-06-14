@@ -228,7 +228,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#gerarLancamentos(br.net.walltec.api.vo.LancamentoVO, java.util.Date)
 	 */
 	@Override
-	public List<LancamentoVO> gerarLancamentos(LancamentoVO lancamentoOrigem, Date dataInicial,  Date dataFinal, boolean isParcial) throws NegocioException {
+	public List<LancamentoVO> montarListaLancamentos(LancamentoVO lancamentoOrigem, Date dataInicial,  Date dataFinal, boolean isParcial) throws NegocioException {
 		Date dataInicialAux = dataInicial; 
 		Short numParcela = lancamentoOrigem.getNumero();
 		List<LancamentoVO> lancamentos = new ArrayList<>();
@@ -239,12 +239,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			lancamentoNovo.setIdParcelaOrigem(lancamentoOrigem.getId());
 			lancamentoNovo.setDataVencimentoStr(UtilData.getDataFormatada(dataInicialAux));
 			
-			if (isParcial) {
-				lancamentos.add(lancamentoNovo);
-			} else {
-				this.incluirVO(lancamentoNovo);
-			}
-			
+			lancamentos.add(lancamentoNovo);
 			dataInicialAux = UtilData.somarData(dataInicialAux, 1, ChronoUnit.MONTHS);
 		}
 		return lancamentos;

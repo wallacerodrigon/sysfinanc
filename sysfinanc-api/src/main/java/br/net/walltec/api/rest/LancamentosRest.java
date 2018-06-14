@@ -139,9 +139,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
             objeto = servico.incluirVO(objeto);
             
             if (dataFim != null) {
-            	servico.gerarLancamentos(objeto, 
-            			UtilData.somarData(dataVencimento, 1, ChronoUnit.MONTHS), 
-            			dataFim, false);
+            	this.gerarLancamentos(objeto);
+//            	List<LancamentoVO> lancamentos = servico.montarListaLancamentos(objeto, 
+//            			UtilData.somarData(dataVencimento, 1, ChronoUnit.MONTHS), 
+//            			dataFim, false);
+//            	servico.incluirVO(objeto
+//            			);
             }
             
             return Response.ok(objeto).build();
@@ -151,6 +154,22 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
             e.printStackTrace();
             throw new WebServiceException(e.getMessage());
         }
+	}
+
+	/**
+	 * @param objeto
+	 */
+	private void gerarLancamentos(LancamentoVO objeto) {
+    	GeracaoParcelasDto dto = new GeracaoParcelasDto();
+    	dto.setDataVencimentoStr(objeto.getDataVencimentoStr());
+    	dto.setIdConta(objeto.getIdConta());
+    	dto.setQuantidade(2);
+    	dto.setValorVencimento(new BigDecimal(objeto.getValor()));
+    	dto.setIdParcelaOrigem(objeto.getIdParcelaOrigem());
+    	dto.setParcial(false);
+    	dto.setIdUsuario(1);
+    	dto.setDescricaoParcela(objeto.getDescricao());
+		this.gerarLancamentos(dto);
 	}
 
 	@Override
@@ -221,7 +240,8 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 		List<LancamentoVO> vos = null;
 		try {
-			vos = servico.gerarLancamentos(vo, dataInicial, dataFinal, dto.getParcial());
+			vos = servico.montarListaLancamentos(vo, dataInicial, dataFinal, dto.getParcial());
+			servico.incluirVO(vos);
 		} catch (NegocioException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());

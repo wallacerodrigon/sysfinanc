@@ -27,6 +27,8 @@ public interface CrudPadraoServico<T, V extends GerenciadorPadraoVO> {
 
 	 V incluirVO(V objeto) throws NegocioException;
 	 
+	 void incluirVO(List<V> objetos) throws NegocioException; 	 
+	 
 	 V alterarVO(V objeto) throws NegocioException;
 	 
 	 void alterar(List<T> objetos) throws NegocioException;

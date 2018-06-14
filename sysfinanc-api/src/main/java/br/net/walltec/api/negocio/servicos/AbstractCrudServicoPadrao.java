@@ -13,16 +13,16 @@ import javax.persistence.Id;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
-import br.net.walltec.api.excecoes.NegocioException;
-import br.net.walltec.api.excecoes.PersistenciaException;
-import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
-import br.net.walltec.api.vo.GerenciadorPadraoVO;
 import org.apache.commons.beanutils.BeanUtils;
 
 import br.net.walltec.api.conversores.ConversorPadrao;
 import br.net.walltec.api.conversores.FabricaConversores;
 import br.net.walltec.api.excecoes.ConversorNaoExistenteException;
+import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.excecoes.PersistenciaException;
+import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.persistencia.dao.comum.PersistenciaPadraoDao;
+import br.net.walltec.api.vo.GerenciadorPadraoVO;
 
 /**
  * Classe abstrata com os métodos padrões para os serviços
@@ -214,6 +214,13 @@ public abstract class AbstractCrudServicoPadrao<T,  V extends GerenciadorPadraoV
 		T objetoConvertido = conversor.converterPojoParaEntidade(objeto);
 		this.incluir(objetoConvertido);
 		return conversor.converterEntidadeParaPojo(objetoConvertido);
+	}
+
+	@Transactional(value=TxType.REQUIRES_NEW)	
+	public void incluirVO(List<V> objetos) throws NegocioException {
+		for(V objeto : objetos) {
+			this.incluirVO(objeto);
+		}
 	}
 
 
