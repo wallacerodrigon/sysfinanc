@@ -63,7 +63,7 @@ export class HttpInterceptor extends Http  {
         let usuario: string = sessionStorage.getItem("usuario");
         if (usuario){
             let usr: UsuarioVO = JSON.parse(usuario);
-            options.headers.append('x-access-token', usr.token);
+            options.headers.append('Authorization', 'Bearer '+ usr.token);
         }
 
         return options;

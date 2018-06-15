@@ -9,7 +9,7 @@ public class Constantes {
 
 	public static final long TEMPO_EXPIRACAO_TOKEN = 1L; //57600000L;// 2 horas minutos
 
-	public static final String TAG_TOKEN = "x-access-token";
+	public static final String TAG_TOKEN = "Authorization";
 
 	public static final String PERSISTENCE_UNIT ="puSysfinanc";
 

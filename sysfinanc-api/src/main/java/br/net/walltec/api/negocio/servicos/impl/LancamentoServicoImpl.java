@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import br.net.walltec.api.dto.FiltraParcelasDto;
+import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
@@ -39,6 +40,7 @@ import br.net.walltec.api.persistencia.dao.LancamentoDao;
 import br.net.walltec.api.persistencia.dao.impl.ContaDaoImpl;
 import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
 import br.net.walltec.api.utilitarios.UtilData;
+import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -228,18 +230,23 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#gerarLancamentos(br.net.walltec.api.vo.LancamentoVO, java.util.Date)
 	 */
 	@Override
-	public List<LancamentoVO> montarListaLancamentos(LancamentoVO lancamentoOrigem, Date dataInicial,  Date dataFinal, boolean isParcial) throws NegocioException {
-		Date dataInicialAux = dataInicial; 
-		Short numParcela = lancamentoOrigem.getNumero();
+	public List<LancamentoVO> montarListaLancamentos(GeracaoParcelasDto dto) throws NegocioException {
+		Date dataInicialAux = UtilData.getData(dto.getDataVencimentoStr(), "/"); 
+		int numParcela = dto.getNumLancOrigem();
 		List<LancamentoVO> lancamentos = new ArrayList<>();
-		while(dataInicialAux.before(dataFinal)) {
-			LancamentoVO lancamentoNovo = lancamentoOrigem;
-			lancamentoNovo.setId(null);
-			lancamentoNovo.setNumero(Integer.valueOf( ++numParcela).shortValue() );
-			lancamentoNovo.setIdParcelaOrigem(lancamentoOrigem.getId());
-			lancamentoNovo.setDataVencimentoStr(UtilData.getDataFormatada(dataInicialAux));
-			
-			lancamentos.add(lancamentoNovo);
+		for(int i = 0; i < dto.getQuantidade(); i++) {
+			LancamentoVO vo = new LancamentoVO();
+			vo.setId(null);
+			vo.setIdConta(dto.getIdConta());
+			vo.setNumero(Integer.valueOf( ++numParcela).shortValue() );
+			vo.setIdParcelaOrigem(dto.getIdParcelaOrigem());
+			vo.setDataVencimentoStr(UtilData.getDataFormatada(dataInicialAux));
+			vo.setValor(dto.getValorVencimento().doubleValue());
+			vo.setValorCreditoStr(dto.isDespesa() ? null : UtilFormatador.formatarDecimal(dto.getValorVencimento()));
+			vo.setValorDebitoStr(dto.isDespesa() ? UtilFormatador.formatarDecimal(dto.getValorVencimento()) : null);
+			vo.setDespesa(dto.isDespesa());
+			vo.setDescricao(dto.getDescricaoParcela());
+			lancamentos.add(vo);
 			dataInicialAux = UtilData.somarData(dataInicialAux, 1, ChronoUnit.MONTHS);
 		}
 		return lancamentos;

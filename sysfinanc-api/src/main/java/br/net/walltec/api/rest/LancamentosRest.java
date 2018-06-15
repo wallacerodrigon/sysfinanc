@@ -4,6 +4,7 @@
 package br.net.walltec.api.rest;
 
 import java.math.BigDecimal;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
@@ -40,7 +41,9 @@ import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
 import br.net.walltec.api.rest.dto.BaixaLancamentoDTO;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
+import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
+import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -139,7 +142,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
             objeto = servico.incluirVO(objeto);
             
             if (dataFim != null) {
-            	this.gerarLancamentos(objeto);
+            	this.gerarLancamentos(objeto, dataVencimento, dataFim);
 //            	List<LancamentoVO> lancamentos = servico.montarListaLancamentos(objeto, 
 //            			UtilData.somarData(dataVencimento, 1, ChronoUnit.MONTHS), 
 //            			dataFim, false);
@@ -159,16 +162,21 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	/**
 	 * @param objeto
 	 */
-	private void gerarLancamentos(LancamentoVO objeto) {
+	private void gerarLancamentos(LancamentoVO objeto, Date dataVencimento, Date dataFim) {
+		int qtd = UtilData.getDiasDiferenca(dataVencimento, dataFim) / 30;
+		
     	GeracaoParcelasDto dto = new GeracaoParcelasDto();
     	dto.setDataVencimentoStr(objeto.getDataVencimentoStr());
     	dto.setIdConta(objeto.getIdConta());
-    	dto.setQuantidade(2);
-    	dto.setValorVencimento(new BigDecimal(objeto.getValor()));
+    	dto.setQuantidade(qtd);
+    	dto.setValorVencimento(objeto.isDespesa() ? UtilFormatador.formatarStringComoValor(objeto.getValorDebitoStr()) :
+    												UtilFormatador.formatarStringComoValor(objeto.getValorCreditoStr()));
     	dto.setIdParcelaOrigem(objeto.getIdParcelaOrigem());
     	dto.setParcial(false);
     	dto.setIdUsuario(1);
     	dto.setDescricaoParcela(objeto.getDescricao());
+    	dto.setNumLancOrigem(objeto.getNumero());
+    	dto.setDespesa(objeto.isDespesa());
 		this.gerarLancamentos(dto);
 	}
 
@@ -233,14 +241,9 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@POST
 	@Path("/gerar-lancamento")
 	public Response gerarLancamentos(GeracaoParcelasDto dto) throws WebServiceException {
-		LancamentoVO vo = new LancamentoVO();
-		vo.setNumero(new Short("0"));
-		Date dataInicial = UtilData.getData(dto.getDataVencimentoStr(), "/");
-		Date dataFinal = UtilData.somarData(dataInicial, dto.getQuantidade(), ChronoUnit.MONTHS);
-		
 		List<LancamentoVO> vos = null;
 		try {
-			vos = servico.montarListaLancamentos(vo, dataInicial, dataFinal, dto.getParcial());
+			vos = servico.montarListaLancamentos(dto);
 			servico.incluirVO(vos);
 		} catch (NegocioException e) {
 			e.printStackTrace();

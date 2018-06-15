@@ -4,10 +4,10 @@
 package br.net.walltec.api.negocio.servicos;
 
 
-import java.util.Date;
 import java.util.List;
 
 import br.net.walltec.api.dto.FiltraParcelasDto;
+import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
@@ -34,7 +34,7 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	
 	List<UtilizacaoLancamentoVO> listarHistoricoUso(Integer idLancamento) throws NegocioException;
 	
-	List<LancamentoVO>  montarListaLancamentos( LancamentoVO lancamentoOrigem, Date dataInicial, Date dataFinal, boolean isParcial) throws NegocioException;
+	List<LancamentoVO>  montarListaLancamentos( GeracaoParcelasDto dto ) throws NegocioException;
 	
 	MapaDashboardDTO montarDashboards(Integer mes, Integer ano) throws NegocioException;
 	

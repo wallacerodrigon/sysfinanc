@@ -28,6 +28,8 @@ public class GeracaoParcelasDto extends DtoPadrao {
 	private Boolean parcial;
 	private Integer idUsuario;
 	private String descricaoParcela;
+	private int numLancOrigem;
+	private boolean despesa;
 	/**
 	 * @return the quantidade
 	 */
@@ -123,6 +125,30 @@ public class GeracaoParcelasDto extends DtoPadrao {
 	 */
 	public void setIdConta(Integer idConta) {
 		this.idConta = idConta;
+	}
+	/**
+	 * @return the numLancOrigem
+	 */
+	public int getNumLancOrigem() {
+		return numLancOrigem;
+	}
+	/**
+	 * @param numLancOrigem the numLancOrigem to set
+	 */
+	public void setNumLancOrigem(int numLancOrigem) {
+		this.numLancOrigem = numLancOrigem;
+	}
+	/**
+	 * @return the despesa
+	 */
+	public boolean isDespesa() {
+		return despesa;
+	}
+	/**
+	 * @param despesa the despesa to set
+	 */
+	public void setDespesa(boolean despesa) {
+		this.despesa = despesa;
 	}
 	
 	

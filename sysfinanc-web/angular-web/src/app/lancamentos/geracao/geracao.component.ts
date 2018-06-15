@@ -53,7 +53,8 @@ export class GeracaoComponent implements OnInit {
   ngOnInit() {
     jQuery(this.dataVencimento.nativeElement).datepicker();
     this.dataVencimento.nativeElement.value = UtilData.converterToString(new Date());
-    this.listarRubricas();
+   // this.listarRubricas();
+    this.listaRubricas = this.rubricaService.getListaCache();
   }
 
   private listarRubricas(){

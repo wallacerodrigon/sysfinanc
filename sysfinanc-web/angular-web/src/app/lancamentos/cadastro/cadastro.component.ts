@@ -42,6 +42,7 @@ export class CadastroComponent  extends DialogComponent<null, boolean> implement
   ngOnInit() {
     jQuery(this.dataVencimento.nativeElement).datepicker();
     this.dataVencimento.nativeElement.value = UtilData.converterToString(new Date());
+    //this.listaRubricas = this.rubricaService.getListaCache();
     this.listarRubricas();
   }
 
