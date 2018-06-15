@@ -25,7 +25,14 @@ export class RubricaService extends AbstractServicos<RubricaVO> {
     }
 
     public getListaCache(): Array<RubricaVO> {
-        return JSON.parse(localStorage.getItem(this.NOME_CACHE));
+        let objetos: Array<any> = JSON.parse(localStorage.getItem(this.NOME_CACHE));
+        let lista: Array<RubricaVO> = [];
+        objetos.map(obj => {
+            let vo : RubricaVO = new RubricaVO();
+            Object.assign(vo, obj);
+            lista.push(vo);
+        })
+        return lista;
     }
 
     public temCache(): boolean {
