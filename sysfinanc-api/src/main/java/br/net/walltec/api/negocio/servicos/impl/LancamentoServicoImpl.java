@@ -478,8 +478,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			throw new NegocioException("Informações para geração não informadas!");			
 		}
 		
-		List<Lancamento> listaLancamentos = this.montarListaLancamentos(dto);
-		for(Lancamento l : listaLancamentos) {
+		for(Lancamento l : this.montarListaLancamentos(dto)) {
 			this.incluir(l);
 		}
 	}
