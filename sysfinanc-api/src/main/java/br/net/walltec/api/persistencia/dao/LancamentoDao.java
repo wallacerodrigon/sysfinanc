@@ -17,7 +17,7 @@ import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
  */
 public interface LancamentoDao extends PersistenciaPadraoDao<Lancamento> {
 
-    List<Lancamento> listarParcelas(Date dataInicial, Date dataFinal) throws PersistenciaException;
+	List<Lancamento> listarParcelas(Date dataInicial, Date dataFinal, Integer idConta, Integer idParcelaOrigem) throws PersistenciaException;
 
     ResumoLancamentosVO obterResumoLancamentos(Integer mes, Integer ano) throws PersistenciaException;
 

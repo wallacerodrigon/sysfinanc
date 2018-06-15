@@ -3,9 +3,6 @@
  */
 package br.net.walltec.api.rest;
 
-import java.math.BigDecimal;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +38,6 @@ import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
 import br.net.walltec.api.rest.dto.BaixaLancamentoDTO;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
-import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
@@ -137,17 +133,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
         	
         	if (dataFim != null && dataFim.before(dataVencimento)) {
         		throw new WebServiceException("Data Fim não deve ser menor do que a data de Vencimento!");
-        	}
+        	}	
         	
             objeto = servico.incluirVO(objeto);
             
             if (dataFim != null) {
             	this.gerarLancamentos(objeto, dataVencimento, dataFim);
-//            	List<LancamentoVO> lancamentos = servico.montarListaLancamentos(objeto, 
-//            			UtilData.somarData(dataVencimento, 1, ChronoUnit.MONTHS), 
-//            			dataFim, false);
-//            	servico.incluirVO(objeto
-//            			);
             }
             
             return Response.ok(objeto).build();
@@ -162,7 +153,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	/**
 	 * @param objeto
 	 */
-	private void gerarLancamentos(LancamentoVO objeto, Date dataVencimento, Date dataFim) {
+	private void gerarLancamentos(LancamentoVO objeto, Date dataVencimento, Date dataFim) throws NegocioException {
 		int qtd = UtilData.getDiasDiferenca(dataVencimento, dataFim) / 30;
 		
     	GeracaoParcelasDto dto = new GeracaoParcelasDto();
@@ -177,7 +168,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
     	dto.setDescricaoParcela(objeto.getDescricao());
     	dto.setNumLancOrigem(objeto.getNumero());
     	dto.setDespesa(objeto.isDespesa());
-		this.gerarLancamentos(dto);
+		this.servico.gerarLancamentos(dto);
 	}
 
 	@Override
@@ -241,17 +232,17 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@POST
 	@Path("/gerar-lancamento")
 	public Response gerarLancamentos(GeracaoParcelasDto dto) throws WebServiceException {
-		List<LancamentoVO> vos = null;
 		try {
-			vos = servico.montarListaLancamentos(dto);
-			servico.incluirVO(vos);
+			
+			if (dto.getParcial()) {
+				return Response.ok().entity(this.servico.montarListaLancamentosVO(dto)).build();
+			} 
+			this.servico.gerarLancamentos(dto);
 		} catch (NegocioException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());
 		}
-		return Response.ok(vos).build();
-		
-		
+		return Response.ok().build();
 	}
 	
 	@GET

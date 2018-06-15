@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
@@ -29,6 +30,8 @@ import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.RubricaMesAnoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
+import br.net.walltec.api.entidades.Conta;
+import br.net.walltec.api.entidades.FormaPagamento;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.CampoObrigatorioException;
 import br.net.walltec.api.excecoes.NegocioException;
@@ -39,8 +42,8 @@ import br.net.walltec.api.persistencia.dao.ContaDao;
 import br.net.walltec.api.persistencia.dao.LancamentoDao;
 import br.net.walltec.api.persistencia.dao.impl.ContaDaoImpl;
 import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
+import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
-import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -91,9 +94,13 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 
     @Override
     public List<LancamentoVO> listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException {
-        if (dtoFiltro == null || dtoFiltro.getMes() == null || dtoFiltro.getAno() == null){
+        if (dtoFiltro == null) {
             throw new CampoObrigatorioException("FIltro não informado");
         }
+        if (dtoFiltro.getMes() == null && dtoFiltro.getAno() == null && dtoFiltro.getIdConta() == null && dtoFiltro.getIdParcelaOrigem() == null){
+        	throw new CampoObrigatorioException("Parâmetros dos fIltros não foram informados");
+        }
+        
         try {
         	List<Lancamento> listaParcelas = filtrarParcelas(dtoFiltro);
 			return getConversor().converterEntidadeParaPojo(listaParcelas);
@@ -103,9 +110,13 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     }
 
 	private List<Lancamento> filtrarParcelas(FiltraParcelasDto dtoFiltro) throws PersistenciaException {
-		Date dataInicial = UtilData.createDataSemHoras(1, dtoFiltro.getMes(), dtoFiltro.getAno());
-		Date dataFinal   = UtilData.asDate(UtilData.getUltimaDataMes(dtoFiltro.getMes(), dtoFiltro.getAno()));
-		return lancamentoDao.listarParcelas(dataInicial, dataFinal);
+		Date dataInicial = null;
+		Date dataFinal = null;
+		if (dtoFiltro.getMes() != null && dtoFiltro.getAno() != null) {
+			dataInicial = UtilData.createDataSemHoras(1, dtoFiltro.getMes(), dtoFiltro.getAno());
+			dataFinal   = UtilData.asDate(UtilData.getUltimaDataMes(dtoFiltro.getMes(), dtoFiltro.getAno()));
+		}
+		return lancamentoDao.listarParcelas(dataInicial, dataFinal, dtoFiltro.getIdConta(), dtoFiltro.getIdParcelaOrigem());
 	}
 
     @Override
@@ -230,23 +241,28 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#gerarLancamentos(br.net.walltec.api.vo.LancamentoVO, java.util.Date)
 	 */
 	@Override
-	public List<LancamentoVO> montarListaLancamentos(GeracaoParcelasDto dto) throws NegocioException {
+	public List<Lancamento> montarListaLancamentos(GeracaoParcelasDto dto) throws NegocioException {
 		Date dataInicialAux = UtilData.getData(dto.getDataVencimentoStr(), "/"); 
 		int numParcela = dto.getNumLancOrigem();
-		List<LancamentoVO> lancamentos = new ArrayList<>();
+		List<Lancamento> lancamentos = new ArrayList<>();
+
 		for(int i = 0; i < dto.getQuantidade(); i++) {
-			LancamentoVO vo = new LancamentoVO();
-			vo.setId(null);
-			vo.setIdConta(dto.getIdConta());
-			vo.setNumero(Integer.valueOf( ++numParcela).shortValue() );
-			vo.setIdParcelaOrigem(dto.getIdParcelaOrigem());
-			vo.setDataVencimentoStr(UtilData.getDataFormatada(dataInicialAux));
-			vo.setValor(dto.getValorVencimento().doubleValue());
-			vo.setValorCreditoStr(dto.isDespesa() ? null : UtilFormatador.formatarDecimal(dto.getValorVencimento()));
-			vo.setValorDebitoStr(dto.isDespesa() ? UtilFormatador.formatarDecimal(dto.getValorVencimento()) : null);
-			vo.setDespesa(dto.isDespesa());
-			vo.setDescricao(dto.getDescricaoParcela());
-			lancamentos.add(vo);
+			Lancamento lancamento = new Lancamento();
+			lancamento.setConta(new Conta());
+			lancamento.getConta().setId(dto.getIdConta());
+			lancamento.setNumero(Integer.valueOf( ++numParcela).shortValue() );
+			lancamento.setDataVencimento(dataInicialAux);
+			lancamento.setDescricao(dto.getDescricaoParcela());
+			lancamento.setFormaPagamento(new FormaPagamento());
+			lancamento.getFormaPagamento().setId(Constantes.ID_FORMA_PAGAMENTO_PADRAO);
+			
+			if (dto.getIdParcelaOrigem() != null) {
+				lancamento.setLancamentoOrigem(new Lancamento());
+				lancamento.getLancamentoOrigem().setId(dto.getIdParcelaOrigem());
+			}
+			lancamento.setValor(dto.getValorVencimento());
+			lancamentos.add(lancamento);
+
 			dataInicialAux = UtilData.somarData(dataInicialAux, 1, ChronoUnit.MONTHS);
 		}
 		return lancamentos;
@@ -271,7 +287,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			Date dataBase = UtilData.asDate(LocalDate.of(ano, mes, 1));
 			Date ultimaDataMes = UtilData.getUltimaDataMes(dataBase);
 			List<Lancamento> listaMesAtual = lancamentoDao.listarParcelas(UtilData.createDataSemHoras(1, mes, ano), 
-					ultimaDataMes);
+					ultimaDataMes, null, null);
 			
 			if (listaMesAtual == null || listaMesAtual.isEmpty()) {
 				throw new NegocioException("Nenhum lançamento para esse mês");
@@ -449,5 +465,31 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			throw new NegocioException(e);
 		}		
 
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#gerarLancamentos(br.net.walltec.api.dto.GeracaoParcelasDto)
+	 */
+	@Override
+	@Transactional(value=TxType.REQUIRES_NEW)
+	public void gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException {
+		
+		if (dto == null) {
+			throw new NegocioException("Informações para geração não informadas!");			
+		}
+		
+		List<Lancamento> listaLancamentos = this.montarListaLancamentos(dto);
+		for(Lancamento l : listaLancamentos) {
+			this.incluir(l);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#montarListaLancamentosVO(br.net.walltec.api.dto.GeracaoParcelasDto)
+	 */
+	@Override
+	public List<LancamentoVO> montarListaLancamentosVO(GeracaoParcelasDto dto) throws NegocioException {
+		List<Lancamento> lista = this.montarListaLancamentos(dto);
+		return getConversor().converterEntidadeParaPojo(lista);
 	}
 }

@@ -34,7 +34,9 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	
 	List<UtilizacaoLancamentoVO> listarHistoricoUso(Integer idLancamento) throws NegocioException;
 	
-	List<LancamentoVO>  montarListaLancamentos( GeracaoParcelasDto dto ) throws NegocioException;
+	List<Lancamento>  montarListaLancamentos( GeracaoParcelasDto dto ) throws NegocioException;
+	
+	List<LancamentoVO> montarListaLancamentosVO( GeracaoParcelasDto dto ) throws NegocioException;	
 	
 	MapaDashboardDTO montarDashboards(Integer mes, Integer ano) throws NegocioException;
 	
@@ -42,6 +44,6 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	
 	ResumoDetalhadoMesAnoDTO obterResumoDetalhadoMesAno(FiltraParcelasDto dtoFiltro) throws NegocioException;
 	
-	
+	void gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException;
 	
 }
