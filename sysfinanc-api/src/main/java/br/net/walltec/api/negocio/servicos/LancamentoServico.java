@@ -44,6 +44,6 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	
 	ResumoDetalhadoMesAnoDTO obterResumoDetalhadoMesAno(FiltraParcelasDto dtoFiltro) throws NegocioException;
 	
-	void gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException;
+	List<LancamentoVO> gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException;
 	
 }

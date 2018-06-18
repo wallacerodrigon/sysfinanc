@@ -36,6 +36,7 @@ import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.CampoObrigatorioException;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.PersistenciaException;
+import br.net.walltec.api.excecoes.WebServiceException;
 import br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao;
 import br.net.walltec.api.negocio.servicos.LancamentoServico;
 import br.net.walltec.api.persistencia.dao.ContaDao;
@@ -44,6 +45,7 @@ import br.net.walltec.api.persistencia.dao.impl.ContaDaoImpl;
 import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
 import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
+import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -243,18 +245,22 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	@Override
 	public List<Lancamento> montarListaLancamentos(GeracaoParcelasDto dto) throws NegocioException {
 		Date dataInicialAux = UtilData.getData(dto.getDataVencimentoStr(), "/"); 
-		int numParcela = dto.getNumLancOrigem();
+		int numParcela = 1;
 		List<Lancamento> lancamentos = new ArrayList<>();
 
 		for(int i = 0; i < dto.getQuantidade(); i++) {
 			Lancamento lancamento = new Lancamento();
 			lancamento.setConta(new Conta());
 			lancamento.getConta().setId(dto.getIdConta());
+			lancamento.getConta().setDespesa(dto.isDespesa());
+			
 			lancamento.setNumero(Integer.valueOf( ++numParcela).shortValue() );
 			lancamento.setDataVencimento(dataInicialAux);
 			lancamento.setDescricao(dto.getDescricaoParcela());
 			lancamento.setFormaPagamento(new FormaPagamento());
 			lancamento.getFormaPagamento().setId(Constantes.ID_FORMA_PAGAMENTO_PADRAO);
+			lancamento.setBolPaga(false);
+			lancamento.setBolConciliado(false);
 			
 			if (dto.getIdParcelaOrigem() != null) {
 				lancamento.setLancamentoOrigem(new Lancamento());
@@ -472,15 +478,18 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 */
 	@Override
 	@Transactional(value=TxType.REQUIRES_NEW)
-	public void gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException {
+	public List<LancamentoVO> gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException {
 		
 		if (dto == null) {
 			throw new NegocioException("Informações para geração não informadas!");			
 		}
 		
+		List<Lancamento> lista = new ArrayList<>();
 		for(Lancamento l : this.montarListaLancamentos(dto)) {
 			this.incluir(l);
+			lista.add(l);
 		}
+		return getConversor().converterEntidadeParaPojo(lista);
 	}
 
 	/* (non-Javadoc)
@@ -491,4 +500,46 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 		List<Lancamento> lista = this.montarListaLancamentos(dto);
 		return getConversor().converterEntidadeParaPojo(lista);
 	}
+	
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao#incluirVO(br.net.walltec.api.vo.GerenciadorPadraoVO)
+	 */
+	@Override
+	public LancamentoVO incluirVO(LancamentoVO objeto) throws NegocioException {
+    	Date dataFim = objeto.getDataFimStr() != null && !objeto.getDataFimStr().isEmpty() ? UtilData.getData(objeto.getDataFimStr(), UtilData.SEPARADOR_PADRAO) : null;
+    	Date dataVencimento = UtilData.getData(objeto.getDataVencimentoStr(), UtilData.SEPARADOR_PADRAO);
+    	
+    	if (dataFim != null && dataFim.before(dataVencimento)) {
+    		throw new WebServiceException("Data Fim não deve ser menor do que a data de Vencimento!");
+    	}	
+    	
+        if (dataFim != null) {
+        	this.gerarLancamentos(objeto, dataVencimento, dataFim);
+        	return objeto;
+        } else {		
+        	return super.incluirVO(objeto);
+        }
+	}
+	
+
+	/**
+	 * @param objeto
+	 */
+	private void gerarLancamentos(LancamentoVO objeto, Date dataVencimento, Date dataFim) throws NegocioException {
+		int qtd = (UtilData.getDiasDiferenca(dataVencimento, dataFim) / 30)+1;
+		
+    	GeracaoParcelasDto dto = new GeracaoParcelasDto();
+    	dto.setDataVencimentoStr(objeto.getDataVencimentoStr());
+    	dto.setIdConta(objeto.getIdConta());
+    	dto.setQuantidade(qtd);
+    	dto.setValorVencimento(objeto.isDespesa() ? UtilFormatador.formatarStringComoValor(objeto.getValorDebitoStr()) :
+    												UtilFormatador.formatarStringComoValor(objeto.getValorCreditoStr()));
+    	dto.setIdParcelaOrigem(objeto.getIdParcelaOrigem());
+    	dto.setParcial(false);
+    	dto.setIdUsuario(1);
+    	dto.setDescricaoParcela(objeto.getDescricao());
+    	dto.setDespesa(objeto.isDespesa());
+		this.gerarLancamentos(dto);
+	}	
+	
 }

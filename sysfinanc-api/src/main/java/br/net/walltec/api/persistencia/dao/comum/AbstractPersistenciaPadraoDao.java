@@ -39,7 +39,7 @@ public abstract class AbstractPersistenciaPadraoDao<T> implements PersistenciaPa
 
 	@Override
 	public T incluir(T objeto) throws PersistenciaException {
-		em.merge(objeto);
+		em.persist(objeto);
 		return objeto;
 	}
 

@@ -23,7 +23,7 @@ public class ConversorLancamento extends AbstractConverter<Lancamento, Lancament
                 UtilFormatador.formatarDecimal(entidade.getValor()));
         lancamentoVO.setValorDebitoStr( lancamentoVO.isDespesa() ? 
                 UtilFormatador.formatarDecimal(entidade.getValor()) : "0,00");
-        lancamentoVO.setBolConciliado(entidade.getBolConciliado());
+        lancamentoVO.setBolConciliado(entidade.getBolConciliado() ==null ? false : entidade.getBolConciliado());
         lancamentoVO.setId(entidade.getId());
         lancamentoVO.setNumero(entidade.getNumero());
         return lancamentoVO;

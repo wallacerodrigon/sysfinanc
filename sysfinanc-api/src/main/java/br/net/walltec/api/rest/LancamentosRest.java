@@ -128,18 +128,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@Override
 	public Response incluir(LancamentoVO objeto) throws WebServiceException {
         try {
-        	Date dataFim = objeto.getDataFimStr() != null && !objeto.getDataFimStr().isEmpty() ? UtilData.getData(objeto.getDataFimStr(), UtilData.SEPARADOR_PADRAO) : null;
-        	Date dataVencimento = UtilData.getData(objeto.getDataVencimentoStr(), UtilData.SEPARADOR_PADRAO);
-        	
-        	if (dataFim != null && dataFim.before(dataVencimento)) {
-        		throw new WebServiceException("Data Fim não deve ser menor do que a data de Vencimento!");
-        	}	
-        	
             objeto = servico.incluirVO(objeto);
-            
-            if (dataFim != null) {
-            	this.gerarLancamentos(objeto, dataVencimento, dataFim);
-            }
             
             return Response.ok(objeto).build();
         } catch (NegocioException e) {
@@ -150,26 +139,6 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
         }
 	}
 
-	/**
-	 * @param objeto
-	 */
-	private void gerarLancamentos(LancamentoVO objeto, Date dataVencimento, Date dataFim) throws NegocioException {
-		int qtd = UtilData.getDiasDiferenca(dataVencimento, dataFim) / 30;
-		
-    	GeracaoParcelasDto dto = new GeracaoParcelasDto();
-    	dto.setDataVencimentoStr(objeto.getDataVencimentoStr());
-    	dto.setIdConta(objeto.getIdConta());
-    	dto.setQuantidade(qtd);
-    	dto.setValorVencimento(objeto.isDespesa() ? UtilFormatador.formatarStringComoValor(objeto.getValorDebitoStr()) :
-    												UtilFormatador.formatarStringComoValor(objeto.getValorCreditoStr()));
-    	dto.setIdParcelaOrigem(objeto.getIdParcelaOrigem());
-    	dto.setParcial(false);
-    	dto.setIdUsuario(1);
-    	dto.setDescricaoParcela(objeto.getDescricao());
-    	dto.setNumLancOrigem(objeto.getNumero());
-    	dto.setDespesa(objeto.isDespesa());
-		this.servico.gerarLancamentos(dto);
-	}
 
 	@Override
 	public Response alterar(LancamentoVO objeto) throws WebServiceException {
@@ -237,12 +206,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			if (dto.getParcial()) {
 				return Response.ok().entity(this.servico.montarListaLancamentosVO(dto)).build();
 			} 
-			this.servico.gerarLancamentos(dto);
+			List<LancamentoVO> vos = this.servico.gerarLancamentos(dto);
+			return Response.ok().entity(vos).build();
 		} catch (NegocioException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());
 		}
-		return Response.ok().build();
 	}
 	
 	@GET
