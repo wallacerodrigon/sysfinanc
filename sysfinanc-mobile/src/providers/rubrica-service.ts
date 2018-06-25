@@ -4,17 +4,17 @@ import 'rxjs/add/operator/map';
 import {Constantes} from '../app/utilitarios/constantes';
 
 import {HttpServicos} from '../app/utilitarios/HttpServicos';
+import { AbstractServicos } from './abstract.servicos';
+import { RubricaVO } from '../app/entidades/rubricaVO';
 
 @Injectable()
-export class RubricaService {
-    //
-    private _url: string = Constantes.URL_BASE + "/contas";
+export class RubricaService extends AbstractServicos<RubricaVO> {
 
-    constructor(private _http: HttpServicos){
-
-    }
-
-    listarRubricas(){
-        return this._http.get(this._url);
+    protected uri: string = Constantes.URL_BASE + "/rubricas";
+    
+    public transformar(element: any): RubricaVO {
+       let vo: RubricaVO = new RubricaVO();
+       Object.assign(vo, element);
+       return vo;
     }
 }

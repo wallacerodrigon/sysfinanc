@@ -1,11 +1,11 @@
 export class LancamentoVO {
     constructor(
-        public idLancamento: number,
-        public descricao: string,
-        public dataVencimento: string,
-        public valorVencimento: number,
-        public valorUtilizado: number,
-        public bolPaga : boolean,
+        public idLancamento: number = null,
+        public descricao: string = null,
+        public dataVencimento: string = null,
+        public valorVencimento: number = null,
+        public valorUtilizado: number = null,
+        public bolPaga : boolean = null,
         public idUsuario: number = null
     ){}
 

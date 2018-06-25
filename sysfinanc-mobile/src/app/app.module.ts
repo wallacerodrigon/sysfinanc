@@ -20,7 +20,11 @@ import { RubricaModule } from '../pages/rubrica/rubrica.module';
 import {LancamentoService} from '../providers/lancamento-service';
 import {RubricaService} from '../providers/rubrica-service';
 import {HttpServicos} from '../app/utilitarios/HttpServicos';
-
+import { HttpInterceptor } from '../providers/http-interceptor';
+import { HttpFactory } from '../providers/http-factory';
+import { XHRBackend } from '@angular/http/src/backends/xhr_backend';
+import { RequestOptions } from '@angular/http/src/base_request_options';
+import { NavController } from 'ionic-angular/navigation/nav-controller';
 
 @NgModule({
   declarations: [
@@ -45,6 +49,11 @@ import {HttpServicos} from '../app/utilitarios/HttpServicos';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    {
+      provide: HttpInterceptor,
+      useFactory: HttpFactory,
+      deps: [XHRBackend, RequestOptions, NavController]
+    },      
     LancamentoService,
     HttpServicos,
     RubricaService
