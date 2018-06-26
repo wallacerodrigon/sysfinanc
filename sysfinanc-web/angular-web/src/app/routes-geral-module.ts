@@ -31,7 +31,7 @@ const defaultRoutes: Routes = [
     data: { state: 'lancamentos' },
     canActivate: [AuthGuard]
   },      
-  { path: '**', redirectTo: '' }
+ // { path: '**', redirectTo: '' }
    
 
 ];
