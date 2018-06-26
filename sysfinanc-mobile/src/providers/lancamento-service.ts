@@ -14,20 +14,23 @@ import {UtilizacaoLancamentoDTO} from '../app/dto/utilizacao-lancamento-dto';
 import {LancamentoDTO} from '../app/dto/lancamento-dto';
 
 import {HttpServicos} from '../app/utilitarios/HttpServicos';
+import { AbstractServicos } from './abstract.servicos';
 
 @Injectable()
-export class LancamentoService {
+export class LancamentoService extends AbstractServicos<LancamentoVO> {
   //http://walltec.net.br/sysfinanc/rest/lancamentos/resumo-mes/06/2017
   private _mes:Number =0;
   private _ano:Number = 0;
-  private _urlLancamentos: string = Constantes.URL_BASE + "/lancamentos";
-
-  constructor(public http: HttpServicos) {
-    console.log('Hello Lancamento Provider');
-  }
+  protected uri: string = Constantes.URL_BASE + "/lancamentos";
+    
+  public transformar(element: any): LancamentoVO {
+     let vo: LancamentoVO = new LancamentoVO();
+     Object.assign(vo, element);
+     return vo;
+  }  
 
   private _getUriResumoMes(mes:Number, ano:Number){
-    return this._urlLancamentos + `/obter-resumo-mes/${mes}/${ano}`;
+    return this.uri + `/obter-resumo-mes/${mes}/${ano}`;
   }
 
   recuperarSaldo(dataReferencia: Date) {
@@ -36,9 +39,9 @@ export class LancamentoService {
 
     return this.http
         .get(this._getUriResumoMes(this._mes, this._ano))
-        //.map(res => res.json())
+        .map(res => res.json())
         //.toPromise()
-        .then(resumo => new SaldoLancamento(dataReferencia, parseFloat(resumo.totalReceitas), 
+        .subscribe(resumo => new SaldoLancamento(dataReferencia, parseFloat(resumo.totalReceitas), 
                                             parseFloat(resumo.totalDespesas),
                                             parseFloat(resumo.saldoFinal) ) );
 
@@ -56,10 +59,10 @@ export class LancamentoService {
     let lancamentos: Array<LancamentoVO> = [];
     let filtroDto: Object = {"mes": dataReferencia.getMonth()+1, "ano":dataReferencia.getFullYear()};
     return this.http
-        .post(this._urlLancamentos +"/buscarLancamentos", filtroDto)
+        .post(this.uri +"/buscarLancamentos", filtroDto)
         //.map(res => res.json())
         //.toPromise()
-        .then(lista => {
+        .subscribe(lista => {
              let lancFiltrados = lista.json().filter(item => item.despesa === isDespesa);
 
              lancFiltrados.forEach( dado => {
@@ -73,7 +76,7 @@ export class LancamentoService {
 
   gerarLancamentos(dtoGeracao: GeracaoLancamentoDTO){
        return this.http
-          .post(this._urlLancamentos + "/gera", JSON.stringify(dtoGeracao));
+          .post(this.uri + "/gera", JSON.stringify(dtoGeracao));
   }
 
   usarLancamentos(idLancOrigem:number, dataUtilizacao:string, valorUtilizado:number){
@@ -85,17 +88,17 @@ export class LancamentoService {
         "descricao":"utilizando parte do lançamento"
       };
       return this.http
-          .post(this._urlLancamentos + "/utilizar", dto);
+          .post(this.uri + "/utilizar", dto);
 	};	
 
   //TODO: voltar para tratar o retorno e colocar num objeto
  listarUsos(pIdLancamento: number){
       let usos: Array<HistoricoUsoVO> = [];
       return this.http
-          .get(this._urlLancamentos + "/listarHistoricoUso?idLancamento="+pIdLancamento)
-         // .map(res => res.json())
+          .get(this.uri + "/listarHistoricoUso?idLancamento="+pIdLancamento)
+          .map(res => res.json())
          // .toPromise()
-          .then(lista => {
+          .subscribe(lista => {
               lista.forEach(dado =>{
                   let histUso: HistoricoUsoVO = new HistoricoUsoVO(dado.descricao, dado.dataStr, dado.valor);
                   usos.push(histUso);
@@ -110,26 +113,27 @@ export class LancamentoService {
   baixarLancamento(pIdLancamento: number){
       let objBaixa: Object = {"listaIdsLancamentos":[pIdLancamento]};
       return this.http
-          .post(this._urlLancamentos + "/baixar", objBaixa);
+          .post(this.uri + "/baixar", objBaixa);
 	};
 
   excluirLancamento(pIdLancamento:number){
       return this.http
-          .deleteUrl(this._urlLancamentos + "/"+pIdLancamento);
+          .delete(this.uri + "/"+pIdLancamento);
 	}	
 
   salvarLancamento(pLancamento: LancamentoVO){
       pLancamento.idUsuario = Constantes.ID_USUARIO_PADRAO;
-      return this.http
-          .put(this._urlLancamentos, new LancamentoDTO().converter(pLancamento));
+      //this.http
+        //  .put(this.uri, new LancamentoDTO().converter(pLancamento));
 	}		
 
     recuperarResumoGeral(dataReferencia: Date) {
         let mes: number = dataReferencia.getMonth();
         let ano: number = dataReferencia.getFullYear();
         return this.http
-            .get(this._urlLancamentos + `/obter-resumo-mes-detalhe/${mes}/${ano}`)
-            .then(retorno => {
+            .get(this.uri + `/obter-resumo-mes-detalhe/${mes}/${ano}`)
+            .map(res => res.json())
+            .subscribe(retorno => {
                     let resumo : ResumoVO = new ResumoVO();
                     resumo.recPagas = retorno.totalRecebido;
                     resumo.despPagas = retorno.totalPago;

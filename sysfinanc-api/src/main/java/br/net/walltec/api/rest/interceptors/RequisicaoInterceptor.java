@@ -43,10 +43,10 @@ public class RequisicaoInterceptor {
 	        	return contexto.proceed();
 	        }
 			
-			//String token = recuperarToken(headers);			
+			String token = recuperarToken(headers);			
 			
 			
-			//validarToken(token, contexto);
+			validarToken(token, contexto);
 		}
 		
 		
