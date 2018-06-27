@@ -29,16 +29,29 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 		super(em);
 	}
 
-	public List<Lancamento> listarParcelas(Date dataInicial, Date dataFinal) throws PersistenciaException {
+	public List<Lancamento> listarParcelas(Date dataInicial, Date dataFinal, Integer idConta, Integer idParcelaOrigem) throws PersistenciaException {
 		
 		
-		String hql = "select p "
-				+ " from Lancamento p join p.conta c"
-				+ " where p.dataVencimento between :dataInicial and :dataFinal order by p.dataVencimento, p.descricao ";
+		StringBuilder hql = new StringBuilder("select p from Lancamento p join p.conta c where 1=1 ");
 		Map<String, Object> mapa = new HashMap<String, Object>();
-		mapa.put("dataInicial", dataInicial);
-		mapa.put("dataFinal", dataFinal);
-        return listarQueryECachear(hql, null, mapa);
+		if (dataInicial != null && dataFinal != null) {
+			hql.append(" and p.dataVencimento between :dataInicial and :dataFinal ");
+			mapa.put("dataInicial", dataInicial);
+			mapa.put("dataFinal", dataFinal);
+		}
+		
+		if (idConta != null) {
+			hql.append(" and c.id = :idConta ");
+			mapa.put("idConta", idConta);
+		}
+		
+		if (idParcelaOrigem != null) {
+			hql.append(" and p.lancamentoOrigem.id = :idParcelaOrigem ");
+			mapa.put("idParcelaOrigem", idParcelaOrigem);
+		}
+		
+		hql.append(" order by p.dataVencimento, p.descricao ");
+        return listarQueryECachear(hql.toString(), Lancamento.class, mapa);
 	}
 
 	@Override

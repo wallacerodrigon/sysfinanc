@@ -23,7 +23,6 @@ import br.net.walltec.api.utilitarios.UtilData;
 
 @Entity
 @Table(name="lancamento")
-@Cacheable(true)
 public class Lancamento extends EntidadeBasica<Lancamento> {
 	
 	

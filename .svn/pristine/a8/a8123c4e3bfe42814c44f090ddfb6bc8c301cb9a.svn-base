@@ -1,9 +1,0 @@
-    <app-crud-componente #crudComponente [nomesColunas]="colunas" 
-                   [listaDados]="listagem" 
-                   [tamanhoListagem]="tamanhoListagem"
-                   [atributosColunas]="atributos"
-
-                   (onEditar)="editar($event)"
-                   (onNovoRegistro)="abrirModalNovo($event)"
-                   (onExcluir)="excluir($event)" >
-    </app-crud-componente>

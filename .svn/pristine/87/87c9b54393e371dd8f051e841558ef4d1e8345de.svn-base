@@ -1,8 +1,0 @@
-import { Observable } from "rxjs/Observable";
-
-export class GerenciadorPadraoVO {
-
-    public transformar(elem: any) {
-        Object.assign(this, elem);
-    }
-}

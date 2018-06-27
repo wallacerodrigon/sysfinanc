@@ -1,9 +1,0 @@
-<div class="texto">
-  <h1>Você não tem acesso a esta página</h1>
-  <h3>Efetue login para acessar o sistema.</h3>
-  <a [routerLink]="['/login']">Ir para o login</a>
-</div>
-
-<div class="texto">
-  <img src="assets/img/imagem-pagina-invalida.jpg"/>
-</div>

@@ -1,0 +1,66 @@
+﻿Sysfinanc - web:
+- login;
+- menu principal com dashboard e alguns dados;
+- cadastros:
+  * contas;
+  * lançamentos;
+    - crud;
+	- baixa;
+	- utilização;
+	- geração;
+  * usuários;
+  * formas de pagamento;
+  * bancos;
+  
+- consultas:
+  * lançamentos;
+  * mapa de contas;
+  * dashboard;
+  
+- relatórios:
+  * extrato por períodos;
+  * visão anual;
+  * mapa de contas mensal;
+  * comparativo entre meses;;
+
+
+WEBServices:
+  - WebServiceBancosRest:
+    * crud;
+	* atualizarLocalizacao;
+	* listarBancosProximos;
+	
+  - WebServiceLancamentosRest;
+    * crud;
+    * listarPorMesReferencia;
+    * listarPorVisaoMensal;
+    * listarPorDashBoard;
+    * listarPorVisaoAnual;
+	* efetuar Baixa;
+	* efetuar utilização;
+	* gerarLancamento;
+  - WebServiceUsuariosRest:
+    * crud;
+    * login;	
+	
+Sysfinanc - mobile:
+	- Login;
+	- Geração de lançamentos;
+	- Lista de contas;
+	- Lista de lançamentos mes a mes;
+	- Lista de bancos;
+	- gráfico visão mensal;
+	- efetuar baixa;
+	- efetuar utilização;
+	- atualização de localização;
+	- lista de bancos próximos em um mapa;
+	- envio de resumos por e-mail;
+	- configuração;
+	
+	
+	
+REQUISITOS NÃO FUNCIONAIS:
+
+- Página web em angular, bootstrap, postgres, spring e com token;
+- Sistema mobile em ionic, com utilização de mapas, localização;
+- Layout leve;	

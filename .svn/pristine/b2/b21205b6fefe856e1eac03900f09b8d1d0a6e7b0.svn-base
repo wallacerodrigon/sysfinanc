@@ -1,7 +1,0 @@
-import {LoginVO} from './login-vo';
-
-export class UsuarioLogadoVO {
-
-    public static usuarioLogado: LoginVO;
-
-}

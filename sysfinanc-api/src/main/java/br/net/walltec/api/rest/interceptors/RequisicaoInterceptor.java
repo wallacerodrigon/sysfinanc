@@ -11,6 +11,7 @@ import javax.interceptor.InvocationContext;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response.Status;
 
+import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.WebServiceException;
 import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
 import br.net.walltec.api.tokens.TokenManager;
@@ -34,15 +35,18 @@ public class RequisicaoInterceptor {
 		
 		if (contexto.getTarget() != null){
 			HttpHeaders headers = ((RequisicaoRestPadrao)contexto.getTarget()).getHeaders();
-		
-			String token = headers.getHeaderString(Constantes.TAG_TOKEN);
-			
-	        headers.getRequestHeaders().add("Access-Control-Allow-Origin", "http://localhost:4200");
-	        headers.getRequestHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-			
+			configurarHeaders(headers);
+
 	        boolean ehLogin = contexto.getMethod().getName().equalsIgnoreCase("efetuarLogin");
-			//validarToken(token, ehLogin);
+	        
+	        if (ehLogin) {
+	        	return contexto.proceed();
+	        }
 			
+			String token = recuperarToken(headers);			
+			
+			
+			validarToken(token, contexto);
 		}
 		
 		
@@ -53,10 +57,40 @@ public class RequisicaoInterceptor {
 	}
 
 	/**
+	 * @param headers
+	 */
+	private void configurarHeaders(HttpHeaders headers) {
+		headers.getRequestHeaders().add("Access-Control-Allow-Origin", "*");
+		headers.getRequestHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+	}
+
+	/**
+	 * @param headers
+	 * @return
+	 * @throws NegocioException
+	 */
+	private String recuperarToken(HttpHeaders headers) throws NegocioException {
+		String token = headers.getHeaderString(Constantes.TAG_TOKEN);
+		
+		if (token == null) {
+			throw new NegocioException("Requisição sem token");
+		}
+		
+		if (!token.startsWith("Bearer")) {
+			throw new NegocioException("Requisição sem token no header apropriado");
+		}
+		return token;
+	}
+
+	/**
 	 * @param token
+	 * @param contexto 
 	 * @param ehLogin
 	 */
-	private void validarToken(String token, boolean ehLogin) {
+	private void validarToken(String token, InvocationContext contexto) {
+		token = token.split(" ")[1];	        
+        boolean ehLogin = contexto.getMethod().getName().equalsIgnoreCase("efetuarLogin");
+		
 		if (!ehLogin && naoHaToken(token) ){
 			throw new WebServiceException(Status.UNAUTHORIZED);
 		}

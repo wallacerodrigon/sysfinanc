@@ -6,12 +6,12 @@
   <packaging>pom</packaging>
   
   <properties>
-    	<sistema.version>1.7.1</sistema.version>
+    	<sistema.version>1.8.1</sistema.version>
   </properties>
   
   <modules>
   	<module>../sysfinanc-api</module>
-  	<module>../sysfinanc-web</module>
+   	<module>../sysfinanc-web</module>
 <!-- 	<module>../e-sysfinanc</module> -->
   </modules>
 </project>

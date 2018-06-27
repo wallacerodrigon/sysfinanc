@@ -7,6 +7,7 @@ import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { RecuperaUsuarioLoginSenhaDto } from 'app/dominio/dto/recupera-usuario-login-senha-dto';
+import { RubricaService } from '../../rubricas/rubrica.service';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router, private _dialogService: DialogService,
               private fb: FormBuilder, 
-              private loginService: LoginService ) { 
+              private loginService: LoginService,
+              private rubricaService: RubricaService ) { 
   }
 
   ngOnInit() {
@@ -56,6 +58,9 @@ export class LoginComponent implements OnInit {
      this.loginService
         .efetuarLogin(dto)
         .subscribe(usuario => {
+            if (! this.rubricaService.temCache()){
+                this.rubricaService.listarParaCache();
+            }
             this.blockUI.stop(); // Stop blocking
             this.router.navigate(['/dashboard']);
         },

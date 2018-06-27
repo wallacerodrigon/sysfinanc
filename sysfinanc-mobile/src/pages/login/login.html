@@ -1,0 +1,20 @@
+<ion-content padding>
+  <ion-item>
+			<ion-img src="assets/img/logo_sysfinanc.png" width="292" height="71" justify-content-end></ion-img>         
+  </ion-item>
+
+  <form (submit)="efetuaLogin()">
+      <ion-item>
+          <ion-label stacked>Usuário</ion-label>
+          <ion-input [(ngModel)]="usuario" name="usuario" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label stacked>Senha</ion-label>
+          <ion-input [(ngModel)]="senha" name="senha" type="password"></ion-input>
+      </ion-item>
+
+      <button ion-button full color="light" type="submit">ENTRAR</button>
+    </form>
+
+</ion-content>

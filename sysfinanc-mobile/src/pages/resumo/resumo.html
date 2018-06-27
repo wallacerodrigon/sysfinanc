@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Resumo do mês</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <ion-card>
+        <ion-card-header>
+                <h1>Receitas total:
+                    {{resumoVO.receitaTotal|currency:"BRL":true:'1.2-2'}}                
+                </h1>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item>Recebido:{{resumoVO.recPagas|currency:"BRL":true:'1.2-2'}}</ion-item>
+            <ion-item>A receber:{{resumoVO.recNaoPagas|currency:"BRL":true:'1.2-2'}}</ion-item>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+        <ion-card-header>
+                <h1>Despesas total:
+                    {{resumoVO.despesaTotal|currency:"BRL":true:'1.2-2'}}                                
+                </h1>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item>Pagas:{{resumoVO.despPagas|currency:"BRL":true:'1.2-2'}}</ion-item>
+            <ion-item>A pagar:{{resumoVO.despNaoPagas|currency:"BRL":true:'1.2-2'}}</ion-item>
+        </ion-card-content>
+    </ion-card>
+
+
+</ion-content>

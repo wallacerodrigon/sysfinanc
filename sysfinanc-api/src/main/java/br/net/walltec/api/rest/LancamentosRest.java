@@ -3,7 +3,6 @@
  */
 package br.net.walltec.api.rest;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -25,6 +25,8 @@ import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.GravacaoArquivoDto;
 import br.net.walltec.api.dto.RegistroExtratoDto;
+import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
+import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.WalltecException;
@@ -37,6 +39,7 @@ import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
 import br.net.walltec.api.rest.dto.BaixaLancamentoDTO;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
 import br.net.walltec.api.utilitarios.UtilData;
+import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -125,20 +128,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@Override
 	public Response incluir(LancamentoVO objeto) throws WebServiceException {
         try {
-        	Date dataFim = objeto.getDataFimStr() != null && !objeto.getDataFimStr().isEmpty() ? UtilData.getData(objeto.getDataFimStr(), UtilData.SEPARADOR_PADRAO) : null;
-        	Date dataVencimento = UtilData.getData(objeto.getDataVencimentoStr(), UtilData.SEPARADOR_PADRAO);
-        	
-        	if (dataFim != null && dataFim.before(dataVencimento)) {
-        		throw new WebServiceException("Data Fim não deve ser menor do que a data de Vencimento!");
-        	}
-        	
             objeto = servico.incluirVO(objeto);
-            
-            if (dataFim != null) {
-            	servico.gerarLancamentos(objeto, 
-            			UtilData.somarData(dataVencimento, 1, ChronoUnit.MONTHS), 
-            			dataFim, false);
-            }
             
             return Response.ok(objeto).build();
         } catch (NegocioException e) {
@@ -148,6 +138,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
             throw new WebServiceException(e.getMessage());
         }
 	}
+
 
 	@Override
 	public Response alterar(LancamentoVO objeto) throws WebServiceException {
@@ -210,22 +201,52 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@POST
 	@Path("/gerar-lancamento")
 	public Response gerarLancamentos(GeracaoParcelasDto dto) throws WebServiceException {
-		LancamentoVO vo = new LancamentoVO();
-		vo.setNumero(new Short("0"));
-		Date dataInicial = UtilData.getData(dto.getDataVencimentoStr(), "/");
-		Date dataFinal = UtilData.somarData(dataInicial, dto.getQuantidade(), ChronoUnit.MONTHS);
-		
-		List<LancamentoVO> vos = null;
 		try {
-			vos = servico.gerarLancamentos(vo, dataInicial, dataFinal, dto.getParcial());
+			
+			if (dto.getParcial()) {
+				return Response.ok().entity(this.servico.montarListaLancamentosVO(dto)).build();
+			} 
+			List<LancamentoVO> vos = this.servico.gerarLancamentos(dto);
+			return Response.ok().entity(vos).build();
 		} catch (NegocioException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());
 		}
-		return Response.ok(vos).build();
-		
-		
 	}
+	
+	@GET
+	@Path("/obter-resumo-mes/{mes}/{ano}")
+	public Response gerarResumoMes(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
+		
+		FiltraParcelasDto dtoFiltro = new FiltraParcelasDto();
+		dtoFiltro.setMes(mes);
+		dtoFiltro.setAno(ano);
+		
+		try {
+			ResumoMesAnoDTO retorno = servico.obterResumoMesAno(dtoFiltro);
+			return Response.ok().entity(retorno).build();
+		} catch (NegocioException e) {
+			e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+		}
+	}
+	
+	@GET
+	@Path("/obter-resumo-mes-detalhe/{mes}/{ano}")
+	public Response gerarResumoMesDetalhado(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
+		
+		FiltraParcelasDto dtoFiltro = new FiltraParcelasDto();
+		dtoFiltro.setMes(mes);
+		dtoFiltro.setAno(ano);
+		
+		try {
+			ResumoDetalhadoMesAnoDTO retorno = servico.obterResumoDetalhadoMesAno(dtoFiltro);
+			return Response.ok().entity(retorno).build();
+		} catch (NegocioException e) {
+			e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+		}
+	}	
 
 }
 

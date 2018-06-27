@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Edição de lançamento</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <form (submit)="salvarEdicao()">
+      <ion-item>
+          <ion-label stacked>Descrição</ion-label>
+          <ion-input [(ngModel)]="lancamentoEditar.descricao" name="descricao" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label stacked>Data do Vencimento</ion-label>
+          <ion-input [(ngModel)]="lancamentoEditar.dataVencimento" name="dataVencimento" type="date"></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label stacked>Valor</ion-label>
+          <ion-input [(ngModel)]="lancamentoEditar.valorVencimento" name="valorVencimento" type="currency"></ion-input>
+      </ion-item>
+
+      <button ion-button full color="light" type="submit">Salvar</button>
+    </form>
+
+</ion-content>

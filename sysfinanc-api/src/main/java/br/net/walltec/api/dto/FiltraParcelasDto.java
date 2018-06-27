@@ -14,7 +14,7 @@ public class FiltraParcelasDto extends DtoPadrao {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Integer mes, ano;
+	private Integer mes, ano, idConta, idParcelaOrigem;
 
 	/**
 	 * @return the mes
@@ -42,6 +42,27 @@ public class FiltraParcelasDto extends DtoPadrao {
 	 */
 	public void setAno(Integer ano) {
 		this.ano = ano;
+	}
+
+	public Integer getIdConta() {
+		return idConta;
+	}
+
+	public void setIdConta(Integer idConta) {
+		this.idConta = idConta;
+	}
+
+	public Integer getIdParcelaOrigem() {
+		return idParcelaOrigem;
+	}
+
+	public void setIdParcelaOrigem(Integer idParcelaOrigem) {
+		this.idParcelaOrigem = idParcelaOrigem;
+	}
+
+	@Override
+	public String toString() {
+		return "FiltraParcelasDto [mes=" + mes + ", ano=" + ano + "]";
 	}
 	
 	
