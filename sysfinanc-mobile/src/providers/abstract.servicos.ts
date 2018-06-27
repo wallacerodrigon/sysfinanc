@@ -6,8 +6,13 @@ import { Observable } from 'rxjs';
 
 export abstract class AbstractServicos<T> {
 
-  protected http: HttpInterceptor;
   protected uri: string;
+  protected http: HttpInterceptor;
+
+  // constructor(public http: HttpInterceptor) { 
+  // }
+
+
 
   public ping(): Promise<any> {
       return this.http

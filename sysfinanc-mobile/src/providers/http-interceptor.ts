@@ -1,10 +1,10 @@
 import {Injectable} from "@angular/core";
 import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers} from "@angular/http";
 import {Observable} from "rxjs/Rx";
-import {Constantes} from '../utilitarios/constantes';
-import { LoginPage } from "../../pages/login/login";
+import { LoginPage } from "../pages/login/login";
 import { NavController } from "ionic-angular";
 import { AlertController } from "ionic-angular/components/alert/alert-controller";
+import { UsuarioVO } from "../app/entidades/UsuarioVO";
 
 @Injectable()
 export class HttpInterceptor extends Http  {
@@ -56,9 +56,8 @@ export class HttpInterceptor extends Http  {
         }
         let usuario: string = sessionStorage.getItem("usuario");
         if (usuario){
-            //let usr: UsuarioVO = JSON.parse(usuario);
-            let token = "";
-            options.headers.append('Authorization', 'Bearer '+ token);
+            let usr: UsuarioVO = JSON.parse(usuario);
+            options.headers.append('Authorization', 'Bearer '+ usr.token);
         }
 
         return options;
@@ -70,7 +69,7 @@ export class HttpInterceptor extends Http  {
 
     intercept(observable: Observable<Response>): Observable<Response> {
 
-        return observable.catch((err, source) => {
+        return observable.catch((err) => {
             
             if (err.status  == 401 && ! err.url.endsWith('/login')) {
                 this.irParaLogin();

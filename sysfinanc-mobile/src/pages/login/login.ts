@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {HomePage} from '../home/home';
+import { UsuarioService } from '../../providers/usuario-service';
 
 
 /**
@@ -16,15 +17,23 @@ import {HomePage} from '../home/home';
 })
 export class LoginPage {
 
-  public usuario: String;
-  public senha: String;
+  public usuario: string;
+  public senha: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public usuarioService: UsuarioService) {
   }
 
   efetuaLogin(){
-    console.log(this.usuario + " " + this.senha);
-    this.navCtrl.setRoot(HomePage, {usuario: this.usuario});
+    this.usuarioService
+        .efetuarLogin(this.usuario, this.senha)
+        .then(usuario => {
+            sessionStorage.setItem("usuario", JSON.stringify(usuario));
+            this.navCtrl.setRoot(HomePage, {usuario: this.usuario});
+        })
+        .catch(erro => {
+            console.log(erro);
+        })
+
   }
 
 }

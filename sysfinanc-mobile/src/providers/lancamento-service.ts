@@ -15,6 +15,8 @@ import {LancamentoDTO} from '../app/dto/lancamento-dto';
 
 import {HttpServicos} from '../app/utilitarios/HttpServicos';
 import { AbstractServicos } from './abstract.servicos';
+import { Observable } from 'rxjs';
+import { HttpInterceptor } from './http-interceptor';
 
 @Injectable()
 export class LancamentoService extends AbstractServicos<LancamentoVO> {
@@ -23,6 +25,10 @@ export class LancamentoService extends AbstractServicos<LancamentoVO> {
   private _ano:Number = 0;
   protected uri: string = Constantes.URL_BASE + "/lancamentos";
     
+  constructor(public http: HttpInterceptor) { 
+      super();
+  }
+
   public transformar(element: any): LancamentoVO {
      let vo: LancamentoVO = new LancamentoVO();
      Object.assign(vo, element);
@@ -121,10 +127,11 @@ export class LancamentoService extends AbstractServicos<LancamentoVO> {
           .delete(this.uri + "/"+pIdLancamento);
 	}	
 
-  salvarLancamento(pLancamento: LancamentoVO){
+  salvarLancamento(pLancamento: LancamentoVO): Promise<any> {
       pLancamento.idUsuario = Constantes.ID_USUARIO_PADRAO;
-      //this.http
-        //  .put(this.uri, new LancamentoDTO().converter(pLancamento));
+      return this.executarPut(this.uri, new LancamentoDTO().converter(pLancamento))
+        .then(retorno => retorno)
+        .catch(erro => erro);
 	}		
 
     recuperarResumoGeral(dataReferencia: Date) {
