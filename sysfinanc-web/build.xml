@@ -1,4 +1,4 @@
-<project name="wallet" default="gera-pacote">
+<project name="wallet" default="gera-pacote"> teste
 
 	<property name="node.dir" value="E:\Desenvolvimento\nodejs\node\"/>
 	<property name="node.exe" value="node.exe"/>
