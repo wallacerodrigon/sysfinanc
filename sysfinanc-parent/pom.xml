@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
   
   <properties>
-    	<sistema.version>1.8.0</sistema.version>
+    	<sistema.version>1.8.1</sistema.version>
   </properties>
   
   <modules>
