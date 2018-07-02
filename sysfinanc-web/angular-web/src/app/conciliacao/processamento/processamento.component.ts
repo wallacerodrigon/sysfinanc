@@ -23,24 +23,24 @@ declare var jQuery: any;
 })
 export class ProcessamentoComponent implements OnInit {
 
-  private colunasPadrao: string[] = ["", "Descrição", "Data", "Documento", "C/D", "Valor", "Lançamentos", "Valor"];
+  private colunasPadrao: string[] = ["Descrição", "Data", "Documento", "C/D", "Valor", "Lançamentos"];
   private colunasNaoConciliados: string[] = ["Descrição","Vencimento", "Valor", ""];
   private colunasConciliados: string[] = ["Descrição","Vencimento", "Documento", "Créditos", "Débitos"];
   private colunasVerificacao: string[] = ["","Descrição","Vencimento", "Documento", "Valor", "Total Conciliado", "", "Dif?"];
-
+ 
   private listagemExtrato: RegistroExtratoDto[] = [];
   private listaExtratoInteira: RegistroExtratoDto[] = [];
   private listagemNaoConciliados: LancamentoVO[] = [];
   private listagemConciliados: LancamentoVO[] = [];
   private listagemVerificacao: RegistroExtratoDto[] = [];
 
-  private atributosExtrato: string[] = ["historico", "dataLancamento", "documento", "creditoDebito", "valor", "textoLancamentos", "totalConciliadoStr"];
+  private atributosExtrato: string[] = ["historico", "dataLancamento", "documento", "creditoDebito", "valor", "lancamentos"];
   private atributosNaoConciliados: string[] = ["descricao", "dataVencimentoStr", "valorStr", "creditoDebito"];
   private atributosConciliados: string[] = ["descricao", "dataVencimentoStr", "numDocumento", "valorCreditoStr", "valorDebitoStr"];
   private atributosTotalizadoresExt: string[] = ["","Total:", "", "0,00"];
   private atributosTotalizadoresNConc: string[] = ["","Total:", "", "0,00"];
   private atributosTotalizadoresConc: string[] = ["","Totais =>", "", "0,00","0,00"];
-  private atributosExtratoVerificacao: string[] = ["historico", "dataLancamento", "documento", "valor", "totalConciliadoStr", "creditoDebito", "temDiferenca"];
+  private atributosExtratoVerificacao: string[] = ["historico", "dataLancamento", "documento", "valor",  "totalConciliadoStr", "creditoDebito", "temDiferenca"];
 
   private tamanhoExtrato: number = 0;
   private tamanhoNaoConciliados: number = 0;
@@ -55,8 +55,6 @@ export class ProcessamentoComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;   
 
   @ViewChild("arquivo") arquivo: ElementRef;
-
-  @ViewChild("listaNaoConciliados") tabelaNaoConciliados: CrudComponente;
   @ViewChild("database") database: ElementRef;
 
   constructor(private servico: ConciliacaoServiceService, 
@@ -74,65 +72,7 @@ export class ProcessamentoComponent implements OnInit {
 
   }
 
-  private separarDados(dados: Array<LancamentoVO>): Array<number> {
-      let totais: Array<number> = [0.00, 0.00, 0.00];
-      this.listagemNaoConciliados = [];
-      this.listagemConciliados = [];    
-
-      dados.forEach( vo => {
-        if (vo.bolPaga && vo.numDocumento != null){
-          totais[0] += vo.despesa ? 0.00 : vo.valor;
-          totais[1] += vo.despesa ? vo.valor : 0.00;
-          this.listagemConciliados.push( vo );
-
-        } else if (vo.bolPaga && vo.numDocumento == null){
-          totais[2] += vo.valor;
-          this.listagemNaoConciliados.push( vo );
-        }
-      })
-
-      return totais;
-
-  }
-
-  private buscarLancamentosConciliadosOuNao(dadosExtrato: any) {
-      this.databaseFiltro = this.database.nativeElement.value;
-      let dadosData: string[] = this.databaseFiltro.split('/');
-
-      this.lancamentoService.filtrar(new FiltraParcelasDto(Number(dadosData[1]), Number(dadosData[2])))
-            .subscribe( dados => {
-                let totais:Array<number> = this.separarDados(dados);
-
-                this.tamanhoConciliados = this.listagemConciliados.length;
-                this.tamanhoNaoConciliados = this.listagemNaoConciliados.length;
-
-                if (this.tamanhoConciliados + this.tamanhoNaoConciliados === 0){
-                    new AlertaComponent(this.dialogService).exibirMensagem('Não há lançamentos para conciliar!');
-                    return false;
-                }
-
-                this.atributosTotalizadoresNConc[3] = Formatadores.formataMoeda(totais[2]);
-                this.atributosTotalizadoresConc[2] = "Saldo:" + Formatadores.formataMoeda(totais[0]-totais[1]);
-                this.atributosTotalizadoresConc[3] = Formatadores.formataMoeda(totais[0]);
-                this.atributosTotalizadoresConc[4] = Formatadores.formataMoeda(totais[1]);
-                dadosExtrato.forEach(element => {
-                  let dto: RegistroExtratoDto = new RegistroExtratoDto().transformar(element);
-
-                   if (dto.historico.startsWith('S A L D O')){
-                      this.atributosTotalizadoresExt[3]= dto.valor;
-                   } else if (! this.isConciliado(dto.documento)){
-                       this.listagemExtrato.push(dto);            
-                   }
-                   this.listaExtratoInteira.push(dto);
-               });
-               this.tamanhoExtrato = this.listagemExtrato.length;
-               this.gerarVerificacaoConciliados(this.listaExtratoInteira);
-            }, erro => {
-                new AlertaComponent(this.dialogService).exibirMensagem(erro._data);
-            }  );
-  }
-
-  associarExtratoLancamento(){
+   associarExtratoLancamento(){
 
       let extratosMarcados: Array<RegistroExtratoDto> = this.listagemExtrato.filter(extrato => extrato["selecionado"]);
       let lancamentosNaoConciliados: Array<LancamentoVO> = this.listagemNaoConciliados.filter(extrato => extrato["selecionado"]);
@@ -229,14 +169,20 @@ export class ProcessamentoComponent implements OnInit {
         this.listaExtratoInteira= [];
 
         this.servico.enviarArquivo(
-                      new GravacaoArquivoDto(this.conteudoArquivoBase64)
+                      new GravacaoArquivoDto(this.conteudoArquivoBase64, this.database.nativeElement.value, 1)
                     )
             .subscribe(dados => {
-                this.buscarLancamentosConciliadosOuNao(dados.json());
+                dados.json().forEach(e => {
+                  let dto: RegistroExtratoDto = new RegistroExtratoDto();
+                  dto.transformar(e);
+                  this.listagemExtrato.push(dto);
+
+                });
+                this.tamanhoExtrato = this.listagemExtrato.length;
                 this.blockUI.stop();
             },
             erro => {
-              new AlertaComponent(this.dialogService).exibirMensagem(erro._data);
+              new AlertaComponent(this.dialogService).exibirMensagem("Erro ao processar o arquivo.");
               this.blockUI.stop();
             });
    }
@@ -247,8 +193,8 @@ export class ProcessamentoComponent implements OnInit {
 
        extrato.forEach(reg => {
            let total: number = 0.00;
-           reg.listaLancamentos  = this.listagemConciliados.filter(vo => vo.numDocumento.trim() == reg.documento.trim());
-           reg.listaLancamentos.forEach(vo => total += vo.descricao ? vo.valor * -1 : vo.valor);           
+           reg.lancamentos  = this.listagemConciliados.filter(vo => vo.numDocumento.trim() == reg.documento.trim());
+           reg.lancamentos.forEach(vo => total += vo.descricao ? vo.valor * -1 : vo.valor);           
            reg.totalConciliado = total;
            this.listagemVerificacao.push(reg);
        });

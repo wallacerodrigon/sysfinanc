@@ -1,5 +1,9 @@
 package br.net.walltec.api.dto;
 
+import java.util.List;
+
+import br.net.walltec.api.vo.LancamentoVO;
+
 public class RegistroExtratoDto {
 
     private String dataLancamento;
@@ -11,6 +15,9 @@ public class RegistroExtratoDto {
     private String valor;
     
     private String creditoDebito;
+    
+    private List<LancamentoVO> lancamentos;
+    
 
     public String getDataLancamento() {
         return dataLancamento;
@@ -57,4 +64,20 @@ public class RegistroExtratoDto {
 	public void setCreditoDebito(String creditoDebito) {
 		this.creditoDebito = creditoDebito;
 	}
+
+	/**
+	 * @return the lancamentos
+	 */
+	public List<LancamentoVO> getLancamentos() {
+		return lancamentos;
+	}
+
+	/**
+	 * @param lancamentos the lancamentos to set
+	 */
+	public void setLancamentos(List<LancamentoVO> lancamentos) {
+		this.lancamentos = lancamentos;
+	}
+
+
 }

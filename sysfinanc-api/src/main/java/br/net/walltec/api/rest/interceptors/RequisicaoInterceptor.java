@@ -60,8 +60,6 @@ public class RequisicaoInterceptor {
 	 * @param headers
 	 */
 	private void configurarHeaders(HttpHeaders headers) {
-		headers.getRequestHeaders().add("Access-Control-Allow-Origin", "*");
-		headers.getRequestHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 	}
 
 	/**

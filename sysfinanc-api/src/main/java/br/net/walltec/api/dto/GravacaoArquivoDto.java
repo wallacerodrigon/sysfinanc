@@ -15,7 +15,8 @@ public class GravacaoArquivoDto extends DtoPadrao {
 	private static final long serialVersionUID = 1L;
 	
 	private String arquivoBase64;
-	
+	private String strDataVencimento;
+	private Integer banco;
 
 	/**
 	 * @return the arquivoBase64
@@ -29,6 +30,34 @@ public class GravacaoArquivoDto extends DtoPadrao {
 	 */
 	public void setArquivoBase64(String arquivoBase64) {
 		this.arquivoBase64 = arquivoBase64;
+	}
+
+	/**
+	 * @return the strDataVencimento
+	 */
+	public String getStrDataVencimento() {
+		return strDataVencimento;
+	}
+
+	/**
+	 * @param strDataVencimento the strDataVencimento to set
+	 */
+	public void setStrDataVencimento(String strDataVencimento) {
+		this.strDataVencimento = strDataVencimento;
+	}
+
+	/**
+	 * @return the banco
+	 */
+	public Integer getBanco() {
+		return banco;
+	}
+
+	/**
+	 * @param banco the banco to set
+	 */
+	public void setBanco(Integer banco) {
+		this.banco = banco;
 	}
 
 	

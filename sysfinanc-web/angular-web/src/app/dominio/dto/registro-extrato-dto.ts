@@ -9,7 +9,7 @@ export class RegistroExtratoDto {
         public valor: string = null,
         public totalConciliado: number = null,
         public creditoDebito: string = null,
-        public listaLancamentos: Array<LancamentoVO> = null){}
+        public lancamentos: Array<LancamentoVO> = null){}
 
     public transformar(elem: any): RegistroExtratoDto {
         Object.assign(this, elem);
@@ -26,9 +26,9 @@ export class RegistroExtratoDto {
     }
 
     public get textoLancamentos(): string {
-        if (this.listaLancamentos != null){
+        if (this.lancamentos != null){
             let texto: string = "";
-            this.listaLancamentos.forEach(vo => {
+            this.lancamentos.forEach(vo => {
                 texto+= vo.descricao.substr(1,10)+"...\n";
             })
             return texto;

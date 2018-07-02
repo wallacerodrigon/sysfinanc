@@ -171,7 +171,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		byte[] conteudoArquivoDesformatado = Base64.getDecoder().decode(dto.getArquivoBase64());
 		List<RegistroExtratoDto> dadosArquivo;
 		try {
-			dadosArquivo = mapImportadores.get("001").importar("arquivo", conteudoArquivoDesformatado);
+			String dadosData[] = dto.getStrDataVencimento().split("/");
+			FiltraParcelasDto dto2 = new FiltraParcelasDto();
+			dto2.setAno(Integer.valueOf(dadosData[2]));
+			dto2.setMes(Integer.valueOf(dadosData[1]));
+			List<LancamentoVO> listaParcelas = servico.listarParcelas(dto2);
+			dadosArquivo = mapImportadores.get("001").importar("arquivo", conteudoArquivoDesformatado, listaParcelas);
 			return Response.ok(dadosArquivo).build();
 		} catch (WalltecException e) {
 			e.printStackTrace();
