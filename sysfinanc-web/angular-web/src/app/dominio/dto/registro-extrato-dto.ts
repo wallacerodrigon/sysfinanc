@@ -4,12 +4,15 @@ import { LancamentoVO } from "../vo/lancamento-vo";
 export class RegistroExtratoDto {
 
     constructor(public dataLancamento: string = null, 
+        public confirmado: boolean = false,
         public historico: string = null,   
         public documento: string = null, 
         public valor: string = null,
         public totalConciliado: number = null,
         public creditoDebito: string = null,
-        public lancamentos: Array<LancamentoVO> = null){}
+        public lancamentos: Array<LancamentoVO> = null,
+        public arrayIds: Array<number> = []
+        ){}
 
     public transformar(elem: any): RegistroExtratoDto {
         Object.assign(this, elem);
@@ -36,4 +39,6 @@ export class RegistroExtratoDto {
             return "";
         }
     }
+
+
 }

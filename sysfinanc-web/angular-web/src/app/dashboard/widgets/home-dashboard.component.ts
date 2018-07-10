@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Chart } from 'chart.js';  
+//import { Chart } from 'chart.js';  
 
 @Component({
   selector: 'app-home-dashboard',
@@ -47,7 +47,7 @@ export class HomeDashboardComponent implements OnInit {
   }
 
   gerarGrafico(){
-    this.chart = new Chart('canvas', {
+    /*this.chart = new Chart('canvas', {
       type: 'line',
       data: {
         labels: [{year:2018, month: 1, day: 1}, {year:2018, month: 1, day: 10}, {year:2018, month: 1, day: 11}],
@@ -77,6 +77,6 @@ export class HomeDashboardComponent implements OnInit {
           }],
         }
       }
-    });    
+    });    */
   }
 }

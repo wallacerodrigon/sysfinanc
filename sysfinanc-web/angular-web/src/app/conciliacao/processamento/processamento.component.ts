@@ -24,9 +24,6 @@ declare var jQuery: any;
 export class ProcessamentoComponent implements OnInit {
 
   private colunasPadrao: string[] = ["Descrição", "Data", "Documento", "C/D", "Valor", "Lançamentos"];
-  private colunasNaoConciliados: string[] = ["Descrição","Vencimento", "Valor", ""];
-  private colunasConciliados: string[] = ["Descrição","Vencimento", "Documento", "Créditos", "Débitos"];
-  private colunasVerificacao: string[] = ["","Descrição","Vencimento", "Documento", "Valor", "Total Conciliado", "", "Dif?"];
  
   private listagemExtrato: RegistroExtratoDto[] = [];
   private listaExtratoInteira: RegistroExtratoDto[] = [];
@@ -34,23 +31,12 @@ export class ProcessamentoComponent implements OnInit {
   private listagemConciliados: LancamentoVO[] = [];
   private listagemVerificacao: RegistroExtratoDto[] = [];
 
-  private atributosExtrato: string[] = ["historico", "dataLancamento", "documento", "creditoDebito", "valor", "lancamentos"];
-  private atributosNaoConciliados: string[] = ["descricao", "dataVencimentoStr", "valorStr", "creditoDebito"];
-  private atributosConciliados: string[] = ["descricao", "dataVencimentoStr", "numDocumento", "valorCreditoStr", "valorDebitoStr"];
-  private atributosTotalizadoresExt: string[] = ["","Total:", "", "0,00"];
-  private atributosTotalizadoresNConc: string[] = ["","Total:", "", "0,00"];
-  private atributosTotalizadoresConc: string[] = ["","Totais =>", "", "0,00","0,00"];
-  private atributosExtratoVerificacao: string[] = ["historico", "dataLancamento", "documento", "valor",  "totalConciliadoStr", "creditoDebito", "temDiferenca"];
-
   private tamanhoExtrato: number = 0;
-  private tamanhoNaoConciliados: number = 0;
-  private tamanhoConciliados: number = 0;
-  private tamanhoVerificacao: number = 0;
 
   private conteudoArquivoBase64: string = null;
   protected databaseFiltro: string;
 
-  private paginaVerificacao: number = 0;
+  private paginaAtual: number = 1;
   
   @BlockUI() blockUI: NgBlockUI;   
 
@@ -67,45 +53,54 @@ export class ProcessamentoComponent implements OnInit {
     
     jQuery(this.database.nativeElement).datepicker();
     this.tamanhoExtrato = 0;
-    this.tamanhoNaoConciliados = this.listagemNaoConciliados.length;
-    this.tamanhoConciliados = this.listagemConciliados.length;
 
   }
 
    associarExtratoLancamento(){
 
-      let extratosMarcados: Array<RegistroExtratoDto> = this.listagemExtrato.filter(extrato => extrato["selecionado"]);
-      let lancamentosNaoConciliados: Array<LancamentoVO> = this.listagemNaoConciliados.filter(extrato => extrato["selecionado"]);
+      let extratosAAtualizar: Array<RegistroExtratoDto> = this.listagemExtrato.filter(extrato => extrato.confirmado == false);
 
-      if (extratosMarcados == null || extratosMarcados.length === 0 || 
-        lancamentosNaoConciliados == null || lancamentosNaoConciliados.length === 0){
-          new AlertaComponent(this.dialogService).exibirMensagem('Selecione um extrato e um lançamento não conciliado');
-          return false;
-      }
+      extratosAAtualizar.forEach(dto => {
 
-      if (extratosMarcados.length > 1){
-        new AlertaComponent(this.dialogService).exibirMensagem('Selecione apenas um item do extrato');
-        return false;
-      }
+          if (dto.arrayIds != null){
+              let lancamentos: Array<LancamentoVO> = dto.lancamentos;
 
-      let totalExtrato: number = Formatadores.formataNumero( extratosMarcados[0].valor );
-      if (extratosMarcados[0].creditoDebito == 'D'){
-        totalExtrato = totalExtrato * -1;
-      }
-      let totalNaoConciliado: number = 0.00;
-      lancamentosNaoConciliados.forEach(vo => totalNaoConciliado += vo.despesa ? vo.valor * -1 : vo.valor);
+              dto.lancamentos = lancamentos.filter(vo => dto.arrayIds.every(id => id == vo.id));
+              delete dto.arrayIds;
+          }
 
-      if (totalExtrato != totalNaoConciliado ){
-          new AlertaComponent(this.dialogService).exibirMensagem('ATENÇÃO! O total do extrato não confere com o total selecionado dos não conciliados!');
-          return false;        
-      }
+      });
 
-      let dataDocumento: string = extratosMarcados[0].dataLancamento;
-      let dadosData: Array<string> = dataDocumento.split('/');
-      this.efetivarAssociacao(extratosMarcados[0].documento, dadosData[0] +'/'+dadosData[1]+'/20'+dadosData[2]);
-      this.atualizarListaExtrato();
-      this.atualizarTamanhosListagens();      
-      this.gerarVerificacaoConciliados(this.listaExtratoInteira);
+      console.log(extratosAAtualizar);
+
+
+      // if (extratosMarcados == null || extratosMarcados.length === 0 || 
+      //   lancamentosNaoConciliados == null || lancamentosNaoConciliados.length === 0){
+      //     new AlertaComponent(this.dialogService).exibirMensagem('Selecione um extrato e um lançamento não conciliado');
+      //     return false;
+      // }
+
+      // if (extratosMarcados.length > 1){
+      //   new AlertaComponent(this.dialogService).exibirMensagem('Selecione apenas um item do extrato');
+      //   return false;
+      // }
+
+      // let totalExtrato: number = Formatadores.formataNumero( extratosMarcados[0].valor );
+      // if (extratosMarcados[0].creditoDebito == 'D'){
+      //   totalExtrato = totalExtrato * -1;
+      // }
+      // let totalNaoConciliado: number = 0.00;
+      // lancamentosNaoConciliados.forEach(vo => totalNaoConciliado += vo.despesa ? vo.valor * -1 : vo.valor);
+
+      // if (totalExtrato != totalNaoConciliado ){
+      //     new AlertaComponent(this.dialogService).exibirMensagem('ATENÇÃO! O total do extrato não confere com o total selecionado dos não conciliados!');
+      //     return false;        
+      // }
+
+      // let dataDocumento: string = extratosMarcados[0].dataLancamento;
+      // let dadosData: Array<string> = dataDocumento.split('/');
+      // this.efetivarAssociacao(extratosMarcados[0].documento, dadosData[0] +'/'+dadosData[1]+'/20'+dadosData[2]);
+      //this.gerarVerificacaoConciliados(this.listaExtratoInteira);
    }
 
    private efetivarAssociacao(numDocumentoExtrato: string, dataDocumento: string){
@@ -135,22 +130,7 @@ export class ProcessamentoComponent implements OnInit {
     })    
     this.listagemNaoConciliados = lancamentosNaoConciliados; 
    }
-
-   private atualizarTamanhosListagens(){
-    this.tamanhoConciliados = this.listagemConciliados.length;
-    this.tamanhoNaoConciliados = this.listagemNaoConciliados.length;
-    
-  }
   
-  private atualizarListaExtrato(){
-    this.listagemExtrato.forEach((data, index)=> {
-      if (data["selecionado"]){
-        this.listagemExtrato.splice(index, 1)
-      }
-    });     
-    this.tamanhoExtrato = this.listagemExtrato.length;
-   }
-
    private isConciliado(numDocumento: string): boolean {
      return this.listagemConciliados &&
             this.listagemConciliados.filter(vo => vo.numDocumento == numDocumento).length > 0;
@@ -189,7 +169,6 @@ export class ProcessamentoComponent implements OnInit {
 
    private gerarVerificacaoConciliados(extrato: RegistroExtratoDto[]): any {
        this.listagemVerificacao = [];
-       this.tamanhoVerificacao = 0;
 
        extrato.forEach(reg => {
            let total: number = 0.00;
@@ -199,7 +178,6 @@ export class ProcessamentoComponent implements OnInit {
            this.listagemVerificacao.push(reg);
        });
        console.log(this.listagemVerificacao);
-       this.tamanhoVerificacao = this.listagemVerificacao.length;
    }   
 
    private onFileChange(event) {
@@ -213,9 +191,5 @@ export class ProcessamentoComponent implements OnInit {
       };      
     }
   } 
-  
-  private visualizarLancamentos(item: RegistroExtratoDto, indice: number){
-       // window.document.getElementById("linha_"+indice).attributes('color', 'red');
-  }
 
 }

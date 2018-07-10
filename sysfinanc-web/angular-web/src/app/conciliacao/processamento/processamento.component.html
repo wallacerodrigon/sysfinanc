@@ -26,24 +26,48 @@
     </form>
     <block-ui>
         <!-- Nav tabs -->
-        <div class="tab-content">
-            <div  role="tabpanel" class="tab-pane fade in active" id="extrato">
-                    <div class="col col-md-12">
-                        <app-crud-componente [nomesColunas]="colunasPadrao"
-                                    [listaDados]="listagemExtrato"
-                                    [exibeCheckboxes]="true"
-                                    [tamanhoListagem]="tamanhoExtrato"
-                                    [totalizadores]="atributosTotalizadoresExt"
-                                    [exibeTotalizadores]="true"
-                                    [atributosColunas]="atributosExtrato">
-                        </app-crud-componente>
+        <div  role="tabpanel" class="tab-pane fade in active" id="extrato">
+                <div class="col col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <th *ngFor="let col of colunasPadrao">
+                                    {{col}}
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of listagemExtrato.slice( (paginaAtual-1)*tamanhoExtrato, (paginaAtual)*10)">
+                                    <td>{{row.historico}}</td>
+                                    <td>{{row.dataLancamento}}</td>
+                                    <td>{{row.documento}}</td>
+                                    <td>{{row.creditoDebito}}</td>
+                                    <td>{{row.valor}}</td>
+                                    <td  *ngIf="row.confirmado">
+                                        <ul *ngFor="let l of row.lancamentos">
+                                            <li>{{l.descricao}} - {{l.valor}}</li>
+                                        </ul>
+                                    </td>
+
+                                    <td  *ngIf="!row.confirmado">
+                                        <select class="form-control" multiple [(ngModel)]="row.arrayIds">
+                                            <option *ngFor="let l of row.lancamentos" value="{{l.id}}">{{l.descricao}} - {{l.valor}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default" *ngIf="!row.confirmado">Add</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>]
+                        <ngb-pagination class="d-flex justify-content-center" [collectionSize]="tamanhoExtrato" [pageSize]="10" [ellipses]="false" [maxSize]="3"  
+                        [(page)]="paginaAtual" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>            
                     </div>
-                    <div class="row">
-                        <div class="col col-md-4 col-md-offset-4">
-                            <button class="btn btn-primary" id="btnAssociar" (click)="associarExtratoLancamento()">Associar Marcados</button>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-4 col-md-offset-4">
+                        <button class="btn btn-primary" id="btnAssociar" (click)="associarExtratoLancamento()">Associar Marcados</button>
                     </div>
-            </div>
+                </div>
         </div>
     </block-ui>
 </div>

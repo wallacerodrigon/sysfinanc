@@ -18,6 +18,8 @@ public class RegistroExtratoDto {
     
     private List<LancamentoVO> lancamentos;
     
+    private boolean confirmado;
+    
 
     public String getDataLancamento() {
         return dataLancamento;
@@ -77,6 +79,20 @@ public class RegistroExtratoDto {
 	 */
 	public void setLancamentos(List<LancamentoVO> lancamentos) {
 		this.lancamentos = lancamentos;
+	}
+
+	/**
+	 * @return the confirmado
+	 */
+	public boolean isConfirmado() {
+		return confirmado;
+	}
+
+	/**
+	 * @param confirmado the confirmado to set
+	 */
+	public void setConfirmado(boolean confirmado) {
+		this.confirmado = confirmado;
 	}
 
 
