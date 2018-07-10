@@ -38,4 +38,8 @@ export class LancamentoVO  {
     public get creditoDebito(): string {
         return this.despesa ? "D":"C";
     }
+
+    public descCombo(): string {
+        return this.descricao + '-' + this.valorStr;
+    }
 }

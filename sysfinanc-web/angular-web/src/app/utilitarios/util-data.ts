@@ -85,4 +85,8 @@ export class UtilData {
         }
     }
     
+    public static converterDataUSAToBR(strData: string): string {
+        let dados: string[] = strData.split('-');
+        return dados[2]+'/'+dados[1]+'/'+dados[0];
+    }
 }

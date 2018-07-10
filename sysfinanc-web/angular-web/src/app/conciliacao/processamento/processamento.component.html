@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <form name="frmArquivo" novalidate enctype="application/x-www-form-urlencoded">
-        <fieldset>
-            <legend>Parâmetros</legend>
+        <div class="border">
+            
                 <div class="row">
                         <div class="col col-md-2">
                             <label for="banco">Banco</label>
@@ -11,18 +11,21 @@
                         </div>
                         <div class="col col-md-2">
                             <label for="database">Data-base dos Lançamentos</label>
-                            <input type="text" id="database" name="databaseFiltro" class="form-control" #database [(ngModel)]="databaseFiltro">
+                            <input type="date" id="database" name="databaseFiltro" class="form-control" [(ngModel)]="databaseFiltro">
                         </div>
                         <div class="col col-md-6">
                             <label for="arquivo">Arquivo</label>
                             <input id="arquivo"  class="btn btn-default file" name="arquivo" #arquivo type="file" placeholder="Selecione um arquivo" (change)="onFileChange($event)">
                         </div>
-                        <div class="col col-md-2">
-                                <label for="arquivo">processar</label>
-                                <button class="btn btn-primary" id="btnIniciar" (click)="efetuarUpload()">Processar</button>
-                        </div>
                 </div>
-        </fieldset>
+
+                <div class="row">
+                    <div class="col col-md-4 col-md-offset-4">
+                        <button class="btn btn-primary" id="btnIniciar" (click)="efetuarUpload()">Processar</button>
+                    </div>
+                    
+                </div>
+            </div>
     </form>
     <block-ui>
         <!-- Nav tabs -->
@@ -36,29 +39,31 @@
                                 </th>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let row of listagemExtrato.slice( (paginaAtual-1)*tamanhoExtrato, (paginaAtual)*10)">
+                                <tr *ngFor="let row of listagemExtrato.slice( (paginaAtual-1)*tamanhoPagina, (paginaAtual)*tamanhoPagina)">
                                     <td>{{row.historico}}</td>
                                     <td>{{row.dataLancamento}}</td>
                                     <td>{{row.documento}}</td>
                                     <td>{{row.creditoDebito}}</td>
                                     <td>{{row.valor}}</td>
                                     <td  *ngIf="row.confirmado">
-                                        <ul *ngFor="let l of row.lancamentos">
-                                            <li>{{l.descricao}} - {{l.valor}}</li>
+                                        <ul *ngFor="let l of row.lancamentos" class="largura-maxima">
+                                            <li>{{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}</li>
                                         </ul>
                                     </td>
 
                                     <td  *ngIf="!row.confirmado">
-                                        <select class="form-control" multiple [(ngModel)]="row.arrayIds">
-                                            <option *ngFor="let l of row.lancamentos" value="{{l.id}}">{{l.descricao}} - {{l.valor}}</option>
+                                        <select multiple [(ngModel)]="row.arrayIds" class="largura-maxima">
+                                            <option *ngFor="let l of row.lancamentos" value="{{l.id}}">
+                                               {{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}
+                                            </option>
                                         </select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-default" *ngIf="!row.confirmado">Add</button>
+                                        <button class="btn btn-default" *ngIf="!row.confirmado">Incluir</button>
                                     </td>
                                 </tr>
                             </tbody>
-                        </table>]
+                        </table>
                         <ngb-pagination class="d-flex justify-content-center" [collectionSize]="tamanhoExtrato" [pageSize]="10" [ellipses]="false" [maxSize]="3"  
                         [(page)]="paginaAtual" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>            
                     </div>
