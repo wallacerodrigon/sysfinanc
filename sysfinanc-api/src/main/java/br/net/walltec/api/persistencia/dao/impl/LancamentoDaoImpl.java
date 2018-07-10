@@ -9,8 +9,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-
-import org.hibernate.Hibernate;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.PersistenciaException;
@@ -97,6 +97,21 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		parametros.put("idLancamentoOrigem", idLancamentoOrigem);
 		return listarQueryECachear(buffer.toString(), UtilizacaoLancamentoVO.class, parametros);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.persistencia.dao.LancamentoDao#associarLancamentoComExtrato(java.lang.Integer, java.lang.String)
+	 */
+	@Override
+	public boolean associarLancamentoComExtrato(Integer idLancamento, String numDocumento, Date dataVencimento) throws PersistenciaException {
+		String hql = "update Lancamento set numDocumento = :numDocumento, bolPaga = true, bolConciliado = true, dataVencimento = :dataVencimento where id = :idLancamento ";
+		Map<String, Object> mapParams = new HashMap<>();
+		mapParams.put("idLancamento", idLancamento);
+		mapParams.put("numDocumento", numDocumento);
+		mapParams.put("dataVencimento", dataVencimento);
+		
+		return this.executarUpdateHql(hql, mapParams);
+		
 	}
 
 

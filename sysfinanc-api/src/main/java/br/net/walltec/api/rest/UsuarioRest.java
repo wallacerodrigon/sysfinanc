@@ -3,6 +3,8 @@
  */
 package br.net.walltec.api.rest;
 
+import java.util.List;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -112,5 +114,7 @@ public class UsuarioRest extends RequisicaoRestPadrao<UsuarioVO> {
         }
 
 	}
+
+
 	
 }

@@ -1,13 +1,8 @@
 package br.net.walltec.api.rest.comum;
 
 
-import br.net.walltec.api.excecoes.NegocioException;
-import br.net.walltec.api.excecoes.WebServiceException;
-import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
-import br.net.walltec.api.rest.dto.filtro.FiltroRelatorioDTO;
-import br.net.walltec.api.tokens.TokenManager;
-import br.net.walltec.api.utilitarios.Constantes;
-import br.net.walltec.api.vo.GerenciadorPadraoVO;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -19,7 +14,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.logging.Logger;
+
+import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.excecoes.WebServiceException;
+import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
+import br.net.walltec.api.rest.dto.filtro.FiltroRelatorioDTO;
+import br.net.walltec.api.tokens.TokenManager;
+import br.net.walltec.api.utilitarios.Constantes;
+import br.net.walltec.api.vo.GerenciadorPadraoVO;
 
 @SuppressWarnings("ALL")
 @Produces(value={MediaType.APPLICATION_JSON})
@@ -103,6 +105,14 @@ public abstract class RequisicaoRestPadrao<V extends GerenciadorPadraoVO> implem
 		filtro.setResponse(response);
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.rest.comum.ContratoPadraoRest#alterar(java.util.List)
+	 */
+	@Override
+	public Response alterar(List<V> lista) throws WebServiceException {
+		throw new WebServiceException(Response.serverError().build());
+	}	
 	
 	
 }

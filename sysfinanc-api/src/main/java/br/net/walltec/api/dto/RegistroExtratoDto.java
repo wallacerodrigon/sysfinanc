@@ -1,9 +1,11 @@
 package br.net.walltec.api.dto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.net.walltec.api.vo.LancamentoVO;
 
+//verificar como ignorar atributos 
 public class RegistroExtratoDto {
 
     private String dataLancamento;
@@ -19,6 +21,8 @@ public class RegistroExtratoDto {
     private List<LancamentoVO> lancamentos;
     
     private boolean confirmado;
+    
+    private int[] arrayIds;
     
 
     public String getDataLancamento() {
@@ -93,6 +97,29 @@ public class RegistroExtratoDto {
 	 */
 	public void setConfirmado(boolean confirmado) {
 		this.confirmado = confirmado;
+	}
+
+	/**
+	 */
+	public Double calcularTotalLancamentos() {
+		return getLancamentos()
+			 .stream()
+			 .collect(Collectors.summingDouble(LancamentoVO::getValor))
+			 .doubleValue();
+	}
+
+	/**
+	 * @return the arrayIds
+	 */
+	public int[] getArrayIds() {
+		return arrayIds;
+	}
+
+	/**
+	 * @param arrayIds the arrayIds to set
+	 */
+	public void setArrayIds(int[] arrayIds) {
+		this.arrayIds = arrayIds;
 	}
 
 

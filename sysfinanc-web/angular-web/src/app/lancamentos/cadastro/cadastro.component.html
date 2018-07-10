@@ -52,7 +52,7 @@
                                 onkeyup="moeda(this);"                                 
                                 >
                         </div>
-                        <div class="col col-md-4 col-xs-12 col-lg-4">
+                        <div class="col col-md-4 col-xs-12 col-lg-4" *ngIf="mostraBlocoRepetir">
                                 <label for="numDocumento">Documento</label>                
                                 <input type="text" class="form-control"  
                                 name="numDocumento"
@@ -60,7 +60,7 @@
                         </div>                        
                     </div>
 
-                    <div class="row">
+                    <div class="row"  *ngIf="mostraBlocoRepetir">
                         <div class="col col-md-8 col-xs-12 col-lg-8">
                             <label for="habilitaDataFim">Deseja repetir esse lançamento?</label>
                             <label class="radio-inline" class="form-control">

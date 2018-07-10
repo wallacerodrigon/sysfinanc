@@ -7,6 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -61,6 +62,18 @@ public abstract class AbstractPersistenciaPadraoDao<T> implements PersistenciaPa
 	public void executarUpdateHql(String script) throws PersistenciaException {
 		em.createQuery(script).executeUpdate();
 	}
+
+	public boolean executarUpdateHql(String script, Map<String, Object> parametros) throws PersistenciaException {
+		Query query = em.createQuery(script);
+		
+		if (parametros != null) {
+			parametros.entrySet()
+				.stream()
+				.forEach(entry -> query.setParameter(entry.getKey(), entry.getValue()));
+		}
+		return query.executeUpdate() > 0;
+	}
+	
 	
 	@Override
 	public T find(Serializable id) throws PersistenciaException {

@@ -10,6 +10,7 @@ import { Constantes } from "../utilitarios/constantes";
 import { UtilizacaoLancamentoVO } from "../dominio/vo/utilizacao-lancamento-vo";
 import { BaixaLancamentoDTO } from "../dominio/dto/baixa-lancamento-dto";
 import { GeracaoParcelasDto } from "../dominio/dto/geracao-parcelas-dto";
+import { RegistroExtratoDto } from "../dominio/dto/registro-extrato-dto";
 
 @Injectable()
 export class LancamentoService extends AbstractServicos<LancamentoVO>  {
@@ -60,5 +61,9 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
         return this.executarPost(this.uri + '/gerar-lancamento', dto);
                 
     }    
+
+    public associarLancamentos(listaDtos: Array<RegistroExtratoDto>): Promise<any> {
+        return this.executarPut(this.uri + "/associar-lancamento-extrato", listaDtos);
+    }
 
 }

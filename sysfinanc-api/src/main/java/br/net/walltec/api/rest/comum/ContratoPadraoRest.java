@@ -4,6 +4,7 @@
 package br.net.walltec.api.rest.comum;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -32,6 +33,9 @@ public interface ContratoPadraoRest<V extends GerenciadorPadraoVO> extends Seria
 	 
 	 @PUT
 	 Response alterar(V objeto) throws WebServiceException;
+	 
+	 @PUT
+	 Response alterar(List<V> lista) throws WebServiceException;	 
 	 
 	 @DELETE
 	 @Path("/{idChaveObjeto}")

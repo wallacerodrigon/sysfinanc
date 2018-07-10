@@ -13,6 +13,7 @@ import { Formatadores } from '../../utilitarios/formatadores';
 import { AlertaComponent } from '../../componentes/mensagens/alert.component';
 import { DialogService } from 'ng2-bootstrap-modal/dist/dialog.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { CadastroComponent } from '../../lancamentos/cadastro/cadastro.component';
 
 declare var jQuery: any;
 
@@ -36,6 +37,7 @@ export class ProcessamentoComponent implements OnInit {
 
   private conteudoArquivoBase64: string = null;
   protected databaseFiltro: Date = new Date();
+  private processando: boolean = false;
 
   private paginaAtual: number = 1;
   
@@ -53,7 +55,7 @@ export class ProcessamentoComponent implements OnInit {
 
    associarExtratoLancamento(){
 
-      let extratosAAtualizar: Array<RegistroExtratoDto> = this.listagemExtrato.filter(extrato => extrato.confirmado == false && extrato.arrayIds.length > 0);
+      let extratosAAtualizar: Array<RegistroExtratoDto> = this.listagemExtrato.filter(extrato => extrato.confirmado == false && extrato.arrayIds && extrato.arrayIds.length > 0);
       let temAlgumExtratoIncoerente: boolean = false;
 
       if (extratosAAtualizar.length > 0){
@@ -70,11 +72,16 @@ export class ProcessamentoComponent implements OnInit {
           new AlertaComponent(this.dialogService).exibirMensagem('Selecione um extrato e um lançamento para conciliar');
       }
       
-      this.efetivarAssociacao(extratosAAtualizar, UtilData.converterDataUSAToBR( this.databaseFiltro.toString() ));
+      this.efetivarAssociacao(extratosAAtualizar);
    }
 
-   private efetivarAssociacao(extratosAAtualizar: Array<RegistroExtratoDto>, strDataBase: string){
-      
+   private efetivarAssociacao(extratosAAtualizar: Array<RegistroExtratoDto>){
+        this.lancamentoService.associarLancamentos(extratosAAtualizar)
+        .then( () => {
+          new AlertaComponent(this.dialogService).exibirMensagem('Associações realizadas com sucesso');
+          this.efetuarUpload();
+        })
+        .catch(erro => new AlertaComponent(this.dialogService).exibirMensagem(erro._body))
    }
 
    protected efetuarUpload(){
@@ -82,6 +89,11 @@ export class ProcessamentoComponent implements OnInit {
         if (! this.conteudoArquivoBase64 || this.conteudoArquivoBase64.length === 0){
             new AlertaComponent(this.dialogService).exibirMensagem("Selecione um arquivo");
             return false;
+        }
+
+        if (this.databaseFiltro == null){
+          new AlertaComponent(this.dialogService).exibirMensagem("Selecione uma data");
+          return false;
         }
 
         this.blockUI.start('Aguarde. Montando as conciliações com o extrato do arquivo...');
@@ -101,6 +113,7 @@ export class ProcessamentoComponent implements OnInit {
 
                 });
                 this.tamanhoExtrato = this.listagemExtrato.length;
+                this.processando = true;
                 this.blockUI.stop();
             },
             erro => {
@@ -119,6 +132,24 @@ export class ProcessamentoComponent implements OnInit {
           this.conteudoArquivoBase64 = reader.result.split(',')[1];
       };      
     }
-  } 
+  }
+  
+  private novoCadastro(){
+    this.dialogService.addDialog(CadastroComponent, {
+      mostraBlocoRepetir: false,
+      consideraPago: true
+    })
+    .subscribe(lancamentoCadastrado => {
+        if (lancamentoCadastrado){
+            this.listagemExtrato
+              .filter(dto => dto.confirmado == false)
+              .forEach(dto => dto.lancamentos.push(lancamentoCadastrado));
+        }
+    }); 
+  }
+  
+  protected limpar(dto: RegistroExtratoDto): void {
+    dto.arrayIds = [];
+  }
 
 }

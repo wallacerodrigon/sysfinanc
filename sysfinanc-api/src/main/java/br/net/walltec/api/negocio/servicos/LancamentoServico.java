@@ -9,6 +9,7 @@ import java.util.List;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.MapaDashboardDTO;
+import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
@@ -46,4 +47,5 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	
 	List<LancamentoVO> gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException;
 	
+	void associarLancamentos(List<RegistroExtratoDto> lancamentos) throws NegocioException;
 }

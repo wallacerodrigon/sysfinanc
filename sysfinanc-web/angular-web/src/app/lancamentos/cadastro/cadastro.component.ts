@@ -18,7 +18,7 @@ declare var jQuery: any;
   templateUrl: './cadastro.component.html',
   styleUrls: ['./cadastro.component.css']
 })
-export class CadastroComponent  extends DialogComponent<null, boolean> implements OnInit {
+export class CadastroComponent  extends DialogComponent<null, LancamentoVO> implements OnInit {
  
   @ViewChild("dataVencimento") dataVencimento: ElementRef; 
   @ViewChild("dataFim") dataFim: ElementRef; 
@@ -28,6 +28,8 @@ export class CadastroComponent  extends DialogComponent<null, boolean> implement
 
   private lancamento: LancamentoVO = new LancamentoVO();
   private listaRubricas: Array<RubricaVO> = [];
+  protected mostraBlocoRepetir: boolean = true;
+  protected consideraPago: boolean = false;
 
   protected rubricaSelecionada: string;
   protected habilitaDataFim: boolean = false;
@@ -43,20 +45,8 @@ export class CadastroComponent  extends DialogComponent<null, boolean> implement
     jQuery(this.dataVencimento.nativeElement).datepicker();
     this.dataVencimento.nativeElement.value = UtilData.converterToString(new Date());
     this.listaRubricas = this.rubricaService.getListaCache();
-    //this.listarRubricas();
-  }
+    this.lancamento.bolPaga = this.consideraPago;
 
-  private listarRubricas(){
-      this.blockUI.start('Carregando rubricas...');
-      this.rubricaService.listar()
-          .subscribe(rubricas => {
-            this.listaRubricas = rubricas;
-            this.blockUI.stop();
-          },
-          erro => {
-            new AlertaComponent(this.dialogService).exibirMensagem("Erro ao listar as rubricas");
-            this.blockUI.stop();
-          });
   }
 
   private getRubrica(): RubricaVO {
@@ -87,6 +77,11 @@ export class CadastroComponent  extends DialogComponent<null, boolean> implement
       erro = true;
     }
 
+    if (this.consideraPago && !this.lancamento.bolPaga){
+      new AlertaComponent(this.dialogService).exibirMensagem("É obrigatório que o lançamento seja marcado como pago!");
+      return false;
+    }
+
     if (erro){
       new AlertaComponent(this.dialogService).exibirMensagem("Informe os dados obrigatórios: rubrica, valor, descrição e data vencimento. Data fim se marcada a repetição!");
       return true;
@@ -96,8 +91,8 @@ export class CadastroComponent  extends DialogComponent<null, boolean> implement
 
   salvar(){
     this.lancamento.dataVencimentoStr = this.dataVencimento.nativeElement.value;
-    this.lancamento.dataFimStr  = this.dataFim.nativeElement.value;
-
+    this.lancamento.dataFimStr  = this.mostraBlocoRepetir ? this.dataFim.nativeElement.value : null;
+    this.result = null;
     if (! this.isDadosValidos() ){
       return false;
     }
@@ -123,10 +118,10 @@ export class CadastroComponent  extends DialogComponent<null, boolean> implement
     this.lancamento.descricao = this.lancamento.descricao.toLocaleLowerCase();
 
     this.lancamentoService.incluir(this.lancamento)
-        .then(()=> {
-          new AlertaComponent(this.dialogService).exibirMensagem("Registro incluído com sucesso");
+        .then(lancamentoIncluido=> {
           this.blockUI.stop();
-          this.result = true;
+          this.result = JSON.parse(lancamentoIncluido._body);
+          new AlertaComponent(this.dialogService).exibirMensagem("Registro incluído com sucesso");
           this.close();
         })
         .catch(erro => {

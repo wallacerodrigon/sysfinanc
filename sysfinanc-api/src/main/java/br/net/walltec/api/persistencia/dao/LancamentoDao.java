@@ -23,6 +23,6 @@ public interface LancamentoDao extends PersistenciaPadraoDao<Lancamento> {
 
     List<UtilizacaoLancamentoVO> listarUsos(Integer idLancamentoOrigem) throws PersistenciaException;
     
-    
+    boolean associarLancamentoComExtrato(Integer idLancamento, String numDocumento, Date dataVencimento) throws PersistenciaException;
 
 }

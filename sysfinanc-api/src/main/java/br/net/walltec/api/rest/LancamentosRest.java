@@ -4,7 +4,6 @@
 package br.net.walltec.api.rest;
 
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import javax.interceptor.Interceptors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -38,8 +38,6 @@ import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
 import br.net.walltec.api.rest.dto.BaixaLancamentoDTO;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
-import br.net.walltec.api.utilitarios.UtilData;
-import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -251,7 +249,25 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());
 		}
-	}	
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.rest.comum.RequisicaoRestPadrao#alterar(java.util.List)
+	 */
+	@PUT
+	@Path("/associar-lancamento-extrato")
+	public Response associarExtratoComLancamentos(List<RegistroExtratoDto> lista) throws WebServiceException {
+        try {
+        	servico.associarLancamentos(lista);
+            return Response.ok(lista).build();
+        } catch (NegocioException e) {
+            throw new WebServiceException(e.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new WebServiceException(e.getMessage());
+        }
+		
+	}
 
 }
 

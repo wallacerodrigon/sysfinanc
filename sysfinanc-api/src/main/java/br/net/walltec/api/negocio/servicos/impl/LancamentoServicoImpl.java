@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ import javax.transaction.Transactional.TxType;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.MapaDashboardDTO;
+import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.RubricaMesAnoDTO;
@@ -540,6 +542,56 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     	dto.setDescricaoParcela(objeto.getDescricao());
     	dto.setDespesa(objeto.isDespesa());
 		this.gerarLancamentos(dto);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#associarLancamentos(java.util.List)
+	 */
+	
+	@Transactional(value=TxType.REQUIRES_NEW)
+	@Override
+	public void associarLancamentos(List<RegistroExtratoDto> lancamentos) throws NegocioException {
+		
+		Optional<RegistroExtratoDto> optTemDtoComValorDiferente = 
+				lancamentos
+				.stream()
+				.filter(dto -> hasValorDiferente(dto))
+				.findFirst();
+		if (optTemDtoComValorDiferente.isPresent()) {
+			throw new NegocioException("Existem extratos com valores associados diferentes!");
+		}
+
+		List<LancamentoVO> lancamentosAAtualizar = new ArrayList<>();
+		
+		lancamentos
+			.stream()
+			.forEach(dto -> {
+				dto.getLancamentos()
+					.forEach(vo -> {
+						vo.setBolConciliado(true);
+						vo.setDataVencimentoStr(dto.getDataLancamento());
+						vo.setNumDocumento(dto.getDocumento());
+						lancamentosAAtualizar.add(vo);
+					});
+			});
+
+		lancamentosAAtualizar.stream()
+			.forEach(vo -> {
+				try {
+					lancamentoDao.associarLancamentoComExtrato(vo.getId(), vo.getNumDocumento(), UtilData.getData(vo.getDataVencimentoStr(), "/"));
+				} catch (PersistenciaException e) {
+					e.printStackTrace();
+				}
+			});
+	}
+
+	/**
+	 * @param dto
+	 * @return
+	 */
+	private boolean hasValorDiferente(RegistroExtratoDto dto) {
+		BigDecimal valorExtrato = UtilFormatador.formatarStringComoValor(dto.getValor());
+		return valorExtrato.doubleValue() != dto.calcularTotalLancamentos();
 	}	
 	
 }
