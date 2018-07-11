@@ -60,8 +60,12 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-default" *ngIf="!row.confirmado" (click)="novoCadastro()">Incluir</button>
-                                        <button class="btn btn-default" *ngIf="!row.confirmado" (click)="limpar(row)">Limpar</button>
+                                        <button class="btn btn-default" *ngIf="!row.confirmado" (click)="novoCadastro()">
+                                                <i class=" glyphicon glyphicon-plus"></i>
+                                        </button>
+                                        <button class="btn btn-default" *ngIf="!row.confirmado" (click)="limpar(row)">
+                                                <i class=" glyphicon glyphicon-erase"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>

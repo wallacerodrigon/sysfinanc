@@ -7,7 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import org.hibernate.id.factory.IdentifierGeneratorFactory;
 
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.excecoes.WalltecException;
@@ -25,7 +28,7 @@ public class ImportadorBB implements ImportadorArquivo {
         List<LancamentoVO> lancamentosAssociados = new ArrayList<>();
         List<RegistroExtratoDto> dtos = associarLancamentos(mapLancamentosPorDocumento, mapLancamentosPorValor, linhas,
 				lancamentosAssociados);
-        //lista de lancmaentos nao associados
+        //lista de lancmaentos nao associados: os que não tiverem sido associados, gravar antes de mandar para a tela
         List<LancamentoVO> lancamentosNaoAssociados = 
         			listaParcelas
         			.stream()
@@ -35,7 +38,7 @@ public class ImportadorBB implements ImportadorArquivo {
         			.collect(Collectors.toList());
         					
         dtos.stream()
-        	.filter(dto -> dto.getLancamentos() == null)
+        	.filter(dto -> dto.getLancamentos() == null && !dto.getHistorico().equals("S A L D O"))
         	.forEach(dto -> dto.setLancamentos(lancamentosNaoAssociados));
         
         return dtos;
@@ -63,6 +66,11 @@ public class ImportadorBB implements ImportadorArquivo {
 					associarLancamentos(dto, mapLancamentosPorDocumento, mapLancamentosPorValor);
 					if (dto.getLancamentos() != null) {
 						lancamentosAssociados.addAll(dto.getLancamentos());
+						IntStream ids = dto
+								.getLancamentos()
+								.stream()
+								.mapToInt(LancamentoVO::getId);
+						dto.setArrayIds(ids.toArray());
 					}
 					return dto;
    	          })
@@ -104,6 +112,11 @@ public class ImportadorBB implements ImportadorArquivo {
 			return;
 		}
 		
+		if (dto.getHistorico().contains("S A L D O")){
+			dto.setConfirmado(true);
+			return;
+		}
+		
 		BigDecimal valor = UtilFormatador.formatarStringComoValor(dto.getValor().replaceAll("[.]", "").replaceAll(",", "."));
 		if (mapLancamentosPorDocumento.containsKey(dto.getDocumento())) {
 			dto.setLancamentos(mapLancamentosPorDocumento.get(dto.getDocumento()));
@@ -114,7 +127,6 @@ public class ImportadorBB implements ImportadorArquivo {
 			
 			if (lancamentos != null && lancamentos.size() == 1) {
 				dto.setLancamentos( lancamentos );
-				dto.setConfirmado(true);
 				mapLancamentosPorValor.remove(valor.doubleValue());
 			} else if (lancamentos != null) {
 				dto.setLancamentos(Arrays.asList(lancamentos.get(0)));
