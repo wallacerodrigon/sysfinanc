@@ -575,14 +575,13 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 					});
 			});
 
-		lancamentosAAtualizar.stream()
-			.forEach(vo -> {
-				try {
-					lancamentoDao.associarLancamentoComExtrato(vo.getId(), vo.getNumDocumento(), UtilData.getData(vo.getDataVencimentoStr(), "/"));
-				} catch (PersistenciaException e) {
-					e.printStackTrace();
-				}
-			});
+		for(LancamentoVO vo : lancamentosAAtualizar) {
+			try {
+				lancamentoDao.associarLancamentoComExtrato(vo.getId(), vo.getNumDocumento(), UtilData.getData(vo.getDataVencimentoStr(), "/"));
+			} catch (PersistenciaException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
