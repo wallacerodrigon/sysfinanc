@@ -13,3 +13,12 @@ label.obrigatorio:after {
 .conteudo { margin: 10px; padding:5px; border: 1px solid #C0C0C0; min-height: 50%;  box-shadow: 5px 5px 5px #ccc; }
 
 .centralizar .conteudo { margin-bottom: 10px; padding:10px; border: 1px solid #C0C0C0; min-height: 50%;  box-shadow: 5px 5px 5px #ccc; }
+
+.borda {
+    border: 1px 1px 1px 1px
+
+}
+
+.largura-maxima {
+    width: 100%
+}

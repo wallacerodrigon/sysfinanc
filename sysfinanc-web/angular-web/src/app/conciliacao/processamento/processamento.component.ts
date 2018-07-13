@@ -24,7 +24,7 @@ declare var jQuery: any;
 })
 export class ProcessamentoComponent implements OnInit {
 
-  private colunasPadrao: string[] = ["Descrição", "Data", "Documento", "C/D", "Valor", "Lançamentos"];
+  private colunasPadrao: string[] = ["Descrição", "Data", "Documento", "C/D", "Valor", "Lançamentos", "Ações"];
  
   private listagemExtrato: RegistroExtratoDto[] = [];
   private listaExtratoInteira: RegistroExtratoDto[] = [];
@@ -33,7 +33,7 @@ export class ProcessamentoComponent implements OnInit {
   private listagemVerificacao: RegistroExtratoDto[] = [];
 
   private tamanhoExtrato: number = 0;
-  private tamanhoPagina: number = 10;
+  private tamanhoPagina: number = 6;
 
   private conteudoArquivoBase64: string = null;
   protected databaseFiltro: Date = new Date();

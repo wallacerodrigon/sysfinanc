@@ -1,8 +1,9 @@
 <div class="container-fluid">
     <form name="frmArquivo" novalidate enctype="application/x-www-form-urlencoded">
-        <div class="border">
-            
-                <div class="row">
+        <div class="panel panel-default">
+                <div class="panel-heading">Conciliação bancária</div>
+                <div class="panel-body">
+                    <div class="row">
                         <div class="col col-md-2">
                             <label for="banco">Banco</label>
                             <select id="banco" class="form-control">
@@ -10,70 +11,75 @@
                             </select>
                         </div>
                         <div class="col col-md-2">
-                            <label for="database">Data-base dos Lançamentos</label>
+                            <label for="database">Data dos Lançamentos</label>
                             <input type="date" id="database" name="databaseFiltro" class="form-control" [(ngModel)]="databaseFiltro">
                         </div>
                         <div class="col col-md-6">
-                            <label for="arquivo">Arquivo</label>
-                            <input id="arquivo"  class="btn btn-default file" name="arquivo" #arquivo type="file" placeholder="Selecione um arquivo" (change)="onFileChange($event)">
+                            <div class="form-group">
+                                <label for="arquivo">Arquivo</label>
+                                <input id="arquivo"  class="btn btn-default file" name="arquivo" #arquivo type="file" placeholder="Selecione um arquivo" (change)="onFileChange($event)">
+                            </div>
                         </div>
-                </div>
-
-                <div class="row">
-                    <div class="col col-md-4 col-md-offset-4">
-                        <button class="btn btn-primary" id="btnIniciar" (click)="efetuarUpload()">Processar</button>
-                        <button class="btn btn-primary" id="btnAssociar" *ngIf="processando" (click)="associarExtratoLancamento()">Associar Marcados</button>
                     </div>
-                    
+                    <br/>
+                    <div class="row">
+                       <button class="btn btn-default center-block" id="btnIniciar" (click)="efetuarUpload()">Processar Arquivo</button>
+                    </div>
                 </div>
             </div>
     </form>
+    
     <block-ui>
         <!-- Nav tabs -->
-        <div  role="tabpanel" class="tab-pane fade in active" id="extrato">
-                <div class="col col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover table-bordered">
-                            <thead>
-                                <th *ngFor="let col of colunasPadrao">
-                                    {{col}}
-                                </th>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let row of listagemExtrato.slice( (paginaAtual-1)*tamanhoPagina, (paginaAtual)*tamanhoPagina)">
-                                    <td>{{row.historico}}</td>
-                                    <td>{{row.dataLancamento}}</td>
-                                    <td>{{row.documento}}</td>
-                                    <td>{{row.creditoDebito}}</td>
-                                    <td>{{row.valor}}</td>
-                                    <td  *ngIf="row.confirmado">
-                                        <ul *ngFor="let l of row.lancamentos" class="largura-maxima">
-                                            <li>{{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}</li>
-                                        </ul>
-                                    </td>
+        <div class="panel panel-default" *ngIf="processando">
+            <div class="panel-heading">Extrato e Lançamentos</div>
+            <div class="panel-body">
+                <button class="btn btn-default center-block" id="btnAssociar" *ngIf="processando" (click)="associarExtratoLancamento()">Associar Marcados</button>
+                <br/>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead>
+                            <th *ngFor="let col of colunasPadrao">
+                                {{col}}
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of listagemExtrato.slice( (paginaAtual-1)*tamanhoPagina, (paginaAtual)*tamanhoPagina)">
+                                <td>{{row.historico}}</td>
+                                <td>{{row.dataLancamento}}</td>
+                                <td>{{row.documento}}</td>
+                                <td>{{row.creditoDebito}}</td>
+                                <td>{{row.valor}}</td>
+                                <td  *ngIf="row.confirmado">
+                                    <ul *ngFor="let l of row.lancamentos" class="largura-maxima">
+                                        <li>{{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}</li>
+                                    </ul>
+                                </td>
 
-                                    <td  *ngIf="!row.confirmado">
-                                        <select multiple [(ngModel)]="row.arrayIds" class="largura-maxima">
-                                            <option *ngFor="let l of row.lancamentos" value="{{l.id}}">
-                                               {{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}
-                                            </option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-default" *ngIf="!row.confirmado" (click)="novoCadastro()">
-                                                <i class=" glyphicon glyphicon-plus"></i>
-                                        </button>
-                                        <button class="btn btn-default" *ngIf="!row.confirmado" (click)="limpar(row)">
-                                                <i class=" glyphicon glyphicon-erase"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <ngb-pagination class="col col-md-4 col-md-offset-4" [collectionSize]="tamanhoExtrato" [pageSize]="10" [ellipses]="false" [maxSize]="3"  
+                                <td  *ngIf="!row.confirmado">
+                                    <select multiple [(ngModel)]="row.arrayIds" class="largura-maxima">
+                                        <option *ngFor="let l of row.lancamentos" value="{{l.id}}">
+                                            {{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default" *ngIf="!row.confirmado" (click)="novoCadastro()">
+                                            <i class=" glyphicon glyphicon-plus"></i>
+                                    </button>
+                                    <button class="btn btn-default" *ngIf="!row.confirmado" (click)="limpar(row)">
+                                            <i class=" glyphicon glyphicon-erase"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col col-md-4 col-md-offset">
+                        <ngb-pagination [collectionSize]="tamanhoExtrato" [pageSize]="10" [ellipses]="false" [maxSize]="3"  
                         [(page)]="paginaAtual" [rotate]="true" [boundaryLinks]="true" *ngIf="listagemExtrato.length &gt; 0"></ngb-pagination>            
                     </div>
                 </div>
+            </div>
         </div>
     </block-ui>
 </div>
