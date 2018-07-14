@@ -6,7 +6,8 @@ import {UsuarioVO} from '../../dominio/vo/usuario-vo';
 
 @Component({
     selector: 'home-component',
-    templateUrl: './home.component.html'
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css']
 })
 export class HomePageComponent {
 

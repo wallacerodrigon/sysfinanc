@@ -5,9 +5,9 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <button class="btn btn-info  glyphicon glyphicon-chevron-left" (click)="filtrarAnterior()"></button>
+                                <button class="btn btn-default  glyphicon glyphicon-chevron-left" (click)="filtrarAnterior()"></button>
                                 <label class="text-info">{{mes + '/'+ ano}}</label>
-                                <button class="btn btn-info glyphicon glyphicon-chevron-right" (click)="filtrarProximo()"></button>
+                                <button class="btn btn-default glyphicon glyphicon-chevron-right" (click)="filtrarProximo()"></button>
                             </div>
                         </div>
                     </div>
@@ -26,10 +26,10 @@
         <div class="col col-md-9 col-lg-9 col-xs-12">
                 <div class="panel panel-default">
                         <div class="panel-heading">
-                            <button type="button" class="btn btn-primary" (click)="filtrar()">
+                            <button type="button" class="btn btn-default" (click)="filtrar()">
                                 <i class="glyphicon glyphicon-filter"></i> Listar Tudo</button> 
 
-                            <button type="button" id='btnBaixa' class="btn btn-success" (click)="baixarLista()"  data-loading-text="Baixando Lançamento..." autocomplete="off">
+                            <button type="button" id='btnBaixa' class="btn btn-default" (click)="baixarLista()"  data-loading-text="Baixando Lançamento..." autocomplete="off">
                                     <i class="glyphicon glyphicon-ok"></i> Baixar Marcados</button>
                             
                             <button type="button" class="btn btn-default" (click)="novoCadastro()">
@@ -55,10 +55,4 @@
         </div>
     </block-ui>
 </div>
-<script>
-    $('#btnBaixa').on('click', function () {
-      var $btn = $(this).button('loading')
-      $btn.button('reset')
-    })
-  </script>
 

@@ -74,8 +74,11 @@ public class ImportadorBB implements ImportadorArquivo {
 					}
 					return dto;
    	          })
-   	          .filter(dto -> dto.getDataLancamento().matches("[0-9]{2}[/][0-9]{2}[/][0-9]{2}") && (dto.getCreditoDebito().trim().equalsIgnoreCase("C") || dto.getCreditoDebito().trim().equalsIgnoreCase("D")) )
+   	          .filter(dto -> 
+   	        	dto.getDataLancamento().matches("[0-9]{2}[/][0-9]{2}[/][0-9]{2}") 
+   	        	&& (dto.getCreditoDebito().trim().equalsIgnoreCase("C") || dto.getCreditoDebito().trim().equalsIgnoreCase("D")) )
    	          .collect(Collectors.toList());
+   	          
 		return dtos;
 	}
 

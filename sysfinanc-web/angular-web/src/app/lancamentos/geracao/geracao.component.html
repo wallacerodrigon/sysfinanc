@@ -1,8 +1,11 @@
 <div class="container-fluid">
     <form name="frmGeracao" novalidate >
-        <fieldset>
-            <legend>Geração de Lançamentos</legend>
-                <div class="row">
+        
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Geração de Lançamentos</div>
+                <div class="panel-body">
                     <div class="col col-md-6">
                         <label for="banco" class="obrigatorio">Rubrica</label>
                         <input type="text" [(ngModel)]="rubricaSelecionada" class="form-control" id="rubrica" name="rubrica" 
@@ -13,10 +16,6 @@
                             </select>
                         </datalist> 
                     </div>
-                    <!--<div class="row" *ngIf="frmGeracao.rubrica.invalid && frmGeracao.rubrica.errors.required">
-                        <span class="alert alert-danger">Rubrica é de preenchimento obrigatório</span>
-                    </div>-->      
-                    
                     <div class="col-md-2">
                         <label for="vencimento" class="obrigatorio">Vencimento Base</label>
                         <input type="text"  class="form-control" #dataVencimento>
@@ -34,9 +33,7 @@
                         onkeyup="moeda(this);"                                 
                   >
                     </div>
-                </div>
                 
-                <div class="row">
                     <div class="col-md-8">
                         <label class="obrigatorio">Descrição</label>
                         <input type="text" class="form-control" [(ngModel)]="descricao" name="descricao">
@@ -52,19 +49,13 @@
                     </div>
                 </div>
 
-            </fieldset>
-
-            <hr/>
-            <div class="row">
-                <div class="col-md-12 col-lg-12">
-                    <div class="text-center">
-                        <button class="btn btn-default" (click)="gerarLancamentos()">Gerar</button>
-                    </div>
-                </div>
+                <button class="btn btn-default center-block" (click)="gerarLancamentos()">Gerar Lançamentos</button>
             </div>
+
     </form>
 
-    <div class="row" >
+    <div class="panel panel-default" >
+        <div class="panel-heading">Resultado Parcial</div>
         <div class="table-responsive">
             <app-crud-componente #crudComponente [nomesColunas]="colunas" 
                         [listaDados]="listagem" 

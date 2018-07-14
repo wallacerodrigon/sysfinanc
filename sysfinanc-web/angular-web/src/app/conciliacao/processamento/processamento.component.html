@@ -4,13 +4,13 @@
                 <div class="panel-heading">Conciliação bancária</div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col col-md-2">
+                        <div class="col col-md-2 col-lg-2 col-xs-4">
                             <label for="banco">Banco</label>
                             <select id="banco" class="form-control">
                                 <option value="1" selected>Banco do Brasil</option>
                             </select>
                         </div>
-                        <div class="col col-md-2">
+                        <div class="col col-md-2 col-lg-4 col-xs-4">
                             <label for="database">Data dos Lançamentos</label>
                             <input type="date" id="database" name="databaseFiltro" class="form-control" [(ngModel)]="databaseFiltro">
                         </div>
@@ -74,9 +74,11 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="col col-md-4 col-md-offset">
-                        <ngb-pagination [collectionSize]="tamanhoExtrato" [pageSize]="10" [ellipses]="false" [maxSize]="3"  
-                        [(page)]="paginaAtual" [rotate]="true" [boundaryLinks]="true" *ngIf="listagemExtrato.length &gt; 0"></ngb-pagination>            
+                    <div class="col col-md-12 col-lg-12 col-xs-12">
+                        <div class="center-block">
+                                <ngb-pagination [collectionSize]="tamanhoExtrato" [pageSize]="tamanhoPagina" [ellipses]="false" [maxSize]="3"  
+                                [(page)]="paginaAtual" [rotate]="true" [boundaryLinks]="true" *ngIf="listagemExtrato.length &gt; 0"></ngb-pagination>            
+                        </div>
                     </div>
                 </div>
             </div>

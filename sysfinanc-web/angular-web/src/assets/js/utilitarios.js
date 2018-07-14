@@ -677,3 +677,29 @@ function mascararCelularComNove(valor, mask){
     v=v.replace(/(\d)(\d{4})$/,"$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
     valor.value = v;
 }
+
+
+        /*Menu-toggle*/
+        function toggleMenu(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("active");
+            /*if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
+    
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+            if (target.length) {
+                $('html,body').animate({
+                    scrollTop: target.offset().top
+                }, 1000);
+                return false;
+            }
+            }*/
+    
+        }
+    
+        /*Scroll Spy*/
+        $('body').scrollspy({ target: '#spy', offset:80});
+    
+        /*Smooth link animation*/
+       /* $('#menu-toggle').click(function() {
+        });*/

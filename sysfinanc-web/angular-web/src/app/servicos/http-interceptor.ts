@@ -89,17 +89,17 @@ export class HttpInterceptor extends Http  {
             if (err.status  == 401 && ! err.url.endsWith('/login')) {
                 this._removeTodosModais();
                 this._router.navigate(['/login']);
+                return Observable.throw(err);
             } else if (err.status == 403 && ! err.url.endsWith('/login')){
                 this._router.navigate(['/login']);
-                this._removeTodosModais();
                 new AlertaComponent(this._dialogService).exibirMensagem('Sessão expirada! Logue novamente no sistema!');
+                return null;
             } else if (err.status == 503 || err.status == 0){
                 this._router.navigate(['/login']);
-               // this._removeTodosModais();
                 new AlertaComponent(this._dialogService).exibirMensagem('O sistema está indisponível no momento. Favor comunicar ao responsável.');
+                return null;
             }
 
-            return Observable.throw(err);
             
         });
  
