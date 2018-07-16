@@ -1,53 +1,63 @@
 <div id="wrapper">
 
-    <div id="sidebar-wrapper">
+    <div id="sidebar-wrapper" class="borda-redonda">
         <nav id="spy">
-            <ul class="sidebar-nav nav">
-                <li>
-                    <a href="http://www.walltec.net.br" target="_blank"><span class="fa fa-home solo">walltec.net.br</span></a>
-                </li>
-                <li>
-                    <a (click)="logout()" data-scroll>
-                        <span class="fa fa-anchor solo  ponteiro-maozinha">Sair</span>
-                    </a>
-                </li>
-                <li>
-                    <a [routerLink]="['/dashboard']" data-scroll>
-                        <span class="fa fa-anchor solo">Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a  [routerLink]="['/rubricas']"  data-scroll>
-                        <span class="fa fa-anchor solo">Rubricas</span>
-                    </a>
-                </li>
-                <li>
-                    <a  [routerLink]="['/lancamentos-geracao']"  data-scroll>
-                        <span class="fa fa-anchor solo">Geração de Lançamentos</span>
-                    </a>
-                </li>
-                <li>
-                    <a  [routerLink]="['/conciliacoes']"  data-scroll>
-                        <span class="fa fa-anchor solo">Conciliações</span>
-                    </a>
-                </li>
-                <li>
-                        <a  [routerLink]="['/lancamentos']"  data-scroll>
-                            <span class="fa fa-anchor solo">Lançamentos</span>
+                <div class="sidebar-nav nav list-group">
+                        <a href="javascript:void(0)">
+                                <img src="../../assets/img/logo-walltec.png"/>  
                         </a>
-                    </li>
-                </ul>
+
+                        <a class="list-group-item disabled" (click)="toggleSubMenu('subMenuCadastros', 'iconeCadastros')">
+                            <span class="glyphicon glyphicon-plus-sign" id="iconeCadastros"></span>
+                                Cadastros
+                        </a>  
+
+                        <div  class="hidden" id="subMenuCadastros" >
+                            <a  [routerLink]="['/rubricas']" class="list-group-item" data-scroll >
+                                <span>Rubricas</span>
+                            </a>
+                        </div>
+
+                        <a class="list-group-item disabled" (click)="toggleSubMenu('subMenuLancamentos', 'iconeLancamentos')">
+                            <span class="glyphicon glyphicon-plus-sign" id="iconeLancamentos"></span>
+                            Lançamentos
+                        </a>  
+
+                        <div id="subMenuLancamentos" class="hidden">
+                            <a  [routerLink]="['/lancamentos-geracao']" class="list-group-item" data-scroll>
+                                <span>Geração</span>
+                            </a>
+                            <a  [routerLink]="['/conciliacoes']" class="list-group-item" data-scroll>
+                                <span>Conciliações</span>
+                            </a>    
+                            <a  [routerLink]="['/lancamentos']" class="list-group-item" data-scroll>
+                                <span>Consulta</span>
+                            </a>   
+                        </div>
+
+                        <a [routerLink]="['/dashboard']"  class="list-group-item" data-scroll>
+                            Dashboard
+                        </a>
+                        
+                        <a (click)="logout()" data-scroll  class="list-group-item disabled">
+                                <span class="ponteiro-maozinha">Sair</span>
+                        </a>    
+                </div>            
         </nav>
     </div>
 
     <div id="page-content-wrapper">
         <div class="content-header">
-            <h1 id="home" class="header">
-                <a id="menu-toggle" class="glyphicon glyphicon-align-justify btn-menu toggle ponteiro-maozinha" onclick="toggleMenu(event)" >
-                    <i class="fa fa-bars"></i>
-                </a>
-                <span class="left-block">Sysfinanc 6.0</span>
-                <span class="right-block">Sistema de Controle Financeiro</span>
+            <h1 id="home" class="header borda-redonda">
+                <div class="col col-md-6 col-lg-6 col-xs-12">
+                    <a id="menu-toggle" class="glyphicon glyphicon-align-justify btn-menu toggle ponteiro-maozinha" onclick="toggleMenu(event)" >
+                        <i class="fa fa-bars"></i>
+                    </a>
+                    <span class="nome-sistema">Sysfinanc VI</span>
+                </div>
+                <div class="col col-md-6 col-lg-6 col-xs-6">
+                    <span class="detalhe-sistema">Sistema de Controle Financeiro</span>
+                </div>
             </h1>
         </div>
 

@@ -22,3 +22,9 @@ label.obrigatorio:after {
 .largura-maxima {
     width: 100%
 }
+
+.ponteiro-maozinha {
+    cursor:pointer;
+    }
+
+.header { width: 100%; box-shadow: 5px 5px 5px #ccc; }    
