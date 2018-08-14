@@ -9,7 +9,7 @@
   	<groupId>br.net.walltec</groupId>
   	<artifactId>sysfinanc-parent</artifactId>
   	<version>${sistema.version}</version>
-  	<relativePath>../sysfinanc-parent/pom.xml</relativePath>
+  	<relativePath>../pom.xml</relativePath>
   </parent>
 
 	<properties>
