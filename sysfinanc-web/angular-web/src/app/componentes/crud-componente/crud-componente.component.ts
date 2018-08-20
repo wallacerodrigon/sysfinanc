@@ -76,8 +76,7 @@ export class CrudComponente implements OnInit {
 
   executarAcao(item: any, indice: number, acaoExecutar: Function, callBack?: Function){
       if (acaoExecutar != null){
-          acaoExecutar(item, indice, this.dialogService);
-          callBack();
+          acaoExecutar(item, indice, this.dialogService, callBack);
       } else {
           console.log("evento vazio");
       }

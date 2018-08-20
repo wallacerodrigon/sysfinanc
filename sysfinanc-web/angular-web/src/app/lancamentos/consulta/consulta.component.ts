@@ -68,6 +68,8 @@ export class ConsultaComponent implements OnInit {
   ngOnInit() {
       this.mes = new Date().getMonth()+1;
       this.ano = new Date().getFullYear();
+
+      this.filtrar = this.filtrar.bind(this);
       this.filtrar();
   }
 
@@ -80,6 +82,10 @@ export class ConsultaComponent implements OnInit {
   public abrirUtilizacaoLancamento(item: any, indice: number, dialogService: DialogService, callBack?: Function){
       dialogService.addDialog(UtilizacaoComponent, {
           lancamento: item
+      }).subscribe(efetuado => {
+          if (efetuado){
+            window.location.reload(true);
+          }
       });
 
   }  

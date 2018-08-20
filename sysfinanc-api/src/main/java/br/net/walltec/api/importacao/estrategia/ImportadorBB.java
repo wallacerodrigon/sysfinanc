@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.hibernate.id.factory.IdentifierGeneratorFactory;
-
+import antlr.collections.impl.IntRange;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.excecoes.WalltecException;
 import br.net.walltec.api.utilitarios.UtilFormatador;
@@ -32,8 +31,9 @@ public class ImportadorBB implements ImportadorArquivo {
         List<LancamentoVO> lancamentosNaoAssociados = 
         			listaParcelas
         			.stream()
+        			.filter(vo -> vo.isBolPaga() && vo.getValor() > 0)
         			.filter(vo -> 
-        				lancamentosAssociados.indexOf(vo) == -1
+        				!lancamentosAssociados.contains(vo)
         			)
         			.collect(Collectors.toList());
         					
@@ -54,15 +54,28 @@ public class ImportadorBB implements ImportadorArquivo {
 	private List<RegistroExtratoDto> associarLancamentos(Map<String, List<LancamentoVO>> mapLancamentosPorDocumento,
 			Map<Double, List<LancamentoVO>> mapLancamentosPorValor, String[] linhas,
 			List<LancamentoVO> lancamentosAssociados) {
-		List<RegistroExtratoDto> dtos = Stream.of(linhas)
-   	    	  .skip(9)
-   	          .map(linha -> {
-  	        	    RegistroExtratoDto dto = new RegistroExtratoDto();
-					dto.setDataLancamento(linha.substring(0,8));
-					dto.setHistorico(linha.substring(17, 43).trim());
-					dto.setDocumento(linha.substring(43, 66).trim());
-					dto.setValor( linha.substring(67,78).trim().isEmpty() ? "0" : linha.substring(67,78).trim() );
-					dto.setCreditoDebito( linha.substring(79, 80).trim() );
+		List<RegistroExtratoDto> dtos = montarListaExtratoDto(linhas);
+		corrigirDescricaoDocumento(dtos);
+		return configurarLancamentosAoDto(mapLancamentosPorDocumento, mapLancamentosPorValor, lancamentosAssociados,
+				dtos);
+	}
+
+	/**
+	 * @param mapLancamentosPorDocumento
+	 * @param mapLancamentosPorValor
+	 * @param lancamentosAssociados
+	 * @param dtos
+	 * @return
+	 */
+	private List<RegistroExtratoDto> configurarLancamentosAoDto(
+			Map<String, List<LancamentoVO>> mapLancamentosPorDocumento,
+			Map<Double, List<LancamentoVO>> mapLancamentosPorValor, List<LancamentoVO> lancamentosAssociados,
+			List<RegistroExtratoDto> dtos) {
+		dtos = dtos.stream()
+   	          .filter(dto -> 
+   	        	dto.getDataLancamento().matches("[0-9]{2}[/][0-9]{2}[/][0-9]{2}") 
+   	        	&& (dto.getCreditoDebito().trim().equalsIgnoreCase("C") || dto.getCreditoDebito().trim().equalsIgnoreCase("D")) )
+   	          .map(dto -> {
 					associarLancamentos(dto, mapLancamentosPorDocumento, mapLancamentosPorValor);
 					if (dto.getLancamentos() != null) {
 						lancamentosAssociados.addAll(dto.getLancamentos());
@@ -74,11 +87,39 @@ public class ImportadorBB implements ImportadorArquivo {
 					}
 					return dto;
    	          })
-   	          .filter(dto -> 
-   	        	dto.getDataLancamento().matches("[0-9]{2}[/][0-9]{2}[/][0-9]{2}") 
-   	        	&& (dto.getCreditoDebito().trim().equalsIgnoreCase("C") || dto.getCreditoDebito().trim().equalsIgnoreCase("D")) )
    	          .collect(Collectors.toList());
-   	          
+		return dtos;
+	}
+
+	/**
+	 * @param dtos
+	 */
+	private void corrigirDescricaoDocumento(List<RegistroExtratoDto> dtos) {
+		for(int i = 1; i < dtos.size(); i++) {
+			RegistroExtratoDto dto = dtos.get(i);
+			if (dto.getDataLancamento().trim().isEmpty()) {
+				dtos.get(i - 1).setHistorico(dtos.get(i-1).getHistorico() + " "+ dto.getHistorico());
+			}
+		}
+	}
+
+	/**
+	 * @param linhas
+	 * @return
+	 */
+	private List<RegistroExtratoDto> montarListaExtratoDto(String[] linhas) {
+		List<RegistroExtratoDto> dtos = Stream.of(linhas)
+   	    	  .skip(9)
+   	          .map(linha -> {
+  	        	    RegistroExtratoDto dto = new RegistroExtratoDto();
+					dto.setDataLancamento(linha.substring(0,8));
+					dto.setHistorico(linha.substring(17, 43).trim());
+					dto.setDocumento(linha.substring(43, 66).trim());
+					dto.setValor( linha.substring(67,78).trim().isEmpty() ? "0" : linha.substring(67,78).trim() );
+					dto.setCreditoDebito( linha.substring(79, 80).trim() );
+					return dto;
+   	          })
+   	          .collect(Collectors.toList());
 		return dtos;
 	}
 
