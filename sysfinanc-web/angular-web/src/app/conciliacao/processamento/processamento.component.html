@@ -54,6 +54,9 @@
                                     <ul *ngFor="let l of row.lancamentos" class="largura-maxima">
                                         <li>{{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}</li>
                                     </ul>
+                                    <ul *ngIf="row.lancamentos && row.lancamentos.length > 1">
+                                        <span class="label label-info">Total R$ {{calcularTotal(row.lancamentos)}}</span>
+                                    </ul>
                                 </td>
 
                                 <td  *ngIf="!row.confirmado">

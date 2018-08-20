@@ -13,11 +13,17 @@
                     </div>
                     
                     <div class="panel-body">
-                        <div class="row" *ngFor="let resumo of resumos">
-                            <label class="col-md-8 col-lg-6 col-xs-12">{{resumo.nome}}:</label>
-                            <a href="javascript:void(0)" class="col-md-4  col-lg-6 col-xs-12 text-right" 
-                                (click)="filtrarLancamentos(resumo.filtro)">{{resumo.valor}} <i class="glyphicon glyphicon-search"></i></a>
-                        </div>
+                        <table class="table table-striped table-hover table-bordered">
+                            <tbody>
+                                <tr *ngFor="let resumo of resumos" (click)="filtrarLancamentos(resumo.filtro)">
+                                    <td>{{resumo.nome}}</td>
+                                    <td>
+                                        <a href="javascript:void(0)"
+                                          (click)="filtrarLancamentos(resumo.filtro)">{{resumo.valor}}</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                             
                 </div>

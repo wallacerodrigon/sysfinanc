@@ -152,4 +152,11 @@ export class ProcessamentoComponent implements OnInit {
     dto.arrayIds = [];
   }
 
+  protected calcularTotal(lancamentos: Array<LancamentoVO>): number {
+    if (lancamentos.length > 0){
+      return lancamentos.reduce( (total, vo) => total += vo.valor, 0.00);
+    }
+    return 0.00;
+  }
+
 }
