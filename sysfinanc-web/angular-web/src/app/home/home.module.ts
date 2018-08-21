@@ -6,7 +6,7 @@ import { BlockUIModule } from 'ng-block-ui';
 import {AuthGuard} from '../servicos/auth-guard.service';
 import {LoginComponent} from '../login/login/login.component';
 import { HomeOutletComponent } from './home-outlet.component';
- 
+import {ComponentesModule} from '../componentes/componentes.module';
 
 const rotas: Routes = [
     {path: '', 
@@ -22,6 +22,7 @@ const rotas: Routes = [
   imports: [
     CommonModule , 
     BlockUIModule,
+    ComponentesModule,
     RouterModule.forChild(rotas), 
   ],
   declarations: [HomePageComponent,HomeOutletComponent],

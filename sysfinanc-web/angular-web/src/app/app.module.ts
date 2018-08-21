@@ -32,9 +32,10 @@ import {RoutesRoutingModule} from './routes-geral-module';
 import { ConciliacaoModule } from './conciliacao/conciliacao.module';
 
 
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     //externos

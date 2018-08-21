@@ -12,6 +12,7 @@ export class HomeDashboardComponent implements OnInit {
   //ver a api em: https://valor-software.com/ng2-charts/#barChart
   chart = [];
   @BlockUI() blockUI: NgBlockUI;
+  protected dataTeste: Date = new Date();
 
   public lineChartData:Array<any> = [
     [65, 59, 80, 81, 56, 55, 40],

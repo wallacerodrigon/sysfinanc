@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AlertaComponent} from '../../componentes/mensagens/alert.component';
-import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
+import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
 import { ActivatedRoute, Router } from '@angular/router';
 import {UsuarioVO} from '../../dominio/vo/usuario-vo';
 
