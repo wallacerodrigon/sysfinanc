@@ -48,20 +48,13 @@ export class Formatadores {
     }  
 
     public static formataMoeda(valor: number): string {
-        if (valor != null){
-            let valorStr: string = valor.toString().replace('.', ',');
-            if (valorStr.indexOf(',') < 0){
-                valorStr+=",00";
-            } else if (valorStr.indexOf(',') > 0 && valorStr.substr(valorStr.indexOf(','), valorStr.length) == '') {
-                valorStr+='00';
-            } else if (valorStr.indexOf(',') > 0 && valorStr.substr(valorStr.indexOf(',')+1, valorStr.length).length == 1) {
-             valorStr+='0';
-            }
-            let strAposVirgula: string = valorStr.substr(valorStr.indexOf(',')+1);
-            return valorStr.substr(0, valorStr.indexOf(',')+1) + strAposVirgula.substr(0,2);
-        } else {
-            return null;
-        }
+        let value:string = valor.toString();
+        let strAposPonto: string = value.indexOf('.') > -1 ? value.slice(value.indexOf('.')+1) : ",00";
+
+        if (strAposPonto.length != 2) {
+            //value = value.slice(0, value.indexOf('.')+2);            
+        }            
+        return this.formatarMoedaAoDigitar({value});
     }
 
  public static formatarMoedaAoDigitar(z){

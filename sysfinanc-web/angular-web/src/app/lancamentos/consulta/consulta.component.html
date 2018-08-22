@@ -23,7 +23,7 @@
                                     <td>{{resumo.nome}}</td>
                                     <td>
                                         <a href="javascript:void(0)"
-                                          (click)="filtrarLancamentos(resumo.filtro)">{{resumo.valor}}</a>
+                                          (click)="filtrarLancamentos(resumo.filtro)">{{resumo.valor|moeda}}</a>
                                     </td>
                                 </tr>
                             </tbody>
