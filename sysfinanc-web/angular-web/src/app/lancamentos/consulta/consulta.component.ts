@@ -69,7 +69,7 @@ export class ConsultaComponent implements OnInit {
       this.mes = new Date().getMonth()+1;
       this.ano = new Date().getFullYear();
 
-      this.filtrar = this.filtrar.bind(this);
+//this.filtrar = this.filtrar.bind(this);
       this.filtrar();
   }
 

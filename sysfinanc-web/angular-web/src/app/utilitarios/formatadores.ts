@@ -48,7 +48,7 @@ export class Formatadores {
     }  
 
     public static formataMoeda(valor: number): string {
-        let value:string = valor.toString();
+        let value:string = valor.toPrecision(2).toString();
         let strAposPonto: string = value.indexOf('.') > -1 ? value.slice(value.indexOf('.')+1) : ",00";
 
         if (strAposPonto.length != 2) {
