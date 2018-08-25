@@ -48,13 +48,18 @@ export class Formatadores {
     }  
 
     public static formataMoeda(valor: number): string {
-        let value:string = valor.toPrecision(2).toString();
-        let strAposPonto: string = value.indexOf('.') > -1 ? value.slice(value.indexOf('.')+1) : ",00";
+        let value:string = valor != null ? valor.toString(): "0.00";
+        let indicePonto: number = value.indexOf('.');
+        let strAposPonto: string = indicePonto > -1 ? value.slice(indicePonto+1, indicePonto+3) : "";
 
-        if (strAposPonto.length != 2) {
-            //value = value.slice(0, value.indexOf('.')+2);            
-        }            
-        return this.formatarMoedaAoDigitar({value});
+        switch(strAposPonto.length) {
+            case 0 : strAposPonto ="00"; break;
+            case 1: strAposPonto+= "0"; break;
+            default: strAposPonto = strAposPonto.slice(0, 2);
+        }
+        indicePonto = indicePonto < 0 ? value.length : indicePonto;
+        value = value.slice(0, indicePonto)+strAposPonto;
+        return (valor < 0 ? "-":"")+ this.formatarMoedaAoDigitar({value});
     }
 
  public static formatarMoedaAoDigitar(z){

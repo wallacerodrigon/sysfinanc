@@ -36,7 +36,9 @@ export class ConsultaComponent implements OnInit {
 
   private tamanhoListagem: number = 0;
   private atributos: Array<string> = ["dataVencimentoStr", "descricao", "valorCreditoStr", "valorDebitoStr", "bolPagaIcone", "numDocumento"];
-  private totalizadores: Array<string> = ["", "", "", "0,00", "0,00", "Saldo: 0,00"];
+  private totalizadores: Array<number> = [];
+
+    private valor: string = "0,00";
 
   protected listaAcoes: Array<AcoesRegistroTabela> = [
     //  {nomeAcao:"Clonar", classeCss:"glyphicon glyphicon-eye-open", eventoAcao: this.abrirUsosLancamento},      
@@ -47,15 +49,16 @@ export class ConsultaComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;  
 
   private resumos: Array<any> = [
-      {nome:"A Receber", valor: "0,00", cor:"#00f", filtro:"AR"}, 
-      {nome:"Recebido", valor: "0,00", cor:"#00f", filtro:"RE"}, 
       {nome:"Créditos", valor: "0,00", cor:"#00f", filtro:"TR"}, 
-      {nome:"A pagar", valor: "0,00", cor:"#f00", filtro:"AP"}, 
-      {nome:"Pago", valor: "0,00", cor:"#f00", filtro:"PG"}, 
+      {nome:"A Receber", valor: "0,00", cor:"#00f", filtro:"AR"}, 
+      {nome:"Já Recebido", valor: "0,00", cor:"#00f", filtro:"RE"}, 
       {nome:"Débitos", valor: "0,00", cor:"#f00", filtro:"TD"},
-      {nome:"Saldo", valor: "0,00", cor:"#0f0", filtro:"-"}, 
-      {nome:"Conciliados", valor: "0,00", cor:"#00f", filtro:"TC"},
-      {nome:"Não conciliados", valor: "0,00", cor:"#f00", filtro:"NC"}
+      {nome:"A pagar", valor: "0,00", cor:"#f00", filtro:"AP"}, 
+      {nome:"Já Pago", valor: "0,00", cor:"#f00", filtro:"PG"}, 
+      {nome:"Saldo Final", valor: "0,00", cor:"#0f0", filtro:"-"}, 
+      {nome:"A conciliar", valor: "0,00", cor:"#f00", filtro:"NC"},
+      {nome:"Disponível no BB", valor: "0,00", cor:"#00f", filtro:"TC"},
+      {nome:"Disponível no BB - A pagar", valor: "0,00", cor:"#00f", filtro:""},
   ];
 
   private mes: number;
@@ -69,7 +72,6 @@ export class ConsultaComponent implements OnInit {
       this.mes = new Date().getMonth()+1;
       this.ano = new Date().getFullYear();
 
-//this.filtrar = this.filtrar.bind(this);
       this.filtrar();
   }
 
@@ -216,9 +218,8 @@ export class ConsultaComponent implements OnInit {
             }
       });
 
-      this.totalizadores[this.indicesValores[0]] = Formatadores.formataMoeda(totalCreditos);
-      this.totalizadores[this.indicesValores[1]] = Formatadores.formataMoeda(totalDebitos);
-      this.totalizadores[this.indicesValores[2]] = "Saldo: " + Formatadores.formataMoeda(totalCreditos - totalDebitos);
+      this.totalizadores[this.indicesValores[0]] = totalCreditos;
+      this.totalizadores[this.indicesValores[1]] = totalDebitos;
   }
 
   protected filtrarProximo(){
@@ -251,7 +252,6 @@ export class ConsultaComponent implements OnInit {
     let totalCredNaoConciliado: number = 0.00;
     let totalDebConciliado : number = 0.00;
     let totalDebNaoConciliado : number = 0.00;
-
     this.listagem.forEach(vo => {
         if (vo.despesa){
             if (vo.bolPaga){
@@ -280,15 +280,16 @@ export class ConsultaComponent implements OnInit {
         }
     });    
     
-    this.resumos[0].valor = Formatadores.formataMoeda(totalReceber);
-    this.resumos[1].valor = Formatadores.formataMoeda(totalRecebido);
-    this.resumos[2].valor = this.totalizadores[this.indicesValores[0]]
-    this.resumos[3].valor = Formatadores.formataMoeda(totalPagar);
-    this.resumos[4].valor = Formatadores.formataMoeda(totalPago);
-    this.resumos[5].valor = this.totalizadores[this.indicesValores[1]]
-    this.resumos[6].valor = this.totalizadores[this.indicesValores[2]].split(':')[1];    
-    this.resumos[7].valor = Formatadores.formataMoeda(totalCredConciliado - totalDebConciliado);
-    this.resumos[8].valor = Formatadores.formataMoeda(totalCredNaoConciliado - totalDebNaoConciliado);
+    this.resumos[0].valor = totalReceber + totalRecebido;
+    this.resumos[1].valor = totalReceber;
+    this.resumos[2].valor = totalRecebido;
+    this.resumos[3].valor = totalPagar+totalPago;
+    this.resumos[4].valor = totalPagar;
+    this.resumos[5].valor = totalPago;
+    this.resumos[6].valor = this.resumos[0].valor - this.resumos[3].valor;
+    this.resumos[7].valor = totalCredNaoConciliado - totalDebNaoConciliado;
+    this.resumos[8].valor = totalCredConciliado - totalDebConciliado;
+    this.resumos[9].valor = this.resumos[8].valor - totalPagar;
   }
 
     private novoCadastro(){
@@ -298,6 +299,11 @@ export class ConsultaComponent implements OnInit {
                 this.filtrar()
             }
         });
+    }
+
+    formatar(){
+        let valor: number = Number(this.valor);
+        alert(Formatadores.formataMoeda(valor));
     }
  
 }

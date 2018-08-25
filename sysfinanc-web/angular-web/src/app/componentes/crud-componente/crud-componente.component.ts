@@ -26,6 +26,7 @@ export class CrudComponente implements OnInit {
     @Input() listaAcoes: Array<AcoesRegistroTabela> = [];
     @Input() exibeCheckboxes: boolean = false;
     @Input() exibeTotalizadores: boolean = false;
+    @Input() exibeFiltroColuna: boolean = false;
 
 //eventos
     @Output() onExcluir = new EventEmitter<any>();
@@ -42,10 +43,14 @@ export class CrudComponente implements OnInit {
     public target: any;
     public indicePagina: number = -1;
 
-  constructor(public dialogService:DialogService) { }
+    protected listaFiltrada: Array<any> = [];
+    private dadosFiltrosColunas: Array<any> = [];
+
+   constructor(public dialogService:DialogService) { 
+}
 
   ngOnInit() {
-
+    this.listaFiltrada = this.listaDados;
   }
 
   excluir(item: any, indice: number){
@@ -127,5 +132,14 @@ export class CrudComponente implements OnInit {
 
   private isIcone(valor: string): boolean {
     return (valor && valor != null && typeof(valor) == 'string' && valor.indexOf('icone') > -1);
+  }
+
+  private filtrarNaLista(indColFiltro: number): void {
+      if (this.atributosColunas[indColFiltro] && this.atributosColunas.length > 0){
+          this.listaDados = this.listaDados.filter(dado => {
+              let result: Array<any> = this.dadosFiltrosColunas.filter(filtro => dado.indexOf(filtro) > -1);
+              return result && result.length > 0;
+          });
+      }
   }
 }

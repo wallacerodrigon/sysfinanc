@@ -3,7 +3,7 @@
         <ol class="breadcrumb">
             <li><a href="#">Lançamentos</a></li>
             <li class="active">Consulta</li>
-        </ol>        
+        </ol>    
         <div class="col col-md-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -44,23 +44,22 @@
                             
                             <button type="button" class="btn btn-default" (click)="novoCadastro()">
                                             <i class="glyphicon glyphicon-plus"></i> Novo Lançamento</button>
-                                </div>
-                </div>
+                        </div>
+              </div>
                 
                     
-                    <app-crud-componente #crudComponente [nomesColunas]="colunas" 
-                            [listaDados]="listagem" 
-                            [tamanhoListagem]="tamanhoListagem"
-                            [atributosColunas]="atributos"
-                            [exibeAcoes]="true"
-                            [exibeExcluir]="true"
-                            [exibeEditar]="true"
-                            [listaAcoes]="listaAcoes"
-                            [exibeCheckboxes]="true"
-                            [exibeTotalizadores]="true"
-                            [totalizadores]="totalizadores"
-                            (onExcluir)="excluir($event)"
-                            (onEditar)="editar($event)" >
+            <app-crud-componente #crudComponente [nomesColunas]="colunas" 
+                    [listaDados]="listagem" 
+                    [tamanhoListagem]="tamanhoListagem"
+                    [atributosColunas]="atributos"
+                    [exibeAcoes]="true"
+                    [exibeExcluir]="true"
+                    [exibeEditar]="true"
+                    [listaAcoes]="listaAcoes"
+                    [exibeCheckboxes]="true"
+                    [exibeFiltroColuna]="true"
+                    (onExcluir)="excluir($event)"
+                    (onEditar)="editar($event)" >
             </app-crud-componente>
         </div>
     </block-ui>
