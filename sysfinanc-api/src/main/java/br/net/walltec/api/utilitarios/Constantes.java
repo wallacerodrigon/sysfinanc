@@ -19,7 +19,7 @@ public class Constantes {
 
 	public static final Integer ID_FORMA_PAGAMENTO_PADRAO = 13;
 
-	public static final int INTERVALO_TOKEN = 60;
+	public static final int INTERVALO_TOKEN = 60000*30; // 30 min
 
 
 

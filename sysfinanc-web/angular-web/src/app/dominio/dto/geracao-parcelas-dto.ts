@@ -10,8 +10,14 @@ export class GeracaoParcelasDto extends DtoPadrao {
         public idParcelaOrigem:number = null,
         public parcial: boolean = false,
         public idUsuario:number = null,
-        public descricaoParcela: string = null
+        public descricaoParcela: string = null,
+        public idFormaPagamento: number = null
     ){
         super();
     }
+
+    public calcularTotal(): number {
+        return this.quantidade * this.valorVencimento;
+    }
+
 }

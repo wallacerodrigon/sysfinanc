@@ -13,11 +13,8 @@ public class TokenManager {
 
 	public String gerarToken(Integer idUsuario){
 		
-		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 		//5 minutos
-		Calendar novaDataHora = Calendar.getInstance();
-		novaDataHora.set(Calendar.MINUTE, novaDataHora.get(Calendar.MINUTE) + Constantes.INTERVALO_TOKEN);
-	
 		byte[] apiSecretBytes = codificarBase64(Constantes.FRASE_SECRETA);
 
 		byte[] loginCriptografado = codificarBase64(idUsuario.toString());
@@ -25,7 +22,7 @@ public class TokenManager {
 		JwtBuilder builder = Jwts.builder()
 						.setIssuedAt(new Date())
 						.setSubject(new String(loginCriptografado))
-						.setExpiration(novaDataHora.getTime())
+						.setExpiration(new Date(System.currentTimeMillis() + Constantes.INTERVALO_TOKEN))
 						.signWith(signatureAlgorithm, apiSecretBytes);
 		
 		return builder.compact();
@@ -47,6 +44,7 @@ public class TokenManager {
 			if ( claims.getExpiration().before(new Date()) ){
 				return false;
 			}
+			//verificar se o usuário é válido e demais validações...
 			return true;
 		} catch(ExpiredJwtException e){		
 			System.out.println("Token inv�lido");

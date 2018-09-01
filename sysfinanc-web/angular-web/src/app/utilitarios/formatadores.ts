@@ -41,7 +41,7 @@ export class Formatadores {
 
     public static formataNumeroToString(valor: number): string {
         if (valor){
-            return valor.toString().replace('.', ',');
+            return this.formataMoeda(valor);
         } else {
             return null;
         }

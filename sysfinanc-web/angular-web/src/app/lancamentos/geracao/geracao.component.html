@@ -4,56 +4,90 @@
             <div class="panel-body">
                 <ul class="nav nav-tabs" role="tablist" >
                     <li role="presentation" class="active"><a href="#dados" aria-controls="dados" role="tab" data-toggle="tab">Dados básicos</a></li>
-                    <li role="presentation"><a href="#parcial" aria-controls="parcial" role="tab" data-toggle="tab">Resultado Parcial</a></li>
-                    <li role="presentation"><a href="#final" aria-controls="final" role="tab" data-toggle="tab">Resultado Final</a></li>
+                    <li role="presentation"><a href="#parcial" aria-controls="parcial" role="tab" data-toggle="tab">Lançamentos Gerados</a></li>
                 </ul>
 
                 <div class="tab-content">
                     <!--aba de dados para informação da geração dos lançamentos-->
                     <div role="tabpanel" class="tab-pane fade in active" id="dados">
-                        <form name="frmGeracao" novalidate >
+                        <form name="frmGeracao" novalidate [formGroup]="frmGeracao" >
+                            <div class="row">
                                 <div class="col col-md-6">
                                     <label for="banco" class="obrigatorio">Rubrica</label>
-                                    <input type="text" [(ngModel)]="rubricaSelecionada" class="form-control" id="rubrica" name="rubrica" 
+                                     <input type="text" formControlName="rubrica" class="form-control" id="rubrica" name="rubrica" 
                                     list="listaRubricas">
                                     <datalist id="listaRubricas">
                                         <select>
                                             <option  *ngFor="let r of listaRubricas" value="{{r.descricaoCombo}}"></option>
                                         </select>
                                     </datalist> 
+                                    <div class="text-danger" *ngIf="isCampoInvalido('rubrica')">
+                                        Rubrica deve ser preenchida
+                                    </div>                                    
                                 </div>
                                 <div class="col-md-2">
                                     <label for="vencimento" class="obrigatorio">Vencimento Base</label>
-                                    <input type="text"  class="form-control" #dataVencimento>
+                                    <input type="date" formControlName="vencimento" class="form-control" min="2016-01-01">
+                                    <div class="text-danger" *ngIf="isCampoInvalido('vencimento')">
+                                            Vencimento deve ser preenchido
+                                    </div>                                    
                                 </div>
             
                                 <div class='col-md-2'>
                                     <label for="quantidade" class="obrigatorio">Quantidade</label>
-                                    <input type="number" id="quantidade" name="quantidade" class="form-control" [(ngModel)]="quantidade">
+                                    <input type="number" id="quantidade" formControlName="quantidade" class="form-control">
+                                    <div class="text-danger" *ngIf="isCampoInvalido('quantidade')">
+                                            Quantidade deve ser preenchido
+                                    </div>                                    
                                 </div>
             
                                 <div class='col-md-2'>
                                     <label for="valor" class="obrigatorio">Valor</label>
-                                    <input type="text" id="valor" class="form-control" #valorStr
-                                    onkeypress="moeda(this);"
+                                    <input type="text" id="valor" class="form-control" formControlName="valor"
+                                    onkeypress="moeda(this);" #valor
+                                    onblur="moeda(this);"
                                     onkeyup="moeda(this);">
+                                    <div class="text-danger" *ngIf="isCampoInvalido('valor')">
+                                            Valor deve ser preenchido
+                                    </div>                                    
                                 </div>
-                            
-                                <div class="col-md-8">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
                                     <label class="obrigatorio">Descrição</label>
-                                    <input type="text" class="form-control" [(ngModel)]="descricao" name="descricao">
+                                    <input type="text" class="form-control" formControlName="descricao" name="descricao">
+                                    <div class="text-danger" *ngIf="isCampoInvalido('descricao')">
+                                            A descrição deve ser preenchida
+                                    </div>                                    
                                 </div>
+
+                                <div class="col-md-4">
+                                    <label class="obrigatorio">Forma de Pagamento</label>
+                                    <select class="form-control" formControlName="formaPagamento" name="formaPagamento">
+                                            <option value="">Selecione</option>
+                                            <option value="13">À vista</option>
+                                            <option value="34">Débito em conta</option>
+                                    </select>
+                                    <div class="text-danger" *ngIf="isCampoInvalido('formaPagamento')">
+                                            A forma de pagamento deve ser preenchida
+                                    </div>                                    
+                                </div>
+
                             
                                 <div class="col-md-4">
                                     <label>Modo de geração</label>
                                     <div class="form-control">
-                                        <input type="radio" class="radio-inline" name="parcial" value="S" checked [(ngModel)]="bolParcial">Somente visualizar
-                                        <input type="radio" class="radio-inline" name="parcial" value="N" [(ngModel)]="bolParcial">Efetivar a geração
-            
+                                        <input type="radio" class="radio-inline" name="modoGeracao" formControlName="modoGeracao" value="S" checked>Somente visualizar
+                                        <input type="radio" class="radio-inline" name="modoGeracao" formControlName="modoGeracao" value="N">Efetivar a geração
                                     </div>
                                 </div>
-            
-                            <button class="btn btn-default center-block" (click)="gerarLancamentos()">Gerar Lançamentos</button>
+                            </div>      
+                               
+                            <br/>
+                            <div class="row">
+                                <button class="btn btn-default center-block" (click)="gerarLancamentos()" [disabled]="frmGeracao.invalid" >Gerar Lançamentos</button>
+                            </div>
                         </form>
                     </div>
 
@@ -71,11 +105,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <!--aba dos dados gerados sendo exibidos por rubrica-->
-                    <div role="tabpanel" class="tab-pane fade" id="final">
-                        <p>Resultado por rubrica</p>
-                    </div>                        
+                      
                 </div>
 
             </div>

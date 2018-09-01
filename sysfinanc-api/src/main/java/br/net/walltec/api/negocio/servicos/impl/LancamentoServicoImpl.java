@@ -260,7 +260,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			lancamento.setDataVencimento(dataInicialAux);
 			lancamento.setDescricao(dto.getDescricaoParcela());
 			lancamento.setFormaPagamento(new FormaPagamento());
-			lancamento.getFormaPagamento().setId(Constantes.ID_FORMA_PAGAMENTO_PADRAO);
+			lancamento.getFormaPagamento().setId(dto.getIdFormaPagamento() == null ? Constantes.ID_FORMA_PAGAMENTO_PADRAO : dto.getIdFormaPagamento());
 			lancamento.setBolPaga(false);
 			lancamento.setBolConciliado(false);
 			
@@ -278,12 +278,8 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	
 	private void mapearLancamento(Map<String, List<Lancamento>> mapaCache, Lancamento lancamento) {
 		String dataFormatada = lancamento.getDataVencimento().getMonth()+""; //, "yyyy-mm-dd");
-		if (mapaCache.containsKey(dataFormatada)) {
-			mapaCache.get(dataFormatada).add(lancamento);		
-		} else {
-			mapaCache.put(dataFormatada, new ArrayList<Lancamento>());
-			mapaCache.get(dataFormatada).add(lancamento);
-		}
+		mapaCache.putIfAbsent(dataFormatada, new ArrayList<>()).add(lancamento);
+		//mapaCache.computeIfAbsent(key, mappingFunction)get(dataFormatada).add(lancamento);
 	}
 
 	/* (non-Javadoc)

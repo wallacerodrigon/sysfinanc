@@ -12,6 +12,7 @@ import { AlertaComponent } from '../../componentes/mensagens/alert.component';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { UtilObjeto } from '../../utilitarios/util-objeto';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { GeracaoParcelasDto } from '../../dominio/dto/geracao-parcelas-dto';
 
 declare var jQuery: any;
 
@@ -23,37 +24,37 @@ declare var jQuery: any;
 export class GeracaoComponent implements OnInit {
 
   @ViewChild("dataVencimento") dataVencimento: ElementRef; 
-  @ViewChild("valorStr") valor: ElementRef;
+  @ViewChild("valor") valor: ElementRef;
   @BlockUI() blockUI: NgBlockUI;
 
   private listaRubricas: Array<RubricaVO> = [];
-  protected rubricaSelecionada: string;
 
-  private colunas: string[] = ["Rubrica", "Vencimento", "Valor", "Descrição"];
+  private colunas: string[] = ["Descrição", "Vencimento", "Crédito", "Débito"];
   private listagem: Array<LancamentoVO> = [];
 
   private tamanhoListagem: number = 0;
-  private atributos: Array<string> = ["descConta", "dataVencimentoStr", "valor", "descricao"];
-  private totalizadores: Array<string> = ["", "Total:", "0,00", ""];
-  private descricao: string;
-  private quantidade: number = 0;
+  private atributos: Array<string> = ["descricao", "dataVencimentoStr", "valorCreditoStr", "valorDebitoStr"];
+  private totalizadores: Array<string> = ["Total:", "-", "0,00", "0,00"];
   private frmGeracao: FormGroup;
-  private bolParcial: string = 'S';
 
   constructor(protected lancamentoService: LancamentoService,
               protected rubricaService: RubricaService,
               private formBuilder: FormBuilder,
               private dialogService: DialogService ) { 
+
         this.frmGeracao= this.formBuilder.group({
           rubrica: this.formBuilder.control('', Validators.required),
+          vencimento: this.formBuilder.control('', Validators.required),
+          quantidade: this.formBuilder.control('', Validators.required),
+          valor: this.formBuilder.control('', Validators.required),
+          descricao: this.formBuilder.control('', Validators.required),
+          modoGeracao: this.formBuilder.control('', Validators.required),
+          formaPagamento: this.formBuilder.control('', Validators.required),
         });
                             
   } 
 
   ngOnInit() {
-    jQuery(this.dataVencimento.nativeElement).datepicker();
-    this.dataVencimento.nativeElement.value = UtilData.converterToString(new Date());
-   // this.listarRubricas();
     this.listaRubricas = this.rubricaService.getListaCache();
   }
 
@@ -70,27 +71,47 @@ export class GeracaoComponent implements OnInit {
         });
   }
 
-  private getRubrica(): RubricaVO {
-      let rubricas: RubricaVO[] = this.listaRubricas.filter(rubrica => rubrica.descricaoCombo == this.rubricaSelecionada);
+  private getRubrica(rubricaSelecionada: string): RubricaVO {
+      let rubricas: RubricaVO[] = this.listaRubricas.filter(rubrica => rubrica.descricaoCombo == rubricaSelecionada);
       return rubricas != null ? rubricas[0] : null;
   }
 
   protected gerarLancamentos(): void {
-      let valor: number = Formatadores.formataNumero(this.valor.nativeElement.value);
-      let total: number = valor * this.quantidade;
-      this.listagem = [];
+      this.blockUI.start('Gerando lançamentos. Aguarde!');    
 
-      this.lancamentoService.gerarLancamentos(this.getRubrica().id, this.dataVencimento.nativeElement.value,
-                              this.quantidade, valor, this.bolParcial == 'S')
-          .then(retorno => {
-            if (this.bolParcial === 'S'){
+      let dto : GeracaoParcelasDto = new GeracaoParcelasDto();
+      let rubrica: RubricaVO = this.getRubrica(this.frmGeracao.value['rubrica']);
+      dto.dataVencimentoStr = UtilData.converterDataUSAToBR(this.frmGeracao.value['vencimento']);
+      dto.descricaoParcela= this.frmGeracao.value['descricao'];
+      dto.idConta = rubrica.id;
+      dto.parcial = this.frmGeracao.value['modoGeracao'] === "S";
+      dto.quantidade = this.frmGeracao.value['quantidade'];
+      dto.valorVencimento = Formatadores.formataNumero(this.valor.nativeElement.value);
+      dto.idFormaPagamento = this.frmGeracao.value['formaPagamento'];
+
+      this.lancamentoService.gerarLancamentosComDto(dto)
+          .subscribe(retorno => {
               this.listagem = retorno;
               this.tamanhoListagem = this.listagem.length;
-              this.totalizadores[2]= Formatadores.formataMoeda(total);
-            }
-          })
-          .catch(erro => console.log(erro));
 
+              if (rubrica.despesa){
+                this.totalizadores[3]= ""+dto.calcularTotal();
+              } else {
+                this.totalizadores[2]= ""+dto.calcularTotal();
+              }
+              this.blockUI.stop();
+              new AlertaComponent(this.dialogService).exibirMensagem('Lançamentos gerados com sucesso! Visualize-os na próxima guia...');
+            },
+          error => {
+            this.blockUI.stop();
+            new AlertaComponent(this.dialogService).exibirMensagem('Erro ao gerar os lançamentos. Detalhes: ' + error._body);
+          });
+          
+
+  }
+
+  private isCampoInvalido(formControlName: string): boolean {
+    return this.frmGeracao.controls[formControlName].touched && this.frmGeracao.controls[formControlName].invalid;
   }
 
 }

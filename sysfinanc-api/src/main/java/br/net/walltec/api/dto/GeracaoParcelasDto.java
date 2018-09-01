@@ -25,6 +25,7 @@ public class GeracaoParcelasDto extends DtoPadrao {
 	private Integer idUsuario;
 	private String descricaoParcela;
 	private boolean despesa;
+	private Integer idFormaPagamento;
 	/**
 	 * @return the quantidade
 	 */
@@ -132,6 +133,18 @@ public class GeracaoParcelasDto extends DtoPadrao {
 	 */
 	public void setDespesa(boolean despesa) {
 		this.despesa = despesa;
+	}
+	/**
+	 * @return the idFormaPagamento
+	 */
+	public Integer getIdFormaPagamento() {
+		return idFormaPagamento;
+	}
+	/**
+	 * @param idFormaPagamento the idFormaPagamento to set
+	 */
+	public void setIdFormaPagamento(Integer idFormaPagamento) {
+		this.idFormaPagamento = idFormaPagamento;
 	}
 	
 	

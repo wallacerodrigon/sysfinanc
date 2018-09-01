@@ -55,6 +55,18 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
                 
     }
 
+    public gerarLancamentosComDto(dto: GeracaoParcelasDto): Observable<LancamentoVO[]> {
+        return this.executarPostSubscribe(this.uri + '/gerar-lancamento', dto)
+            .map(retorno => {
+                return retorno.json()
+                                .map(dado => {
+                                     let vo: LancamentoVO = new LancamentoVO();
+                                     Object.assign(vo, dado);
+                                     return vo;
+                                });
+            });
+    }    
+
 
     public gerarLancamentos(idRubrica: number, strVencimento:string, qtd: number, valor: number, isParcial: boolean, descricao?:string): Promise<LancamentoVO[]> {
         let dto: GeracaoParcelasDto = new GeracaoParcelasDto(idRubrica, qtd, strVencimento, valor, null, isParcial, null, descricao);

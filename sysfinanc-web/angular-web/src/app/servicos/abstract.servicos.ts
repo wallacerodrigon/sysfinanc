@@ -77,6 +77,13 @@ export abstract class AbstractServicos<T> {
         ;
 }  
 
+public executarPostSubscribe( url: string, objeto: any): Observable<any> {
+  return this
+      .http
+      .post(url, JSON.stringify(objeto));
+}  
+
+
 public executarPut(url: string, objeto: any): Promise<any> {
     return this
         .http

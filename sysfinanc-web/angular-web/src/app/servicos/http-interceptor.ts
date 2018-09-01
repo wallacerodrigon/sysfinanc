@@ -7,7 +7,7 @@ import {UsuarioVO} from '../dominio/vo/usuario-vo';
 import {AlertaComponent} from '../componentes/mensagens/alert.component';
 import {  DialogService } from "ng2-bootstrap-modal";
 
-
+//esta classe deve extender de HttpInterceptor
 @Injectable()
 export class HttpInterceptor extends Http  {
 
