@@ -16,6 +16,8 @@ import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
+import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
+import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -48,4 +50,14 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	List<LancamentoVO> gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException;
 	
 	void associarLancamentos(List<RegistroExtratoDto> lancamentos) throws NegocioException;
+
+	/**
+	 * @param desfazimentoDTO
+	 */
+	void desfazerConciliacoes(DesfazimentoConciliacaoDTO desfazimentoDTO) throws NegocioException;
+
+	/**
+	 * @param fechamentoDTO
+	 */
+	void fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws NegocioException;
 }

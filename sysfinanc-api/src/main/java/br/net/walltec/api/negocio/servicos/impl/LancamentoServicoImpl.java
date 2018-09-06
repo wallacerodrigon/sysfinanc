@@ -33,6 +33,7 @@ import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.RubricaMesAnoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.entidades.Conta;
+import br.net.walltec.api.entidades.FechamentoContabil;
 import br.net.walltec.api.entidades.FormaPagamento;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.CampoObrigatorioException;
@@ -45,6 +46,8 @@ import br.net.walltec.api.persistencia.dao.ContaDao;
 import br.net.walltec.api.persistencia.dao.LancamentoDao;
 import br.net.walltec.api.persistencia.dao.impl.ContaDaoImpl;
 import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
+import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
+import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
 import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.utilitarios.UtilFormatador;
@@ -587,6 +590,49 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	private boolean hasValorDiferente(RegistroExtratoDto dto) {
 		BigDecimal valorExtrato = UtilFormatador.formatarStringComoValor(dto.getValor());
 		return valorExtrato.doubleValue() != dto.calcularTotalLancamentos();
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#desfazerConciliacoes(br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO)
+	 */
+	@Transactional(value=TxType.REQUIRES_NEW)
+	@Override
+	public void desfazerConciliacoes(DesfazimentoConciliacaoDTO desfazimentoDTO) throws NegocioException {
+
+		//if estiver fechado, informar que já foi fechado o mês...
+		
+		if (!LocalDate.now().getMonth().equals(desfazimentoDTO.getMes()) &&  
+				LocalDate.now().getDayOfMonth() > 2) {
+			throw new NegocioException("Não é possível desfazer as conciliações deste mês!");
+		}
+		
+		try {
+			List<Lancamento> lancamentos = this.filtrarParcelas(new FiltraParcelasDto(desfazimentoDTO.getMes(), desfazimentoDTO.getAno()));
+			
+			lancamentos
+				.stream()
+				.forEach(entidade -> {
+					entidade.setBolConciliado(false);
+					entidade.setNumDocumento(null);
+				});
+			this.alterar(lancamentos);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#fecharMes(br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO)
+	 */
+	@Transactional(value=TxType.REQUIRES_NEW)	
+	@Override
+	public void fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws NegocioException {
+
+		FechamentoContabil fechamento = new FechamentoContabil();
+		
+		
 	}	
 	
 }

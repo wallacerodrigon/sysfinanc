@@ -17,6 +17,17 @@ public class FiltraParcelasDto extends DtoPadrao {
 	private Integer mes, ano, idConta, idParcelaOrigem;
 
 	/**
+	 * @param mes
+	 * @param ano
+	 */
+	public FiltraParcelasDto(Integer mes, Integer ano) {
+		super();
+		this.mes = mes;
+		this.ano = ano;
+	}
+
+
+	/**
 	 * @return the mes
 	 */
 	public Integer getMes() {
