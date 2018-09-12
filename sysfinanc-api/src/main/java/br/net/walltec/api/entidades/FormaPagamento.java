@@ -1,6 +1,5 @@
 package br.net.walltec.api.entidades;
 
-import javax.jms.JMSSessionMode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

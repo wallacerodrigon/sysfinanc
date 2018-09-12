@@ -84,6 +84,21 @@ export class ProcessamentoComponent implements OnInit {
         .catch(erro => new AlertaComponent(this.dialogService).exibirMensagem(erro._body))
    }
 
+   private desfazerAssociacao(){
+    let strData: string = UtilData.converterDataUSAToBR( this.databaseFiltro.toString() );
+    let mes: number = Number(strData.split("/")[1]);
+    let ano: number =  Number(strData.split("/")[2]);
+    this.lancamentoService.desfazerAssociacoes(mes, ano)
+    .then( () => {
+      new AlertaComponent(this.dialogService).exibirMensagem('Associações desfeitas com sucesso');
+      this.efetuarUpload();
+    })
+    .catch(erro => {
+      console.log(erro);
+      new AlertaComponent(this.dialogService).exibirMensagem("Ocorreu um erro ao desfazer as conciliações!");
+    })
+   }    
+
    protected efetuarUpload(){
 
         if (! this.conteudoArquivoBase64 || this.conteudoArquivoBase64.length === 0){
@@ -158,5 +173,7 @@ export class ProcessamentoComponent implements OnInit {
     }
     return 0.00;
   }
+
+ 
 
 }

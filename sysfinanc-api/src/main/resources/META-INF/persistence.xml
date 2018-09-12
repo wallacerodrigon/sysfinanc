@@ -12,6 +12,7 @@
 		<class>br.net.walltec.api.entidades.Usuario</class>
 		<class>br.net.walltec.api.entidades.FormaPagamento</class>
 		<class>br.net.walltec.api.entidades.TipoConta</class>
+		<class>br.net.walltec.api.entidades.FechamentoContabil</class>
 
 		
 		<properties>

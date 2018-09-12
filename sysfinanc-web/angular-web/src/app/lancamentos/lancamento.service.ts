@@ -78,4 +78,7 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
         return this.executarPut(this.uri + "/associar-lancamento-extrato", listaDtos);
     }
 
+    public desfazerAssociacoes(mes: number, ano: number): Promise<any> {
+        return this.executarPut(this.uri + "/desfazer-conciliacao", {mes: mes, ano: ano});
+    }    
 }

@@ -68,5 +68,14 @@ label.obrigatorio:after {
     .conteudo {
         width: 100%
     }
+
+    .sistema-mensagem {
+        color: #C0C0C0; 
+        font-style: oblique;
+        font-family:fantasy;
+        text-shadow: black 0.1em 0.1em 0.2em;
+        margin-top: 12.5%;
+        margin-bottom: 12.5%
+    }    
 }
 

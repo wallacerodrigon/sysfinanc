@@ -34,7 +34,10 @@
         <div class="panel panel-default" *ngIf="processando">
             <div class="panel-heading">Extrato e Lançamentos</div>
             <div class="panel-body">
-                <button class="btn btn-default center-block" id="btnAssociar" *ngIf="processando" (click)="associarExtratoLancamento()">Associar Marcados</button>
+                <div class="center-block" *ngIf="processando">
+                    <button class="btn btn-default" id="btnAssociar" (click)="associarExtratoLancamento()">Associar Marcados</button>
+                    <button class="btn btn-default" id="btnDesfazer" (click)="desfazerAssociacao()">Desfazer Conciliações</button>
+                </div>
                 <br/>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover table-bordered">

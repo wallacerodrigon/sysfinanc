@@ -43,8 +43,10 @@ import br.net.walltec.api.excecoes.WebServiceException;
 import br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao;
 import br.net.walltec.api.negocio.servicos.LancamentoServico;
 import br.net.walltec.api.persistencia.dao.ContaDao;
+import br.net.walltec.api.persistencia.dao.FechamentoContabilDao;
 import br.net.walltec.api.persistencia.dao.LancamentoDao;
 import br.net.walltec.api.persistencia.dao.impl.ContaDaoImpl;
+import br.net.walltec.api.persistencia.dao.impl.FechamentoContabilDaoImpl;
 import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
 import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
 import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
@@ -64,12 +66,15 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 
     private LancamentoDao lancamentoDao;
     
+    private FechamentoContabilDao fechamentoContabilDao;
+    
     private Logger log = Logger.getLogger(this.getClass().getName());
 
     @PostConstruct
     public void init() {
         contaDao = new ContaDaoImpl(em);
         lancamentoDao = new LancamentoDaoImpl(em);
+        fechamentoContabilDao = new FechamentoContabilDaoImpl(em);
         setDao(lancamentoDao);
     }
 
@@ -601,7 +606,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 
 		//if estiver fechado, informar que já foi fechado o mês...
 		
-		if (!LocalDate.now().getMonth().equals(desfazimentoDTO.getMes()) &&  
+		if (LocalDate.now().getMonth().getValue() != desfazimentoDTO.getMes().intValue() &&  
 				LocalDate.now().getDayOfMonth() > 2) {
 			throw new NegocioException("Não é possível desfazer as conciliações deste mês!");
 		}
@@ -631,7 +636,15 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	public void fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws NegocioException {
 
 		FechamentoContabil fechamento = new FechamentoContabil();
+		fechamento.setDataFechamento(new Date());
+		fechamento.setNumAno(fechamentoDTO.getAno());
+		fechamento.setNumMes(fechamentoDTO.getMes());
 		
+		try {
+			fechamentoContabilDao.incluir(fechamento);
+		} catch (PersistenciaException e) {
+			e.printStackTrace();
+		}
 		
 	}	
 	

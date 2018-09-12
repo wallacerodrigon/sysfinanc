@@ -1,5 +1,11 @@
 package br.net.walltec.api.conversores;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import br.net.walltec.api.entidades.Conta;
 import br.net.walltec.api.entidades.FormaPagamento;
 import br.net.walltec.api.entidades.Lancamento;
@@ -50,4 +56,24 @@ public class ConversorLancamento extends AbstractConverter<Lancamento, Lancament
         							UtilFormatador.formatarStringComoValor(pojo.getValorCreditoStr())  );
         return lancamento;
     }
+    
+//    public static void main(String[] args) throws Exception {
+//    	ZipInputStream arquivoZip = new ZipInputStream(new FileInputStream("C:\\TEMP\\eDNE_Basico.zip"));
+//    	ZipEntry entrada = null;
+//    	while( (entrada = arquivoZip.getNextEntry()) != null) {
+//    		if (entrada.getName().toLowerCase().startsWith("fixo") && entrada.getName().toLowerCase().endsWith(".txt") ) {
+//	    		File f = new File("c:\\temp\\dist\\"+entrada.getName());
+//				FileOutputStream fos = new FileOutputStream(f);
+//				int bytes = 0;
+//				byte[] b = new byte[1024];
+//				while( (bytes = arquivoZip.read(b, 0, 1024)) != -1) {
+//					fos.write(b, 0, bytes);
+//				}
+//				fos.flush();
+//				fos.close();
+//    		}
+//    	}
+//    	arquivoZip.close();
+//    	System.out.println("Finalizado");
+//	}
 }

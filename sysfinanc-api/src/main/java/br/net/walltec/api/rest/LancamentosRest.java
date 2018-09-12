@@ -282,7 +282,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@PUT
 	@Path("/desfazer-conciliacao")
 	public Response desfazerConciliacoes(DesfazimentoConciliacaoDTO desfazimentoDTO) throws WebServiceException {
-		if (this.isMesValido(desfazimentoDTO.getMes())) {
+		if (!this.isMesValido(desfazimentoDTO.getMes())) {
 			throw new WebServiceException(Response.Status.BAD_REQUEST);
 		}
 		try {
@@ -297,7 +297,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	}
 	
 	private boolean isMesValido(Integer mes) {
-		return false;
+		return mes >= 1 && mes <= 12;
 	}
 	
 
