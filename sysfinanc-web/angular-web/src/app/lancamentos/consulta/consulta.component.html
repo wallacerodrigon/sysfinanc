@@ -10,7 +10,7 @@
                         <div class="row">
                             <div class="col-md-12 text-center">
                                 <button class="btn btn-default  glyphicon glyphicon-chevron-left" (click)="filtrarAnterior()"></button>
-                                <label class="text-info">{{mes + '/'+ ano}}</label>
+                                <label class="text-info">{{exibeMesAnoAtual()}}</label>
                                 <button class="btn btn-default glyphicon glyphicon-chevron-right" (click)="filtrarProximo()"></button>
                             </div>
                         </div>
@@ -39,12 +39,16 @@
                             <button type="button" class="btn btn-default" (click)="filtrar()">
                                 <i class="glyphicon glyphicon-filter"></i> Listar Tudo</button> 
 
-                            <button type="button" id='btnBaixa' class="btn btn-default" (click)="baixarLista()"  data-loading-text="Baixando Lançamento..." autocomplete="off">
+                            <button type="button" id='btnBaixa' class="btn btn-default" (click)="baixarLista()"  [disabled]="mesFechado" data-loading-text="Baixando Lançamento..." autocomplete="off">
                                     <i class="glyphicon glyphicon-ok"></i> Baixar Marcados</button>
                             
-                            <button type="button" class="btn btn-default" (click)="novoCadastro()">
+                            <button type="button" class="btn btn-default" (click)="novoCadastro()"  [disabled]="mesFechado">
                                             <i class="glyphicon glyphicon-plus"></i> Novo Lançamento</button>
-                        </div>
+
+                            <button type="button" class="btn btn-default" (click)="fecharMes()" [disabled]="mesFechado">
+                                <i class="glyphicon glyphicon-close"></i> Fechar Mês</button>
+    
+               </div>
               </div>
                 
                     
@@ -52,12 +56,12 @@
                     [listaDados]="listagem" 
                     [tamanhoListagem]="tamanhoListagem"
                     [atributosColunas]="atributos"
-                    [exibeAcoes]="true"
+                    [exibeAcoes]="! mesFechado"
                     [exibeExcluir]="true"
                     [exibeEditar]="true"
                     [listaAcoes]="listaAcoes"
-                    [exibeCheckboxes]="true"
-                    [exibeFiltroColuna]="true"
+                    [exibeCheckboxes]="! mesFechado"
+                    [exibeFiltroColuna]="false"
                     (onExcluir)="excluir($event)"
                     (onEditar)="editar($event)" >
             </app-crud-componente>

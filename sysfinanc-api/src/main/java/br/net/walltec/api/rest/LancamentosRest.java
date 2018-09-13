@@ -21,6 +21,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import br.net.walltec.api.dto.ConsultaLancamentosDTO;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.GravacaoArquivoDto;
@@ -72,11 +73,16 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	private LancamentoServico servico;
 
 
-	@POST
-    @Path(value="/buscarLancamentos")
-	public Response buscarLancamentos(FiltraParcelasDto dto){
+	@GET
+    @Path(value="/buscarLancamentos/{mes}/{ano}")
+	public Response buscarLancamentos(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano){
         try {
-            return Response.ok(servico.listarParcelas(dto)).build();
+        	ConsultaLancamentosDTO dtoRetorno = new ConsultaLancamentosDTO();
+        	FiltraParcelasDto dto = new FiltraParcelasDto(mes, ano);
+        	
+			dtoRetorno.setLancamentos(servico.listarParcelas(dto));
+        	dtoRetorno.setMesFechado(servico.isMesFechado(mes, ano));
+            return Response.ok(dtoRetorno).build();
         } catch (NegocioException e) {
             throw new WebServiceException(e.getMessage());
         } catch(Exception e){
@@ -264,7 +270,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@Path("/fechar-mes")
 	public Response fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws WebServiceException {
 
-		if (this.isMesValido(fechamentoDTO.getMes())) {
+		if (! this.isMesValido(fechamentoDTO.getMes())) {
 			throw new WebServiceException(Response.Status.BAD_REQUEST);
 		}
 		

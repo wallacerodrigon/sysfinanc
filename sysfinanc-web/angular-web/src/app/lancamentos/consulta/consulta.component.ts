@@ -18,6 +18,7 @@ import { EdicaoComponent } from '../edicao/edicao.component';
 import { CadastroComponent } from '../cadastro/cadastro.component';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs/Observable';
+import { ConfirmComponent } from '../../componentes/mensagens/confirm.component';
 
 @Component({
   selector: '..-consulta',
@@ -39,6 +40,7 @@ export class ConsultaComponent implements OnInit {
   private totalizadores: Array<number> = [];
 
     private valor: string = "0,00";
+    private mesFechado: boolean = false;
 
   protected listaAcoes: Array<AcoesRegistroTabela> = [
     //  {nomeAcao:"Clonar", classeCss:"glyphicon glyphicon-eye-open", eventoAcao: this.abrirUsosLancamento},      
@@ -192,11 +194,13 @@ export class ConsultaComponent implements OnInit {
     let dto: FiltraParcelasDto = new FiltraParcelasDto(this.mes, this.ano);
     this.servico.filtrar(dto)
         .subscribe(retorno => {
-            this.listagem = retorno;
-            this.tamanhoListagem = retorno.length;
-            this.listagemOriginal = retorno;
+            let retornoJSON = retorno.json();
+            this.listagem = retornoJSON.lancamentos;
+            this.tamanhoListagem = this.listagem.length;
+            this.listagemOriginal = this.listagem;
             this.calcularTotalizadores();
             this.montarResumo();
+            this.mesFechado = retornoJSON.mesFechado;
             this.blockUI.stop();
         }, erro => {
             this.blockUI.stop();            
@@ -304,6 +308,28 @@ export class ConsultaComponent implements OnInit {
     formatar(){
         let valor: number = Number(this.valor);
         alert(Formatadores.formataMoeda(valor));
+    }
+
+    fecharMes(){
+        let disposable = this.dialogService.addDialog(ConfirmComponent, {
+            title:'Fechamento', 
+            message: 'Deseja realmente fechar este mês?' })
+            .subscribe(confirmado=> {
+                if (confirmado){
+                    this.servico.fecharMes(this.mes, this.ano)
+                        .then(() => {
+                            new AlertaComponent(this.dialogService).exibirMensagem('Fechamento realizado com sucesso!') ;
+                            this.filtrar();
+                        })
+                        .catch(erro => new AlertaComponent(this.dialogService).exibirMensagem(erro._body)  );
+                }
+
+            });
+
+    }
+
+    exibeMesAnoAtual(): string {
+        return `${this.mes}/${this.ano}`;
     }
  
 }

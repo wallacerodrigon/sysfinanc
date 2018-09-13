@@ -14,6 +14,7 @@ import { AlertaComponent } from '../../componentes/mensagens/alert.component';
 import { DialogService } from 'ng2-bootstrap-modal/dist/dialog.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { CadastroComponent } from '../../lancamentos/cadastro/cadastro.component';
+import { ConfirmComponent } from '../../componentes/mensagens/confirm.component';
 
 declare var jQuery: any;
 
@@ -85,6 +86,18 @@ export class ProcessamentoComponent implements OnInit {
    }
 
    private desfazerAssociacao(){
+    let disposable = this.dialogService.addDialog(ConfirmComponent, {
+      title:'Desconciliar', 
+      message: 'Deseja realmente desfazer a conciliação deste mês?' })
+      .subscribe(confirmado=> {
+          if (confirmado){
+            this.efetuarCancelamentoConciliacao();
+          }
+
+      });
+   }
+
+   private efetuarCancelamentoConciliacao(){
     let strData: string = UtilData.converterDataUSAToBR( this.databaseFiltro.toString() );
     let mes: number = Number(strData.split("/")[1]);
     let ano: number =  Number(strData.split("/")[2]);

@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
@@ -107,10 +108,10 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     @Override
     public List<LancamentoVO> listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException {
         if (dtoFiltro == null) {
-            throw new CampoObrigatorioException("FIltro não informado");
+            throw new CampoObrigatorioException("Filtro não informado");
         }
         if (dtoFiltro.getMes() == null && dtoFiltro.getAno() == null && dtoFiltro.getIdConta() == null && dtoFiltro.getIdParcelaOrigem() == null){
-        	throw new CampoObrigatorioException("Parâmetros dos fIltros não foram informados");
+        	throw new CampoObrigatorioException("Parâmetros dos filtros não foram informados");
         }
         
         try {
@@ -635,17 +636,38 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	@Override
 	public void fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws NegocioException {
 
+		if ( this.isMesFechado(fechamentoDTO.getMes(), fechamentoDTO.getAno()) ) {
+			throw new NegocioException("Este mês já foi fechado!");
+		}
 		FechamentoContabil fechamento = new FechamentoContabil();
-		fechamento.setDataFechamento(new Date());
 		fechamento.setNumAno(fechamentoDTO.getAno());
 		fechamento.setNumMes(fechamentoDTO.getMes());
-		
+		fechamento.setDataFechamento(new Date());
 		try {
 			fechamentoContabilDao.incluir(fechamento);
 		} catch (PersistenciaException e) {
-			e.printStackTrace();
+			throw new NegocioException(e);
 		}
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#isMesFechado(int, int)
+	 */
+	@Override
+	public boolean isMesFechado(int mes, int ano) throws NegocioException {
+		FechamentoContabil fechamento = new FechamentoContabil();
+		fechamento.setNumAno(ano);
+		fechamento.setNumMes(mes);
+
+		try {
+			FechamentoContabil fc =  fechamentoContabilDao.pesquisar(fechamento);
+			return fc != null;
+		} catch (NoResultException e) {
+			return false;
+		} catch (Exception e) {
+			throw new NegocioException(e);
+		}
 	}	
 	
 }

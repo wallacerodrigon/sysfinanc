@@ -165,13 +165,13 @@ public class ImportadorBB implements ImportadorArquivo {
 		if (mapLancamentosPorDocumento.containsKey(dto.getDocumento())) {
 			dto.setLancamentos(mapLancamentosPorDocumento.get(dto.getDocumento()));
 			dto.setConfirmado(true);
-			mapLancamentosPorDocumento.remove(dto.getDocumento());
+			//mapLancamentosPorDocumento.remove(dto.getDocumento());
 		} else {
 			List<LancamentoVO> lancamentos = mapLancamentosPorValor.get(valor.doubleValue());
 			
 			if (lancamentos != null && lancamentos.size() == 1) {
 				dto.setLancamentos( lancamentos );
-				mapLancamentosPorValor.remove(valor.doubleValue());
+				//mapLancamentosPorValor.remove(valor.doubleValue());
 			} else if (lancamentos != null) {
 				dto.setLancamentos(Arrays.asList(lancamentos.get(0)));
 				mapLancamentosPorValor.get(valor.doubleValue()).remove(0);

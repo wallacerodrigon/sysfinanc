@@ -16,6 +16,8 @@ public class FiltraParcelasDto extends DtoPadrao {
 	
 	private Integer mes, ano, idConta, idParcelaOrigem;
 
+	
+	public FiltraParcelasDto() {}
 	/**
 	 * @param mes
 	 * @param ano

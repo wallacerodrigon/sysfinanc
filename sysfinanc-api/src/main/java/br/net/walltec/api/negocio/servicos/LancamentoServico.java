@@ -60,4 +60,7 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	 * @param fechamentoDTO
 	 */
 	void fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws NegocioException;
+	
+	boolean isMesFechado(int mes, int ano) throws NegocioException;
+	
 }

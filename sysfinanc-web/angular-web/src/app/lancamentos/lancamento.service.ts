@@ -26,9 +26,8 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
     }
     
 
-    public filtrar(dto: FiltraParcelasDto): Observable<LancamentoVO[]> {
-        return this.pesquisar(this.uri+"/buscarLancamentos", JSON.stringify(dto))
-            .map(dados => dados);
+    public filtrar(dto: FiltraParcelasDto): Observable<any> {
+        return this.http.get(`${this.uri}/buscarLancamentos/${dto.mes}/${dto.ano}`);
     }
 
     public utilizar(dto: UtilizacaoParcelasDto): Promise<LancamentoVO[]> {
@@ -81,4 +80,9 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
     public desfazerAssociacoes(mes: number, ano: number): Promise<any> {
         return this.executarPut(this.uri + "/desfazer-conciliacao", {mes: mes, ano: ano});
     }    
+
+    public fecharMes(mes: number, ano: number): Promise<any> {
+        return this.executarPut(this.uri + "/fechar-mes", {mes: mes, ano: ano});
+    }    
+
 }
