@@ -204,7 +204,6 @@ export class ConsultaComponent implements OnInit {
             this.blockUI.stop();
         }, erro => {
             this.blockUI.stop();            
-            new AlertaComponent(this.dialogService).exibirMensagem(erro._body);
         });
     
   }

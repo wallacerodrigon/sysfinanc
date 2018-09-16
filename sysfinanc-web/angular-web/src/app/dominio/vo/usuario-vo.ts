@@ -6,7 +6,8 @@ export class UsuarioVO  {
 	constructor(
                 public nome: string = null,
                 public login: string = null,
-                public token: string = null
+                public token: string = null,
+                public csrf: string = null
                 ){
         
     }

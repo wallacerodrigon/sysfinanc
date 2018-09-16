@@ -23,6 +23,7 @@ export class LoginService extends AbstractServicos<UsuarioVO> {
   public efetuarLogin(dto: RecuperaUsuarioLoginSenhaDto): Observable<UsuarioVO> {
     return this.http.post(this.uri+'/efetuarLogin', JSON.stringify(dto))
           .map(retorno => {
+            console.log(retorno);
             let json : string = JSON.stringify(retorno.json());
             sessionStorage.setItem("usuario", json);            
             return JSON.parse(json);

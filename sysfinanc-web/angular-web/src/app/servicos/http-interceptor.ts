@@ -64,6 +64,7 @@ export class HttpInterceptor extends Http  {
         if (usuario){
             let usr: UsuarioVO = JSON.parse(usuario);
             options.headers.append('Authorization', 'Bearer '+ usr.token);
+            options.headers.append('X-CSRF', usr.csrf);
         }
 
         return options;
@@ -92,7 +93,7 @@ export class HttpInterceptor extends Http  {
                 return Observable.throw(err);
             } else if (err.status == 403 && ! err.url.endsWith('/login')){
                 this._router.navigate(['/login']);
-                new AlertaComponent(this._dialogService).exibirMensagem('Sessão expirada! Logue novamente no sistema!');
+                new AlertaComponent(this._dialogService).exibirMensagem(err._body);
                 return null;
             } else if (err.status == 503 || err.status == 0){
                 this._router.navigate(['/login']);
