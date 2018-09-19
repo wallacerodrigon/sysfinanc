@@ -32,6 +32,8 @@ public class ConversorLancamento extends AbstractConverter<Lancamento, Lancament
         lancamentoVO.setBolConciliado(entidade.getBolConciliado() ==null ? false : entidade.getBolConciliado());
         lancamentoVO.setId(entidade.getId());
         lancamentoVO.setNumero(entidade.getNumero());
+        lancamentoVO.setIdFormaPagamento(entidade.getFormaPagamento().getId());
+        lancamentoVO.setDescFormaPagamento(entidade.getFormaPagamento().getDescricao());
         return lancamentoVO;
     }
 
@@ -49,7 +51,7 @@ public class ConversorLancamento extends AbstractConverter<Lancamento, Lancament
             lancamento.getLancamentoOrigem().setId(pojo.getIdParcelaOrigem());
         }
         lancamento.setFormaPagamento(new FormaPagamento());
-        lancamento.getFormaPagamento().setId(Constantes.ID_FORMA_PAGAMENTO_PADRAO);
+        lancamento.getFormaPagamento().setId(pojo.getIdFormaPagamento());
         lancamento.setDataVencimento( UtilData.getData(pojo.getDataVencimentoStr(), UtilData.SEPARADOR_PADRAO)  );
         lancamento.setValor( pojo.isDespesa() ? 
         						UtilFormatador.formatarStringComoValor(pojo.getValorDebitoStr()) : 

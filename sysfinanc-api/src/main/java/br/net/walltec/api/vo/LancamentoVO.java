@@ -35,6 +35,10 @@ public class LancamentoVO extends GerenciadorPadraoVO {
 	private String numDocumento;
 	
 	private boolean despesa;
+	
+	private Integer idFormaPagamento;
+	
+	private String descFormaPagamento;
 
 
     public Integer getId() {
@@ -212,5 +216,21 @@ public class LancamentoVO extends GerenciadorPadraoVO {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public Integer getIdFormaPagamento() {
+		return idFormaPagamento;
+	}
+
+	public void setIdFormaPagamento(Integer idFormaPagamento) {
+		this.idFormaPagamento = idFormaPagamento;
+	}
+
+	public String getDescFormaPagamento() {
+		return descFormaPagamento;
+	}
+
+	public void setDescFormaPagamento(String descFormaPagamento) {
+		this.descFormaPagamento = descFormaPagamento;
 	}
 }

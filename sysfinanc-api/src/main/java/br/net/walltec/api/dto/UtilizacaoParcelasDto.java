@@ -20,6 +20,8 @@ public class UtilizacaoParcelasDto extends DtoPadrao {
 	private BigDecimal valorUtilizado; 
 	private String dataUtilizacaoStr;
 	private String descricao;
+	private Integer idFormaPagamento;
+	
 	/**
 	 * @return the idLancamentoOrigem
 	 */
@@ -68,6 +70,12 @@ public class UtilizacaoParcelasDto extends DtoPadrao {
 	 */
 	public void setDataUtilizacaoStr(String dataUtilizacaoStr) {
 		this.dataUtilizacaoStr = dataUtilizacaoStr;
+	}
+	public Integer getIdFormaPagamento() {
+		return idFormaPagamento;
+	}
+	public void setIdFormaPagamento(Integer idFormaPagamento) {
+		this.idFormaPagamento = idFormaPagamento;
 	}
 	
 	

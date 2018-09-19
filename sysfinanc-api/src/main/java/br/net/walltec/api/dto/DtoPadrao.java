@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.net.walltec.api.utilitarios.Constantes;
-
+ 
 public abstract class DtoPadrao implements Serializable {
 
 	private static final long serialVersionUID = 1L;

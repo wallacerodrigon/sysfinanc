@@ -28,6 +28,7 @@ import br.net.walltec.api.dto.GravacaoArquivoDto;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
+import br.net.walltec.api.dto.RetornoArquivoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.WalltecException;
@@ -90,7 +91,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
             throw new WebServiceException(e.getMessage());
         }
 	}	
-
+ 
 	@POST
 	@Path(value="/baixar")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -178,9 +179,19 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		List<RegistroExtratoDto> dadosArquivo;
 		try {
 			String dadosData[] = dto.getStrDataVencimento().split("/");
-			List<LancamentoVO> listaParcelas = servico.listarParcelas(new FiltraParcelasDto(Integer.valueOf(dadosData[1]), Integer.valueOf(dadosData[2])));
+			Integer mes = Integer.valueOf(dadosData[1]);
+			Integer ano = Integer.valueOf(dadosData[2]);
+			List<LancamentoVO> listaParcelas = servico.listarParcelas(new FiltraParcelasDto(mes, ano));
+			
 			dadosArquivo = mapImportadores.get("001").importar("arquivo", conteudoArquivoDesformatado, listaParcelas);
-			return Response.ok(dadosArquivo).build();
+			
+			RetornoArquivoDTO retorno = new RetornoArquivoDTO();
+			retorno.setAno(ano);
+			retorno.setMes(mes);
+			retorno.setDadosArquivo(dadosArquivo);
+			retorno.setMesEstaFechado(servico.isMesFechado(mes, ano));
+			
+			return Response.ok(retorno).build();
 		} catch (WalltecException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());
