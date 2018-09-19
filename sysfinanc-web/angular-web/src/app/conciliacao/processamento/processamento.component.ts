@@ -39,6 +39,7 @@ export class ProcessamentoComponent implements OnInit {
   private conteudoArquivoBase64: string = null;
   protected databaseFiltro: Date = new Date();
   private processando: boolean = false;
+  private mesFechado: boolean = false;
 
   private paginaAtual: number = 1;
   
@@ -134,7 +135,8 @@ export class ProcessamentoComponent implements OnInit {
                       new GravacaoArquivoDto(this.conteudoArquivoBase64, strData, 1)
                     )
             .subscribe(dados => {
-                dados.json().forEach(e => {
+                let data = dados.json();
+                data.dados.forEach(e => {
                   let dto: RegistroExtratoDto = new RegistroExtratoDto();
                   dto.transformar(e);
                   this.listagemExtrato.push(dto);
