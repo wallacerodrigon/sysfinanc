@@ -15,6 +15,7 @@ import { DialogService } from 'ng2-bootstrap-modal/dist/dialog.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { CadastroComponent } from '../../lancamentos/cadastro/cadastro.component';
 import { ConfirmComponent } from '../../componentes/mensagens/confirm.component';
+import { Constantes } from '../../utilitarios/constantes';
 
 declare var jQuery: any;
 
@@ -136,7 +137,8 @@ export class ProcessamentoComponent implements OnInit {
                     )
             .subscribe(dados => {
                 let data = dados.json();
-                data.dados.forEach(e => {
+                this.mesFechado = data.mesEstaFechado;
+                data.dadosArquivo.forEach(e => {
                   let dto: RegistroExtratoDto = new RegistroExtratoDto();
                   dto.transformar(e);
                   this.listagemExtrato.push(dto);
@@ -170,7 +172,7 @@ export class ProcessamentoComponent implements OnInit {
       consideraPago: true
     })
     .subscribe(lancamentoCadastrado => {
-        if (lancamentoCadastrado){
+        if (lancamentoCadastrado && lancamentoCadastrado.idFormaPagamento == Constantes.DEBITO_CONTA){
             this.listagemExtrato
               .filter(dto => dto.confirmado == false)
               .forEach(dto => dto.lancamentos.push(lancamentoCadastrado));

@@ -55,7 +55,7 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
   }
 
   private campoEstaInformado(nomeCampo: string): boolean {
-      return this.lancamento[nomeCampo] != null && this.lancamento[nomeCampo] != "";
+      return this.lancamento[nomeCampo] && this.lancamento[nomeCampo] != null && this.lancamento[nomeCampo] != "";
   }
 
   private isDadosValidos(): boolean {
@@ -69,7 +69,8 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
     }
   
     if (!this.campoEstaInformado('dataVencimentoStr') || 
-        !this.campoEstaInformado('descricao')  ){
+        !this.campoEstaInformado('descricao') ||
+        !this.campoEstaInformado('idFormaPagamento')  ){
           erro = true;
         }
 
@@ -83,8 +84,8 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
     }
 
     if (erro){
-      new AlertaComponent(this.dialogService).exibirMensagem("Informe os dados obrigatórios: rubrica, valor, descrição e data vencimento. Data fim se marcada a repetição!");
-      return true;
+      new AlertaComponent(this.dialogService).exibirMensagem("Informe os dados obrigatórios: rubrica, valor, descrição, forma de pagamento e data vencimento. Data fim se marcada a repetição!");
+      return false;
     }
     return true;
   }

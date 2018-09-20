@@ -35,8 +35,8 @@
             <div class="panel-heading">Extrato e Lançamentos</div>
             <div class="panel-body">
                 <div class="center-block" *ngIf="processando">
-                    <button class="btn btn-default" id="btnAssociar" (click)="associarExtratoLancamento()">Associar Marcados</button>
-                    <button class="btn btn-default" id="btnDesfazer" (click)="desfazerAssociacao()">Desfazer Conciliações</button>
+                    <button class="btn btn-default" id="btnAssociar" *ngIf="!mesFechado" (click)="associarExtratoLancamento()">Associar Marcados</button>
+                    <button class="btn btn-default" id="btnDesfazer"  *ngIf="!mesFechado" (click)="desfazerAssociacao()">Desfazer Conciliações</button>
                 </div>
                 <br/>
                 <div class="table-responsive">
@@ -70,10 +70,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <button class="btn btn-default" *ngIf="!row.confirmado" (click)="novoCadastro()">
+                                    <button class="btn btn-default" *ngIf="!row.confirmado && !mesFechado" (click)="novoCadastro()">
                                             <i class=" glyphicon glyphicon-plus"></i>
                                     </button>
-                                    <button class="btn btn-default" *ngIf="!row.confirmado" (click)="limpar(row)">
+                                    <button class="btn btn-default" *ngIf="!row.confirmado && !mesFechado" (click)="limpar(row)">
                                             <i class=" glyphicon glyphicon-erase"></i>
                                     </button>
                                 </td>

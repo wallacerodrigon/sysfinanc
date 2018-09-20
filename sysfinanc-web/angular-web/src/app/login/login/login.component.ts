@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
                 this.rubricaService.listarParaCache();
             }
             this.blockUI.stop(); // Stop blocking
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/lancamentos']);
         },
         erro => {
             this.blockUI.stop(); // Stop blocking

@@ -108,24 +108,12 @@ public class TokenManager {
 		    MessageDigest m = MessageDigest.getInstance("SHA-256");
 		    m.update(token.getBytes(), 0, qtdBytesMudar);
 		    byte[] digest = m.digest();
-		    return new BigInteger(1,digest).toString(16);
+		    return new BigInteger(1,digest).toString(16).toUpperCase();
 		} catch (NoSuchAlgorithmException e) {
 		    e.printStackTrace();
 		    throw new IllegalArgumentException(e);
 		}
 	}
-/*
- * 	String senhaAdmin = "admin";
-    
-    MessageDigest algorithm = MessageDigest.getInstance("SHA-256");
-    byte messageDigestSenhaAdmin[] = algorithm.digest(senhaAdmin.getBytes("UTF-8"));
-      
-    StringBuilder hexStringSenhaAdmin = new StringBuilder();
-    for (byte b : messageDigestSenhaAdmin) {
-             hexStringSenhaAdmin.append(String.format("%02X", 0xFF & b));
-    }
-    String senhahexAdmin = hexStringSenhaAdmin.toString();
- * 
- * */
+
 	
 }

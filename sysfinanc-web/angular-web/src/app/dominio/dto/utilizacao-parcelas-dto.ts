@@ -6,7 +6,8 @@ export class UtilizacaoParcelasDto extends DtoPadrao {
     constructor(public idLancamentoOrigem: number = null,
                 public valorUtilizado: number = null,
                 public dataUtilizacaoStr: string = null,
-                public descricao: string = null){
+                public descricao?: string,
+                public idFormaPagamento?: number){
         super();
     }
 

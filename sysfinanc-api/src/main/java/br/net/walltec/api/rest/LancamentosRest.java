@@ -7,6 +7,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
@@ -42,6 +43,7 @@ import br.net.walltec.api.rest.dto.BaixaLancamentoDTO;
 import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
 import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
+import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -183,19 +185,52 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			Integer ano = Integer.valueOf(dadosData[2]);
 			List<LancamentoVO> listaParcelas = servico.listarParcelas(new FiltraParcelasDto(mes, ano));
 			
-			dadosArquivo = mapImportadores.get("001").importar("arquivo", conteudoArquivoDesformatado, listaParcelas);
+			dadosArquivo = importarArquivo(conteudoArquivoDesformatado, listaParcelas);
 			
-			RetornoArquivoDTO retorno = new RetornoArquivoDTO();
-			retorno.setAno(ano);
-			retorno.setMes(mes);
-			retorno.setDadosArquivo(dadosArquivo);
-			retorno.setMesEstaFechado(servico.isMesFechado(mes, ano));
+			RetornoArquivoDTO retorno = montarRetornoArquivoDTO(dadosArquivo, mes, ano);
 			
 			return Response.ok(retorno).build();
 		} catch (WalltecException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());
 		}
+	}
+
+	/**
+	 * @param conteudoArquivoDesformatado
+	 * @param listaParcelas
+	 * @return
+	 * @throws WalltecException
+	 */
+	private List<RegistroExtratoDto> importarArquivo(byte[] conteudoArquivoDesformatado,
+			List<LancamentoVO> listaParcelas) throws WalltecException {
+		List<RegistroExtratoDto> dadosArquivo;
+		dadosArquivo = mapImportadores
+				.get("001")
+				.importar("arquivo", 
+						conteudoArquivoDesformatado, 
+						listaParcelas
+							.stream()
+							.filter(l -> l.getIdFormaPagamento().equals(Constantes.ID_FORMA_PAGAMENTO_DEBITO))
+							.collect(Collectors.toList()));
+		return dadosArquivo;
+	}
+
+	/**
+	 * @param dadosArquivo
+	 * @param mes
+	 * @param ano
+	 * @return
+	 * @throws NegocioException
+	 */
+	private RetornoArquivoDTO montarRetornoArquivoDTO(List<RegistroExtratoDto> dadosArquivo, Integer mes, Integer ano)
+			throws NegocioException {
+		RetornoArquivoDTO retorno = new RetornoArquivoDTO();
+		retorno.setAno(ano);
+		retorno.setMes(mes);
+		retorno.setDadosArquivo(dadosArquivo);
+		retorno.setMesEstaFechado(servico.isMesFechado(mes, ano));
+		return retorno;
 	}
 	
 	/* (non-Javadoc)

@@ -28,7 +28,7 @@ import { ConfirmComponent } from '../../componentes/mensagens/confirm.component'
 export class ConsultaComponent implements OnInit {
 
     //falta informar se é debito ou crédito
-  private colunas: string[] = ["Data Vencimento", "Descrição", "Crédito", "Débito", "Pago", "Num.Doc."];
+  private colunas: string[] = ["Data Vencimento", "Descrição", "Crédito", "Débito", "Pago", "Num.Doc.", "Meio Pagto"];
   private listagem: Array<LancamentoVO> = [];
   private listagemOriginal: Array<LancamentoVO> = [];
 
@@ -36,7 +36,7 @@ export class ConsultaComponent implements OnInit {
   private habilitaEdicao: boolean = false;
 
   private tamanhoListagem: number = 0;
-  private atributos: Array<string> = ["dataVencimentoStr", "descricao", "valorCreditoStr", "valorDebitoStr", "bolPagaIcone", "numDocumento"];
+  private atributos: Array<string> = ["dataVencimentoStr", "descricao", "valorCreditoStr", "valorDebitoStr", "bolPagaIcone", "numDocumento", "descFormaPagamento"];
   private totalizadores: Array<number> = [];
 
     private valor: string = "0,00";
@@ -105,9 +105,10 @@ export class ConsultaComponent implements OnInit {
         lancamentoOld: item
     }).subscribe(objSalvo => {
         if (objSalvo != null){
-            this.listagem[this.crudComponente.indiceItem] = objSalvo;
+            this.filtrar();
+            /*this.listagem[this.crudComponente.indiceItem] = objSalvo;
             this.calcularTotalizadores();
-            this.montarResumo();
+            this.montarResumo();*/
         }
     });
    

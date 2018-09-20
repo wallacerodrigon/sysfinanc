@@ -97,7 +97,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     	
     	Lancamento lancBanco = this.find(objeto.getId());
     	
-    	lancamento.setFormaPagamento(lancBanco.getFormaPagamento());
+    	lancamento.setFormaPagamento(new FormaPagamento());
     	lancamento.getFormaPagamento().setId(objeto.getIdFormaPagamento());
     	
     	this.alterar(lancamento);
@@ -548,6 +548,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     	dto.setIdUsuario(1);
     	dto.setDescricaoParcela(objeto.getDescricao());
     	dto.setDespesa(objeto.isDespesa());
+    	dto.setIdFormaPagamento(objeto.getIdFormaPagamento());
 		this.gerarLancamentos(dto);
 	}
 

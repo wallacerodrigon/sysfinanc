@@ -47,7 +47,7 @@ export class EdicaoComponent extends DialogComponent<null, LancamentoVO> impleme
   salvar(){
       
       if (this.lancamento.dataVencimentoStr == "" || this.valor.nativeElement.value == null ||
-          this.valor.nativeElement.value == "" ||
+          this.valor.nativeElement.value == "" || this.lancamento.idFormaPagamento == null ||
           this.lancamento.descricao.trim().length == 0 ){
          new AlertaComponent(this.dialogService).exibirMensagem("Informe os dados obrigatórios");
          return false;
@@ -66,6 +66,7 @@ export class EdicaoComponent extends DialogComponent<null, LancamentoVO> impleme
       }
       this.lancamento.valor = Formatadores.formataNumero(this.valor.nativeElement.value);
       this.lancamento.descricao = this.lancamento.descricao.toLocaleLowerCase().trim();
+      
       this.lancamentoService.alterar(this.lancamento)
           .then(()=> {
             new AlertaComponent(this.dialogService).exibirMensagem("Registro alterado com sucesso");

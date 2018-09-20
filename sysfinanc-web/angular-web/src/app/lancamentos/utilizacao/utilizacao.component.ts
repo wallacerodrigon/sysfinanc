@@ -63,7 +63,7 @@ export class UtilizacaoComponent extends DialogComponent<null, boolean> implemen
       }
 
       if (this.utilizacaoDto.dataUtilizacaoStr == "" || this.utilizacaoDto.descricao.trim() == "" ||
-          this.utilizacaoDto.valorUtilizado == null){
+          this.utilizacaoDto.valorUtilizado == null || this.utilizacaoDto.idFormaPagamento == null ){
             new AlertaComponent(this.dialogService).
                 exibirMensagem("Informe todos os dados para continuar!");
             return;

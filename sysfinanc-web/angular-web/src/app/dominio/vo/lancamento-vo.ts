@@ -17,7 +17,9 @@ export class LancamentoVO  {
         public  bolConciliado: boolean = false,
         public  numDocumento: string = null,
         public  despesa: boolean =false,
-        public  dataFimStr: string = null
+        public  dataFimStr: string = null,
+        public idFormaPagamento?: number,
+        public descFormaPagamento?: string
     ){
       //  super();
     }

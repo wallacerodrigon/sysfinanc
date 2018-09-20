@@ -71,6 +71,7 @@ public class ImportadorBB implements ImportadorArquivo {
 			Map<String, List<LancamentoVO>> mapLancamentosPorDocumento,
 			Map<Double, List<LancamentoVO>> mapLancamentosPorValor, List<LancamentoVO> lancamentosAssociados,
 			List<RegistroExtratoDto> dtos) {
+		
 		dtos = dtos.stream()
    	          .filter(dto -> 
    	        	dto.getDataLancamento().matches("[0-9]{2}[/][0-9]{2}[/][0-9]{2}") 
@@ -165,17 +166,15 @@ public class ImportadorBB implements ImportadorArquivo {
 		if (mapLancamentosPorDocumento.containsKey(dto.getDocumento())) {
 			dto.setLancamentos(mapLancamentosPorDocumento.get(dto.getDocumento()));
 			dto.setConfirmado(true);
-			//mapLancamentosPorDocumento.remove(dto.getDocumento());
 		} else {
 			List<LancamentoVO> lancamentos = mapLancamentosPorValor.get(valor.doubleValue());
 			
 			if (lancamentos != null && lancamentos.size() == 1) {
 				dto.setLancamentos( lancamentos );
-				//mapLancamentosPorValor.remove(valor.doubleValue());
 			} else if (lancamentos != null) {
 				dto.setLancamentos(Arrays.asList(lancamentos.get(0)));
-				mapLancamentosPorValor.get(valor.doubleValue()).remove(0);
 			}
+			dto.setConfirmado(dto.getLancamentos() != null && !dto.getLancamentos().isEmpty());
 		}
 		
 		
