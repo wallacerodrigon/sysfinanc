@@ -38,6 +38,9 @@ public abstract class RequisicaoRestPadrao<V extends GerenciadorPadraoVO> implem
 	@Context
 	private HttpHeaders headers;
 	
+	@Context
+	private HttpServletResponse response;
+	
 	private HttpServletRequest request;
 	
 	private CrudPadraoServico<?,V> servico;
@@ -112,7 +115,12 @@ public abstract class RequisicaoRestPadrao<V extends GerenciadorPadraoVO> implem
 	@Override
 	public Response alterar(List<V> lista) throws WebServiceException {
 		throw new WebServiceException(Response.serverError().build());
-	}	
-	
+	}
+
+	public void addHeader(String name, String value) {
+		if (this.response != null) {
+			response.addHeader(name, value);
+		}
+	}
 	
 }

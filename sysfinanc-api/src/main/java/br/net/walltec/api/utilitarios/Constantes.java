@@ -21,6 +21,8 @@ public class Constantes {
 
 	public static final int INTERVALO_TOKEN = 60000*30; // 30 min
 
+	public static final String X_CSRF = "X-CSRF";
+
 
 
 }

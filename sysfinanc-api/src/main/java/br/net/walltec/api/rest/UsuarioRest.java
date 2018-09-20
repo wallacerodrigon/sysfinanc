@@ -3,17 +3,17 @@
  */
 package br.net.walltec.api.rest;
 
-import java.util.List;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -26,6 +26,8 @@ import br.net.walltec.api.negocio.servicos.UsuarioServico;
 import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
+import br.net.walltec.api.tokens.TokenManager;
+import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.vo.UsuarioVO;
 
 /**
@@ -102,10 +104,12 @@ public class UsuarioRest extends RequisicaoRestPadrao<UsuarioVO> {
 
 	@POST
     @Path("/efetuarLogin")
-	public Response efetuarLogin(RecuperaUsuarioLoginSenhaDto dto) throws WebServiceException {
+	public Response efetuarLogin(RecuperaUsuarioLoginSenhaDto dto, @Context HttpServletResponse response) throws WebServiceException {
 
         try {
-            return Response.ok(servico.recuperarUsuarioPorLoginSenha(dto)).build();
+            UsuarioVO usuarioVO = servico.recuperarUsuarioPorLoginSenha(dto);
+            response.addHeader("X-CSRF", usuarioVO.getCsrf());
+			return Response.ok(usuarioVO).build();
         } catch (RegistroNaoEncontradoException e) {
             throw new WebServiceException(Status.FORBIDDEN);
         } catch(Exception e){

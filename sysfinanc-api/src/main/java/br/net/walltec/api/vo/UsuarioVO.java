@@ -17,6 +17,7 @@ public class UsuarioVO extends GerenciadorPadraoVO {
 
     private String token;
 
+    private String csrf;
 
     public String getNome() {
         return nome;
@@ -41,5 +42,19 @@ public class UsuarioVO extends GerenciadorPadraoVO {
     public void setToken(String token) {
         this.token = token;
     }
+
+	/**
+	 * @return the csrf
+	 */
+	public String getCsrf() {
+		return csrf;
+	}
+
+	/**
+	 * @param csrf the csrf to set
+	 */
+	public void setCsrf(String csrf) {
+		this.csrf = csrf;
+	}
 
 }

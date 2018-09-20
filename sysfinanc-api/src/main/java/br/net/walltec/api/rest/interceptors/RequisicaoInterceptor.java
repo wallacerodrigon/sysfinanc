@@ -8,7 +8,9 @@ import javax.inject.Named;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import br.net.walltec.api.excecoes.NegocioException;
@@ -34,7 +36,8 @@ public class RequisicaoInterceptor {
 		log.info("Executando interceptor no método " + contexto.getMethod().getName() + " classe: " + contexto.getClass().getName());
 		
 		if (contexto.getTarget() != null){
-			HttpHeaders headers = ((RequisicaoRestPadrao)contexto.getTarget()).getHeaders();
+			RequisicaoRestPadrao target = (RequisicaoRestPadrao)contexto.getTarget();
+			HttpHeaders headers = target.getHeaders();
 			configurarHeaders(headers);
 
 	        boolean ehLogin = contexto.getMethod().getName().equalsIgnoreCase("efetuarLogin");
@@ -44,16 +47,26 @@ public class RequisicaoInterceptor {
 	        }
 			
 			String token = recuperarToken(headers);			
+			String csrf = recuperarCsrf(headers);
 			
+			validarToken(token, csrf, contexto);
 			
-			validarToken(token, contexto);
+			//target.addHeader("novo-token", "teste");
 		}
 		
-		
+		//se estiver ok, gerar um novo csrf...
 		Object objeto = contexto.proceed();
 		log.info("Finalizando interceptor");
-
+	
 		return objeto;
+	}
+
+	/**
+	 * @param headers
+	 * @return
+	 */
+	private String recuperarCsrf(HttpHeaders headers) {
+		return headers.getHeaderString(Constantes.X_CSRF);
 	}
 
 	/**
@@ -77,15 +90,20 @@ public class RequisicaoInterceptor {
 		if (!token.startsWith("Bearer")) {
 			throw new NegocioException("Requisição sem token no header apropriado");
 		}
+		
+		if (token.split(" ").length != 2) {
+			throw new NegocioException("Requisição sem token no header correto");
+		}
 		return token;
 	}
 
 	/**
 	 * @param token
+	 * @param csrf 
 	 * @param contexto 
 	 * @param ehLogin
 	 */
-	private void validarToken(String token, InvocationContext contexto) {
+	private void validarToken(String token, String csrf, InvocationContext contexto) {
 		token = token.split(" ")[1];	        
         boolean ehLogin = contexto.getMethod().getName().equalsIgnoreCase("efetuarLogin");
 		
@@ -94,8 +112,16 @@ public class RequisicaoInterceptor {
 		}
 		
 		if (!ehLogin &&  !new TokenManager().isTokenValido(token)){
-			throw new WebServiceException(Status.FORBIDDEN);
+			throw new WebServiceException(Response.status(Status.FORBIDDEN).entity("Acesso inválido! Token vencido ou inválido!").build());
 		}
+		
+		TokenManager tm = new TokenManager();
+		String tokenHashed = tm.gerarHash(token);
+		if (!tokenHashed.equals(csrf)) {
+			//info no log
+			throw new WebServiceException(Response.status(Status.FORBIDDEN).entity("Acesso inválido! Autenticação com problemas!").build());
+		}
+		
 	}
 	
 	private boolean naoHaToken(String token){

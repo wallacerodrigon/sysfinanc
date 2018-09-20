@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.net.walltec.api.dto.ConsultaLancamentosDTO;
+import br.net.walltec.api.dto.DtoPadrao;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.GravacaoArquivoDto;
@@ -50,7 +51,6 @@ import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
  * 
  */
 
-//TODO: atualizar as urls para n?o ter infinitivo e sim substantivos.
 //TODO: Seguir a seguinte padroniza??o: PUT - atualiza; POST - cria;
 @Path("/lancamentos")
 @Produces(value=MediaType.APPLICATION_JSON)
@@ -180,6 +180,10 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			String dadosData[] = dto.getStrDataVencimento().split("/");
 			List<LancamentoVO> listaParcelas = servico.listarParcelas(new FiltraParcelasDto(Integer.valueOf(dadosData[1]), Integer.valueOf(dadosData[2])));
 			dadosArquivo = mapImportadores.get("001").importar("arquivo", conteudoArquivoDesformatado, listaParcelas);
+			
+			boolean mesEstaFechado = this.servico.isMesFechado(Integer.valueOf(dadosData[1]), Integer.valueOf(dadosData[2]));
+			//montar um retorno padrão
+			
 			return Response.ok(dadosArquivo).build();
 		} catch (WalltecException e) {
 			e.printStackTrace();

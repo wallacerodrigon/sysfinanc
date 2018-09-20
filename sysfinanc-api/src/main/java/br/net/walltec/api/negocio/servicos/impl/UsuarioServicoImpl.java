@@ -12,7 +12,6 @@ import javax.persistence.NoResultException;
 import br.net.walltec.api.dto.RecuperaUsuarioLoginSenhaDto;
 import br.net.walltec.api.entidades.Usuario;
 import br.net.walltec.api.excecoes.NegocioException;
-import br.net.walltec.api.excecoes.PersistenciaException;
 import br.net.walltec.api.excecoes.RegistroNaoEncontradoException;
 import br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao;
 import br.net.walltec.api.negocio.servicos.UsuarioServico;
@@ -21,8 +20,6 @@ import br.net.walltec.api.persistencia.dao.impl.UsuarioDaoImpl;
 import br.net.walltec.api.tokens.TokenManager;
 import br.net.walltec.api.utilitarios.UtilCriptografia;
 import br.net.walltec.api.vo.UsuarioVO;
-import com.sun.mail.smtp.DigestMD5;
-import jdk.nashorn.internal.parser.Token;
 
 /**
  * @author wallace
@@ -74,6 +71,7 @@ public class UsuarioServicoImpl extends AbstractCrudServicoPadrao<Usuario, Usuar
 			vo.setLogin(u.getLogin());
 			vo.setNome(u.getNome());
 			vo.setToken(new TokenManager().gerarToken(u.getId()));
+            vo.setCsrf(new TokenManager().gerarHash(vo.getToken()));
 			return vo;
 		} catch(NoResultException e) {
 			throw new RegistroNaoEncontradoException(e);
