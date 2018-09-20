@@ -1,6 +1,6 @@
 package br.net.walltec.api.utilitarios;
 
-public class Constantes {
+public class Constantes { 
 
 	public static final Integer QTD_REGISTROS_PAGINA = 15;
 

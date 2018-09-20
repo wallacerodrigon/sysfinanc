@@ -22,13 +22,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.net.walltec.api.dto.ConsultaLancamentosDTO;
-import br.net.walltec.api.dto.DtoPadrao;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.GravacaoArquivoDto;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
+import br.net.walltec.api.dto.RetornoArquivoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.WalltecException;
@@ -51,6 +51,7 @@ import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
  * 
  */
 
+//TODO: atualizar as urls para n?o ter infinitivo e sim substantivos.
 //TODO: Seguir a seguinte padroniza??o: PUT - atualiza; POST - cria;
 @Path("/lancamentos")
 @Produces(value=MediaType.APPLICATION_JSON)
@@ -178,13 +179,19 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		List<RegistroExtratoDto> dadosArquivo;
 		try {
 			String dadosData[] = dto.getStrDataVencimento().split("/");
-			List<LancamentoVO> listaParcelas = servico.listarParcelas(new FiltraParcelasDto(Integer.valueOf(dadosData[1]), Integer.valueOf(dadosData[2])));
+			Integer mes = Integer.valueOf(dadosData[1]);
+			Integer ano = Integer.valueOf(dadosData[2]);
+			List<LancamentoVO> listaParcelas = servico.listarParcelas(new FiltraParcelasDto(mes, ano));
+			
 			dadosArquivo = mapImportadores.get("001").importar("arquivo", conteudoArquivoDesformatado, listaParcelas);
 			
-			boolean mesEstaFechado = this.servico.isMesFechado(Integer.valueOf(dadosData[1]), Integer.valueOf(dadosData[2]));
-			//montar um retorno padrão
+			RetornoArquivoDTO retorno = new RetornoArquivoDTO();
+			retorno.setAno(ano);
+			retorno.setMes(mes);
+			retorno.setDadosArquivo(dadosArquivo);
+			retorno.setMesEstaFechado(servico.isMesFechado(mes, ano));
 			
-			return Response.ok(dadosArquivo).build();
+			return Response.ok(retorno).build();
 		} catch (WalltecException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());

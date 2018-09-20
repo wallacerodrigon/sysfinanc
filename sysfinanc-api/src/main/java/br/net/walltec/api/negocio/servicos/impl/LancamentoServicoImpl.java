@@ -51,7 +51,6 @@ import br.net.walltec.api.persistencia.dao.impl.FechamentoContabilDaoImpl;
 import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
 import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
 import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
-import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
@@ -99,6 +98,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     	Lancamento lancBanco = this.find(objeto.getId());
     	
     	lancamento.setFormaPagamento(lancBanco.getFormaPagamento());
+    	lancamento.getFormaPagamento().setId(objeto.getIdFormaPagamento());
     	
     	this.alterar(lancamento);
     	
@@ -204,7 +204,9 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
         lancamentoUtilizada.setConta(lancamentoOrigem.getConta());
         lancamentoUtilizada.setDataVencimento(UtilData.getData(dtoUso.getDataUtilizacaoStr(), UtilData.SEPARADOR_PADRAO));
         lancamentoUtilizada.setDescricao(lancamentoOrigem.getDescricao());
-        lancamentoUtilizada.setFormaPagamento(lancamentoOrigem.getFormaPagamento());
+        lancamentoUtilizada.setFormaPagamento(new FormaPagamento());
+        lancamentoUtilizada.getFormaPagamento().setId(dtoUso.getIdFormaPagamento());
+        
         lancamentoUtilizada.setNumero( obterProximoNumero(lancamentoOrigem) );
         lancamentoUtilizada.setLancamentoOrigem(lancamentoOrigem);
         lancamentoUtilizada.setValor(dtoUso.getValorUtilizado());
@@ -269,7 +271,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			lancamento.setDataVencimento(dataInicialAux);
 			lancamento.setDescricao(dto.getDescricaoParcela());
 			lancamento.setFormaPagamento(new FormaPagamento());
-			lancamento.getFormaPagamento().setId(dto.getIdFormaPagamento() == null ? Constantes.ID_FORMA_PAGAMENTO_PADRAO : dto.getIdFormaPagamento());
+			lancamento.getFormaPagamento().setId(dto.getIdFormaPagamento());
 			lancamento.setBolPaga(false);
 			lancamento.setBolConciliado(false);
 			
