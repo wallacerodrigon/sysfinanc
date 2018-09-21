@@ -189,6 +189,10 @@ public class Lancamento extends EntidadeBasica<Lancamento> {
 	public String getDescConta() {
 		return this.conta != null && this.conta.getDescricao() != null ? this.conta.getDescricao() : null;
 	}
+	
+	public TipoConta getTipoConta() {
+		return this.conta != null ? this.conta.getTipoConta() : null;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

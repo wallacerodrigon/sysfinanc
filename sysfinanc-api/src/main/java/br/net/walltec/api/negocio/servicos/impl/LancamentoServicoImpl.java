@@ -31,7 +31,7 @@ import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
-import br.net.walltec.api.dto.RubricaMesAnoDTO;
+import br.net.walltec.api.dto.TipoContaMesDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.entidades.Conta;
 import br.net.walltec.api.entidades.FechamentoContabil;
@@ -317,7 +317,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			ResumoMesAnoDTO calculoTotais = calcularTotais(listaMesAtual);
 			
 			MapaDashboardDTO mapaDashboard = new MapaDashboardDTO();
-			mapaDashboard.setRubricaMesAnoDTO(getResumoPorRubricasMesPesquisa(listaMesAtual));
+			mapaDashboard.setRubricaMesAnoDTO(getResumoPorTipoConta(listaMesAtual));
 			mapaDashboard.setSaldoEmConta( getTotalConciliado(listaMesAtual) );
 			mapaDashboard.setTotalEntradas(calculoTotais.getTotalReceitas());
 			mapaDashboard.setTotalSaidas(calculoTotais.getTotalDespesas());
@@ -377,22 +377,19 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 * @param mesAnoAtual
 	 * @return
 	 */
-	private Set<RubricaMesAnoDTO> getResumoPorRubricasMesPesquisa(List<Lancamento> lancamentos) {
-		Set<RubricaMesAnoDTO> rubricas = new HashSet<>(); 
+	public Set<TipoContaMesDTO> getResumoPorTipoConta(List<Lancamento> lancamentos)  throws NegocioException {
+		Set<TipoContaMesDTO> lista = new HashSet<>(); 
 		lancamentos
 				.stream()
-				.collect(Collectors.groupingBy(Lancamento::getDescConta, Collectors.summingDouble(Lancamento::getValorEmDouble)))
-				.forEach((rubrica, total) -> {
-					RubricaMesAnoDTO dto = new RubricaMesAnoDTO();
-					dto.setNomeRubrica(rubrica);
-					dto.setValorRubrica(new BigDecimal(total));
-					rubricas.add(dto);
+				.collect(Collectors.groupingBy(Lancamento::getTipoConta, Collectors.summingDouble(Lancamento::getValorEmDouble)))
+				.forEach((tipoConta, valor) -> {
+					TipoContaMesDTO dto = new TipoContaMesDTO();
+					dto.setNomeTipoConta(tipoConta.getDescricao());
+					dto.setValor(new BigDecimal(valor));
+					lista.add(dto);
 				});
 
-		System.out.println(rubricas);
-				
-		
-		return rubricas;
+		return lista;
 	}
 
 	/**
@@ -671,6 +668,15 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 		} catch (Exception e) {
 			throw new NegocioException(e);
 		}
-	}	
+	}
+	
+	//usar como modelo
+//	private List<PaisDTO> convertToDto(List<Pais> paises) {
+//		return paises
+//				.stream()
+//				.map(pais -> FabricaDTO.getInstance().criarPaisDTO(pais))
+//				.collect(Collectors.toList());
+//				
+//	}	
 	
 }

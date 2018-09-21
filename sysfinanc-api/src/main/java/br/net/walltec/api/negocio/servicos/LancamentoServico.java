@@ -5,6 +5,7 @@ package br.net.walltec.api.negocio.servicos;
 
 
 import java.util.List;
+import java.util.Set;
 
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
@@ -12,6 +13,7 @@ import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
+import br.net.walltec.api.dto.TipoContaMesDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.NegocioException;
@@ -62,5 +64,7 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	void fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws NegocioException;
 	
 	boolean isMesFechado(int mes, int ano) throws NegocioException;
+	
+	Set<TipoContaMesDTO> getResumoPorTipoConta(List<Lancamento> lancamentos) throws NegocioException;
 	
 }

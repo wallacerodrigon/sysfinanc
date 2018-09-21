@@ -115,5 +115,12 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 		
 	}
 
-
+	//lançamentos por ano
+//	select  year(dt_vencimento), month(dt_vencimento), sum(va_parcela) as total
+//	from lancamento 
+//	where bolconciliado = 1
+//	and year(dt_vencimento) = 2018 
+//	group by year(dt_vencimento), month(dt_vencimento)
+//	order by 1,2
+	
 }

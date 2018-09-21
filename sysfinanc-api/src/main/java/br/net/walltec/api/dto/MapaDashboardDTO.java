@@ -28,7 +28,7 @@ public class MapaDashboardDTO implements Serializable {
 	
 	private BigDecimal saldoEmConta;
 	
-	private Set<RubricaMesAnoDTO> rubricaMesAnoDTO;
+	private Set<TipoContaMesDTO> rubricaMesAnoDTO;
 
 	/**
 	 * @return the totalEntradas
@@ -89,14 +89,14 @@ public class MapaDashboardDTO implements Serializable {
 	/**
 	 * @return the rubricaMesAnoDTO
 	 */
-	public Set<RubricaMesAnoDTO> getRubricaMesAnoDTO() {
+	public Set<TipoContaMesDTO> getRubricaMesAnoDTO() {
 		return rubricaMesAnoDTO;
 	}
 
 	/**
 	 * @param rubricaMesAnoDTO the rubricaMesAnoDTO to set
 	 */
-	public void setRubricaMesAnoDTO(Set<RubricaMesAnoDTO> rubricaMesAnoDTO) {
+	public void setRubricaMesAnoDTO(Set<TipoContaMesDTO> rubricaMesAnoDTO) {
 		this.rubricaMesAnoDTO = rubricaMesAnoDTO;
 	}
 

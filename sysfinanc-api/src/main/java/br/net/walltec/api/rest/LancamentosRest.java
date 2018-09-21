@@ -242,10 +242,10 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	}
 	
 	@GET
-	@Path("/obter-dashboard")
-	public Response gerarDashboards() throws WebServiceException {
+	@Path("/obter-dashboards/{mes}/{ano}")
+	public Response gerarDashboards(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
 		try {
-			return Response.ok().entity(servico.montarDashboards(2, 2018)).build();
+			return Response.ok().entity(servico.montarDashboards(mes, ano)).build();
 		} catch (NegocioException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());
