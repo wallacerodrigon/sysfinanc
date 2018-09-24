@@ -1,21 +1,23 @@
 package br.net.walltec.api.persistencia.dao.impl;
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 
+import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.PersistenciaException;
 import br.net.walltec.api.persistencia.dao.LancamentoDao;
 import br.net.walltec.api.persistencia.dao.comum.AbstractPersistenciaPadraoDao;
+import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.vo.ResumoLancamentosVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -60,7 +62,7 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 		String sql = "select case when ln_despesa then 'S' else 'N' end as tipo, sum(va_parcela) as total "
 				+ "   from parcela p "
 				+ "   join conta c on c.co_conta = p.co_conta "
-				+ "   where year(dt_vencimento) = ? and month(dt_vencimento)= ? " 
+				+ "   where year(dt_vencimento) = :ano and month(dt_vencimento)= :mes " 
 				+ "   group by ln_despesa ";
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -113,6 +115,31 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 		
 		return this.executarUpdateHql(hql, mapParams);
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.persistencia.dao.LancamentoDao#gerarMapaAno(java.lang.Integer)
+	 */
+	@Override
+	public List<ResumoMesAnoDTO> gerarMapaAno(Integer ano) throws PersistenciaException {
+		StringBuilder builder = new StringBuilder("select month(dt_vencimento) as mes, ");
+		builder.append("     sum( case when c.ln_despesa then va_parcela else 0 end ) as despesa, ");
+		builder.append("     sum( case when c.ln_despesa then 0 else va_parcela end ) as receita, ");
+		builder.append("     sum( case when l.bolConciliado=1 and c.ln_despesa = 0 then va_parcela else 0 end ) as credConciliado, ");
+		builder.append("     sum( case when l.bolConciliado=1 and c.ln_despesa = 1 then va_parcela else 0 end ) as debConciliado ");		
+		builder.append("from lancamento l ");
+		builder.append(" join conta c on (c.co_conta = l.co_conta) " );
+		builder.append("where dt_vencimento between :dataInicio and :dataFim ");
+		builder.append(" group by month(dt_vencimento) ");
+		builder.append(" order by mes ");
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("dataInicio", UtilData.createDataSemHoras(1, 1, ano));
+		parametros.put("dataFim", UtilData.createDataSemHoras(31, 12, ano));
+		return this
+				.listarQueryNativaWithParams(builder.toString(), parametros)
+				.stream()
+				.map(obj -> new ResumoMesAnoDTO(ano, (Integer)obj[0], (BigDecimal)obj[1], (BigDecimal)obj[2],((BigDecimal)obj[3]).subtract((BigDecimal)obj[4])) )
+				.collect(Collectors.toList());
 	}
 
 	//lançamentos por ano

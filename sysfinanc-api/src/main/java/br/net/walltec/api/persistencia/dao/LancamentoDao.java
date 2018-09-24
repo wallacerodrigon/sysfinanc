@@ -6,6 +6,7 @@ package br.net.walltec.api.persistencia.dao;
 import java.util.Date;
 import java.util.List;
 
+import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.PersistenciaException;
 import br.net.walltec.api.persistencia.dao.comum.PersistenciaPadraoDao;
@@ -25,4 +26,5 @@ public interface LancamentoDao extends PersistenciaPadraoDao<Lancamento> {
     
     boolean associarLancamentoComExtrato(Integer idLancamento, String numDocumento, Date dataVencimento) throws PersistenciaException;
 
+    List<ResumoMesAnoDTO> gerarMapaAno(Integer ano) throws PersistenciaException;
 }

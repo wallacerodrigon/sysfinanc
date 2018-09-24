@@ -1,0 +1,28 @@
+<div class="page-content-wrapper">
+    <ol class="breadcrumb">
+        <li><a href="#">Lançamentos</a></li>
+        <li class="active">Mapa de Lançamentos</li>
+    </ol>
+
+    <block-ui>
+      <div class="row">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <label>Escolha um Ano para montar o mapa:</label>
+                <input type="number" style="width: 130px" maxlength="4" [min]="minAno" [max]="maxAno" [(ngModel)]="ano">
+                <button type="button" class="btn btn-default" (click)="gerarMapa()">
+                    <i class="glyphicon glyphicon-filter"></i> Gerar Mapa</button> 
+              </div>
+            </div>
+      </div>
+
+      <div id="tabela">
+        <app-crud-componente #crudComponente [nomesColunas]="colunas" 
+            [listaDados]="listaMapa" 
+            [tamanhoListagem]="tamanhoListagem"
+            [atributosColunas]="atributos">
+        </app-crud-componente>
+      </div>
+    </block-ui>
+
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit,ViewChild, ElementRef, Output } from '@angular/core';
 import { DialogComponent } from 'ng2-bootstrap-modal/dist/dialog.component';
 import { LancamentoVO } from '../../dominio/vo/lancamento-vo';
 import { RubricaVO } from '../../dominio/vo/rubrica-vo';
@@ -13,8 +13,10 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { UtilObjeto } from '../../utilitarios/util-objeto';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { GeracaoParcelasDto } from '../../dominio/dto/geracao-parcelas-dto';
+import { ResumoLancamentosVO } from '../../dominio/vo/resumo-lancamento-vo';
 
 declare var jQuery: any;
+
 
 @Component({
   selector: 'app-geracao',
@@ -29,13 +31,15 @@ export class GeracaoComponent implements OnInit {
 
   private listaRubricas: Array<RubricaVO> = [];
 
-  private colunas: string[] = ["Descrição", "Vencimento", "Crédito", "Débito"];
+  private colunas: string[] = ["Descrição", "Vencimento", "Crédito", "Débito", "Meio Pagamento"];
   private listagem: Array<LancamentoVO> = [];
 
   private tamanhoListagem: number = 0;
-  private atributos: Array<string> = ["descricao", "dataVencimentoStr", "valorCreditoStr", "valorDebitoStr"];
+  private atributos: Array<string> = ["descricao", "dataVencimentoStr", "valorCreditoStr", "valorDebitoStr", "descFormaPagamento"];
   private totalizadores: Array<string> = ["Total:", "-", "0,00", "0,00"];
   private frmGeracao: FormGroup;
+
+  private mudaParaParcial: boolean = false;
 
   constructor(protected lancamentoService: LancamentoService,
               protected rubricaService: RubricaService,
@@ -56,6 +60,7 @@ export class GeracaoComponent implements OnInit {
 
   ngOnInit() {
     this.listaRubricas = this.rubricaService.getListaCache();
+    this.inicializarControles();
   }
 
   private listarRubricas(){
@@ -100,9 +105,15 @@ export class GeracaoComponent implements OnInit {
                 this.totalizadores[2]= ""+dto.calcularTotal();
               }
               this.blockUI.stop();
-              new AlertaComponent(this.dialogService).exibirMensagem('Lançamentos gerados com sucesso! Visualize-os na próxima guia...');
+              new AlertaComponent(this.dialogService).exibirMensagem('Lançamentos gerados com sucesso! Visualize-os na tabela!');
+              this.mudaParaParcial = true;
+              if (!dto.parcial){
+                  this.inicializarControles();             
+              }
+
             },
           error => {
+            this.mudaParaParcial = false;
             this.blockUI.stop();
             new AlertaComponent(this.dialogService).exibirMensagem('Erro ao gerar os lançamentos. Detalhes: ' + error._body);
           });
@@ -113,5 +124,25 @@ export class GeracaoComponent implements OnInit {
   private isCampoInvalido(formControlName: string): boolean {
     return this.frmGeracao.controls[formControlName].touched && this.frmGeracao.controls[formControlName].invalid;
   }
+
+  private inicializarControles(){
+    this.frmGeracao.setValue({
+      rubrica: '',
+      vencimento:  '',
+      quantidade:  '',
+      valor:  '',
+      descricao:  '',
+      modoGeracao:  'S',
+      formaPagamento:  '13'
+     });
+
+  }
+
+  private iniciarNovaGeracao(){
+     this.mudaParaParcial = false;
+     this.inicializarControles();
+  } 
+
+
 
 }

@@ -44,6 +44,7 @@ import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
 import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
 import br.net.walltec.api.utilitarios.Constantes;
+import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 
@@ -241,17 +242,6 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		return Response.noContent().build();
 	}
 	
-	@GET
-	@Path("/obter-dashboards/{mes}/{ano}")
-	public Response gerarDashboards(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
-		try {
-			return Response.ok().entity(servico.montarDashboards(mes, ano)).build();
-		} catch (NegocioException e) {
-			e.printStackTrace();
-            throw new WebServiceException(e.getMessage());
-		}
-	}
-
 	@POST
 	@Path("/gerar-lancamento")
 	public Response gerarLancamentos(GeracaoParcelasDto dto) throws WebServiceException {
@@ -269,30 +259,15 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	}
 	
 	@GET
-	@Path("/obter-resumo-mes/{mes}/{ano}")
-	public Response gerarResumoMes(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
-		
+	@Path("/obter-dashboards/{mes}/{ano}")
+	public Response gerarDashboards(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
 		try {
-			ResumoMesAnoDTO retorno = servico.obterResumoMesAno(new FiltraParcelasDto(mes, ano));
-			return Response.ok().entity(retorno).build();
+			return Response.ok().entity(servico.montarDashboards(mes, ano)).build();
 		} catch (NegocioException e) {
 			e.printStackTrace();
             throw new WebServiceException(e.getMessage());
 		}
-	}
-	
-	@GET
-	@Path("/obter-resumo-mes-detalhe/{mes}/{ano}")
-	public Response gerarResumoMesDetalhado(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
-		
-		try {
-			ResumoDetalhadoMesAnoDTO retorno = servico.obterResumoDetalhadoMesAno(new FiltraParcelasDto(mes, ano));
-			return Response.ok().entity(retorno).build();
-		} catch (NegocioException e) {
-			e.printStackTrace();
-            throw new WebServiceException(e.getMessage());
-		}
-	}
+	}	
 	
 	/* (non-Javadoc)
 	 * @see br.net.walltec.api.rest.comum.RequisicaoRestPadrao#alterar(java.util.List)
@@ -316,7 +291,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@Path("/fechar-mes")
 	public Response fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws WebServiceException {
 
-		if (! this.isMesValido(fechamentoDTO.getMes())) {
+		if (! UtilData.isMesValido(fechamentoDTO.getMes())) {
 			throw new WebServiceException(Response.Status.BAD_REQUEST);
 		}
 		
@@ -334,7 +309,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@PUT
 	@Path("/desfazer-conciliacao")
 	public Response desfazerConciliacoes(DesfazimentoConciliacaoDTO desfazimentoDTO) throws WebServiceException {
-		if (!this.isMesValido(desfazimentoDTO.getMes())) {
+		if (!UtilData.isMesValido(desfazimentoDTO.getMes())) {
 			throw new WebServiceException(Response.Status.BAD_REQUEST);
 		}
 		try {
@@ -348,8 +323,20 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 	}
 	
-	private boolean isMesValido(Integer mes) {
-		return mes >= 1 && mes <= 12;
+	@GET
+	@Path("/obter-mapa-ano/{ano}")
+	public Response gerarMapaAno(@PathParam("ano") Integer ano) throws WebServiceException {
+		if (ano == null || ano == 0) {
+			throw new WebServiceException("Ano deve ser informado!");
+		}
+		
+		try {
+			List<ResumoMesAnoDTO> mapaAnual = servico.gerarMapaAno(ano);
+			return Response.ok().entity(mapaAnual).build();		
+		} catch(NegocioException e) {
+			e.printStackTrace();
+		    throw new WebServiceException(e.getMessage());
+		}
 	}
 	
 

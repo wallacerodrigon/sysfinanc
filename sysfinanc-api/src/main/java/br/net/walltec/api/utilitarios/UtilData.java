@@ -194,4 +194,8 @@ public class UtilData {
 		return createDataSemHoras(1, mes, dataBase.getYear());
 	}
 
+	public static boolean isMesValido(Integer mes) {
+		return mes >= 1 && mes <= 12;
+	}
+
 }

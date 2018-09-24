@@ -19,6 +19,7 @@ import { CadastroComponent } from './cadastro/cadastro.component';
 import { RubricasModule } from '../rubricas/rubricas.module';
 
 import { BlockUIModule } from 'ng-block-ui';
+import { MapaLancamentosComponent } from './mapa-lancamentos/mapa-lancamentos.component';
  
 const rotas: Routes = [
   { path: '', 
@@ -26,7 +27,8 @@ const rotas: Routes = [
     canActivate: [AuthGuard],
     children: [
         {path: 'lancamentos', component: ConsultaComponent},
-        {path: 'lancamentos-geracao', component: GeracaoComponent, canActivate: [AuthGuard]}
+        {path: 'lancamentos-geracao', component: GeracaoComponent, canActivate: [AuthGuard]},
+        {path: 'mapa-lancamentos', component: MapaLancamentosComponent, canActivate: [AuthGuard]},
   ]}    
 ];
 
@@ -37,7 +39,7 @@ const rotas: Routes = [
     RouterModule.forChild(rotas), ReactiveFormsModule
   ],
   declarations: [ConsultaComponent, GeracaoComponent, EdicaoComponent, LancamentoOuterLink, 
-    UtilizacaoComponent, VisaoUsosComponent, CadastroComponent],
+    UtilizacaoComponent, VisaoUsosComponent, CadastroComponent, MapaLancamentosComponent],
   providers: [LancamentoService],
   entryComponents: [VisaoUsosComponent, UtilizacaoComponent,CadastroComponent,EdicaoComponent],
   exports: [RouterModule, VisaoUsosComponent, UtilizacaoComponent, LancamentoOuterLink]

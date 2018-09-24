@@ -11,6 +11,17 @@ import java.math.BigDecimal;
  */
 public class ResumoDetalhadoMesAnoDTO extends ResumoMesAnoDTO {
 
+	/**
+	 * @param ano
+	 * @param mes
+	 * @param totalDespesas
+	 * @param totalReceitas
+	 */
+	public ResumoDetalhadoMesAnoDTO(Integer ano, Integer mes, BigDecimal totalDespesas, BigDecimal totalReceitas) {
+		super(ano, mes, totalDespesas, totalReceitas, null);
+		// TODO Auto-generated constructor stub
+	}
+
 	private BigDecimal totalRecebido;
 	
 	private BigDecimal totalReceber;
@@ -19,14 +30,6 @@ public class ResumoDetalhadoMesAnoDTO extends ResumoMesAnoDTO {
 	
 	private BigDecimal totalPagar;
 	
-	public ResumoDetalhadoMesAnoDTO(ResumoMesAnoDTO dto) {
-		this.setAno(dto.getAno());
-		this.setMes(dto.getMes());
-		this.setSaldoFinal(dto.getSaldoFinal());
-		this.setTotalDespesas(dto.getTotalDespesas());
-		this.setTotalReceitas(dto.getTotalReceitas());
-	}
-
 	public BigDecimal getTotalRecebido() {
 		return totalRecebido;
 	}

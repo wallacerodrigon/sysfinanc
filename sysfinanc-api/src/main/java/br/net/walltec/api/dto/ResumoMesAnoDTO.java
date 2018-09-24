@@ -20,6 +20,26 @@ public class ResumoMesAnoDTO {
 	private BigDecimal totalReceitas;
 	
 	private BigDecimal saldoFinal;
+	
+	private BigDecimal valorConciliado;
+	
+	
+
+	/**
+	 * @param ano
+	 * @param mes
+	 * @param totalDespesas
+	 * @param totalReceitas
+	 */
+	public ResumoMesAnoDTO(Integer ano, Integer mes, BigDecimal totalDespesas, BigDecimal totalReceitas, BigDecimal valorConciliado) {
+		super();
+		this.ano = ano;
+		this.mes = mes;
+		this.valorConciliado = valorConciliado;
+		this.totalDespesas = totalDespesas != null ? totalDespesas : BigDecimal.ZERO;
+		this.totalReceitas = totalReceitas != null ? totalReceitas : BigDecimal.ZERO;
+		this.saldoFinal = totalReceitas.subtract(totalDespesas);
+	}
 
 	/**
 	 * @return the ano
@@ -136,6 +156,20 @@ public class ResumoMesAnoDTO {
 
 	public void setSaldoFinal(BigDecimal saldoFinal) {
 		this.saldoFinal = saldoFinal;
+	}
+
+	/**
+	 * @return the valorConciliado
+	 */
+	public BigDecimal getValorConciliado() {
+		return valorConciliado;
+	}
+
+	/**
+	 * @param valorConciliado the valorConciliado to set
+	 */
+	public void setValorConciliado(BigDecimal valorConciliado) {
+		this.valorConciliado = valorConciliado;
 	}
 	
 	

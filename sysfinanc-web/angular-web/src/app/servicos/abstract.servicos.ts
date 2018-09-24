@@ -48,6 +48,7 @@ export abstract class AbstractServicos<T> {
     return this.http
       .get(url)
       .map(dados => {
+        console.log(dados);
           let json: string= JSON.stringify(dados.json());
           return dados.json();
     });

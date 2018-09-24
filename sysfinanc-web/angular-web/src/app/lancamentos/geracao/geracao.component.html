@@ -3,13 +3,13 @@
             <div class="panel-heading">Geração de Lançamentos</div>
             <div class="panel-body">
                 <ul class="nav nav-tabs" role="tablist" >
-                    <li role="presentation" class="active"><a href="#dados" aria-controls="dados" role="tab" data-toggle="tab">Dados básicos</a></li>
-                    <li role="presentation"><a href="#parcial" aria-controls="parcial" role="tab" data-toggle="tab">Lançamentos Gerados</a></li>
+                    <li role="presentation" [class]="!mudaParaParcial? 'active': ''"><a aria-controls="dados" role="tab" data-toggle="tab" [class]="mudaParaParcial? 'hidden': 'show'">Dados básicos</a></li>
+                    <li role="presentation" [class]="mudaParaParcial? 'active': ''"><a aria-controls="parcial" role="tab" data-toggle="tab" [class]="mudaParaParcial? 'show': 'hidden'" >Lançamentos Gerados</a></li>
                 </ul>
 
                 <div class="tab-content">
                     <!--aba de dados para informação da geração dos lançamentos-->
-                    <div role="tabpanel" class="tab-pane fade in active" id="dados">
+                    <div role="tabpanel" [class]="mudaParaParcial? 'tab-pane':'tab-pane fade in active' "  id="dados">
                         <form name="frmGeracao" novalidate [formGroup]="frmGeracao" >
                             <div class="row">
                                 <div class="col col-md-6">
@@ -92,7 +92,7 @@
                     </div>
 
                     <!--aba de com o resultado da geraçaõ (parcial)-->
-                    <div role="tabpanel" class="tab-pane fade" id="parcial">
+                    <div role="tabpanel"  [class]="mudaParaParcial? 'tab-pane fade in active':'tab-pane'" id="parcial">
                         <div class="panel panel-default" >
                             <div class="table-responsive">
                                 <app-crud-componente #crudComponente [nomesColunas]="colunas" 
@@ -103,6 +103,7 @@
                                             [totalizadores]="totalizadores">
                                 </app-crud-componente>
                             </div>
+                            <button class="btn btn-default center-block" (click)="iniciarNovaGeracao()" [disabled]="!this.mudaParaParcial">Gerar novos</button>
                         </div>
                     </div>
                       

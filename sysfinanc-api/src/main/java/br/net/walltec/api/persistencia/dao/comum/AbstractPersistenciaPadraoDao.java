@@ -160,13 +160,7 @@ public abstract class AbstractPersistenciaPadraoDao<T> implements PersistenciaPa
 	public List<T> filtrarPorHqlAndParams(String hql, Map<String, Object> parametros) throws PersistenciaException {
 		Query query = em.createQuery(hql);
 		
-		if (parametros != null && !parametros.isEmpty()){
-			for(Map.Entry<String, Object> param : parametros.entrySet()){
-				if (param.getValue() != null) {
-					query.setParameter(param.getKey(), param.getValue());
-				}
-			}
-		}
+		atribuirParametros(parametros, query);
 		
 		return query.getResultList();
 	}
@@ -183,17 +177,30 @@ public abstract class AbstractPersistenciaPadraoDao<T> implements PersistenciaPa
 		return em.createNativeQuery(sql).getResultList();
 	}
 	
+	public List<Object[]> listarQueryNativaWithParams(String sql, Map<String, Object> parametros, Class classeRetorno) throws PersistenciaException {
+		Query query = em.createNativeQuery(sql, classeRetorno);
+		atribuirParametros(parametros, query);
+		return query.getResultList();
+	}	
+	
 	public List<Object[]> listarQueryNativaWithParams(String sql, Map<String, Object> parametros) throws PersistenciaException {
 		Query query = em.createNativeQuery(sql);
-		int i = 1;
+		atribuirParametros(parametros, query);
+		return query.getResultList();
+	}
+
+	/**
+	 * @param parametros
+	 * @param query
+	 */
+	private void atribuirParametros(Map<String, Object> parametros, Query query) {
 		if (parametros != null && !parametros.isEmpty()){
 			for(Map.Entry<String, Object> param : parametros.entrySet()){
 				if (param.getValue() != null) {
-					query.setParameter(i++, param.getValue());
+					query.setParameter(param.getKey(), param.getValue());
 				}
 			}
 		}
-		return query.getResultList();
 	}
 
 	public <X>List<X> listarQueryECachear(String hql, Class<X> classeRetorno, Map<String, Object> parametros) throws PersistenciaException {
@@ -208,13 +215,7 @@ public abstract class AbstractPersistenciaPadraoDao<T> implements PersistenciaPa
 	 */
 	private Query getQueryConfigurada(String hql, Map<String, Object> parametros) {
 		Query query = em.createQuery(hql);
-		
-		if (parametros != null && !parametros.isEmpty()){
-			for(Map.Entry<String, Object> param : parametros.entrySet()){
-				query.setParameter(param.getKey(), param.getValue());
-			}
-		}
-		
+		atribuirParametros(parametros, query);
 		return query;
 	}
 	

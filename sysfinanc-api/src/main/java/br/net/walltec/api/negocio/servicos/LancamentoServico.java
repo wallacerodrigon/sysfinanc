@@ -45,10 +45,6 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	
 	MapaDashboardDTO montarDashboards(Integer mes, Integer ano) throws NegocioException;
 	
-	ResumoMesAnoDTO obterResumoMesAno(FiltraParcelasDto dtoFiltro) throws NegocioException;
-	
-	ResumoDetalhadoMesAnoDTO obterResumoDetalhadoMesAno(FiltraParcelasDto dtoFiltro) throws NegocioException;
-	
 	List<LancamentoVO> gerarLancamentos(GeracaoParcelasDto dto) throws NegocioException;
 	
 	void associarLancamentos(List<RegistroExtratoDto> lancamentos) throws NegocioException;
@@ -66,5 +62,11 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	boolean isMesFechado(int mes, int ano) throws NegocioException;
 	
 	Set<TipoContaMesDTO> getResumoPorTipoConta(List<Lancamento> lancamentos) throws NegocioException;
+
+	/**
+	 * @param ano
+	 * @return
+	 */
+	List<ResumoMesAnoDTO> gerarMapaAno(Integer ano) throws NegocioException;
 	
 }

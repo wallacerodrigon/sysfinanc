@@ -85,4 +85,8 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
         return this.executarPut(this.uri + "/fechar-mes", {mes: mes, ano: ano});
     }    
 
+    public getMapa(ano: number): Observable<any> {
+        return this.pesquisarGet(this.uri+"/obter-mapa-ano/"+ano);
+    }   
+
 }
