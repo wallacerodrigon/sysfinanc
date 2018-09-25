@@ -184,9 +184,9 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			String dadosData[] = dto.getStrDataVencimento().split("/");
 			Integer mes = Integer.valueOf(dadosData[1]);
 			Integer ano = Integer.valueOf(dadosData[2]);
-			List<LancamentoVO> listaParcelas = servico.listarParcelas(new FiltraParcelasDto(mes, ano));
-			
-			dadosArquivo = importarArquivo(conteudoArquivoDesformatado, listaParcelas);
+			dadosArquivo = importarArquivo(
+					conteudoArquivoDesformatado, 
+					servico.listarParcelas(new FiltraParcelasDto(mes, ano)));
 			
 			RetornoArquivoDTO retorno = montarRetornoArquivoDTO(dadosArquivo, mes, ano);
 			

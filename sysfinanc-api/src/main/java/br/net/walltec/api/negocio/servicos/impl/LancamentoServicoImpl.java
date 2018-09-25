@@ -475,19 +475,11 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	@Override
 	public void associarLancamentos(List<RegistroExtratoDto> lancamentos) throws NegocioException {
 		
-		Optional<RegistroExtratoDto> optTemDtoComValorDiferente = 
-				lancamentos
-				.stream()
-				.filter(dto -> hasValorDiferente(dto))
-				.findFirst();
-		if (optTemDtoComValorDiferente.isPresent()) {
-			throw new NegocioException("Existem extratos com valores associados diferentes!");
-		}
-
 		List<LancamentoVO> lancamentosAAtualizar = new ArrayList<>();
 		
 		lancamentos
 			.stream()
+			.filter(dto -> ! hasValorDiferente(dto))
 			.forEach(dto -> {
 				dto.getLancamentos()
 					.forEach(vo -> {
@@ -512,8 +504,11 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 * @return
 	 */
 	private boolean hasValorDiferente(RegistroExtratoDto dto) {
-		BigDecimal valorExtrato = UtilFormatador.formatarStringComoValor(dto.getValor());
-		return valorExtrato.doubleValue() != dto.calcularTotalLancamentos();
+		if (dto.isConfirmado()) {
+			BigDecimal valorExtrato = UtilFormatador.formatarStringComoValor(dto.getValor());
+			return valorExtrato.doubleValue() != dto.calcularTotalLancamentos();
+		}
+		return false;
 	}
 
 	/* (non-Javadoc)

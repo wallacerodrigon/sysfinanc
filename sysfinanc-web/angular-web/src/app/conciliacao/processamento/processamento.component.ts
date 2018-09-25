@@ -84,7 +84,7 @@ export class ProcessamentoComponent implements OnInit {
           new AlertaComponent(this.dialogService).exibirMensagem('Associações realizadas com sucesso');
           this.efetuarUpload();
         })
-        .catch(erro => new AlertaComponent(this.dialogService).exibirMensagem(erro._body))
+        .catch(erro => new AlertaComponent(this.dialogService).exibirMensagem("Ocorreu um erro ao realizar a(s) associação(ões)."))
    }
 
    private desfazerAssociacao(){

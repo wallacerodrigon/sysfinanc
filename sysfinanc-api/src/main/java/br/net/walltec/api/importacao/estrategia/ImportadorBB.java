@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.excecoes.WalltecException;
+import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 
@@ -28,28 +29,83 @@ public class ImportadorBB implements ImportadorArquivo {
 	@Override
     public List<RegistroExtratoDto> importar(String nomeArquivo, byte[] dadosArquivo, List<LancamentoVO> listaParcelas) throws WalltecException {
     	
-    	Map<String, List<LancamentoVO>> mapLancamentosPorDocumento = mapearLancamentosPorDocumento(listaParcelas);
-    	Map<Double, List<LancamentoVO>> mapLancamentosPorValor = mapearLancamentosPorValor(listaParcelas);
+		List<RegistroExtratoDto> dtos = montarListaExtratoDto(new String(dadosArquivo, Charset.forName(CHARSET_8859_1)).split(QUEBRA_LINHA));
+		List<LancamentoVO> lancamentosDisponiveis = listaParcelas
+				.stream()
+				.filter(vo -> vo.getIdFormaPagamento().equals(Constantes.ID_FORMA_PAGAMENTO_DEBITO))
+				.filter(vo -> vo.isBolPaga())
+				.collect(Collectors.toList());
+		
+		//varrer os dtos e tentar associá-los aos lançamentos. O que associar, marcar. O que não associar, trazer a lista restante.
+		associarDtoALancamentos(dtos, lancamentosDisponiveis);
+		
+		
+//    	Map<String, List<LancamentoVO>> mapLancamentosPorDocumento = mapearLancamentosPorDocumento(listaParcelas);
+//    	Map<Double, List<LancamentoVO>> mapLancamentosPorValor = mapearLancamentosPorValor(listaParcelas);
 
-        String[] linhas = new String(dadosArquivo, Charset.forName(CHARSET_8859_1)).split(QUEBRA_LINHA);
-        List<LancamentoVO> lancamentosAssociados = new ArrayList<>();
-        List<RegistroExtratoDto> dtos = associarLancamentos(mapLancamentosPorDocumento, mapLancamentosPorValor, linhas,
-				lancamentosAssociados);        //lista de lancmaentos nao associados: os que não tiverem sido associados, gravar antes de mandar para a tela
-        List<LancamentoVO> lancamentosNaoAssociados = 
-        			listaParcelas
-        			.stream()
-        			.filter(vo -> vo.isBolPaga() && vo.getValor() > 0)
-        			.filter(vo -> 
-        				!lancamentosAssociados.contains(vo)
-        			)
-        			.collect(Collectors.toList());
-        					
-        dtos.stream()
-        	.filter(dto -> dto.getLancamentos() == null && !dto.getHistorico().equals(TAG_SALDO))
-        	.forEach(dto -> dto.setLancamentos(lancamentosNaoAssociados));
-        
+//        String[] linhas = new String(dadosArquivo, Charset.forName(CHARSET_8859_1)).split(QUEBRA_LINHA);
+//        List<LancamentoVO> lancamentosAssociados = new ArrayList<>();
+//        List<RegistroExtratoDto> dtos = associarLancamentos(mapLancamentosPorDocumento, mapLancamentosPorValor, linhas,
+//				lancamentosAssociados);        //lista de lancmaentos nao associados: os que não tiverem sido associados, gravar antes de mandar para a tela
+//        List<LancamentoVO> lancamentosNaoAssociados = 
+//        			listaParcelas
+//        			.stream()
+//        			.filter(vo -> vo.isBolPaga() && vo.getValor() > 0)
+//        			.filter(vo -> 
+//        				!lancamentosAssociados.contains(vo)
+//        			)
+//        			.collect(Collectors.toList());
+//        					
+//        dtos.stream()
+//        	.filter(dto -> dto.getLancamentos() == null && !dto.getHistorico().equals(TAG_SALDO))
+//        	.forEach(dto -> dto.setLancamentos(lancamentosNaoAssociados));
+//        
         return dtos;
       }
+
+	/**
+	 * @param dtos
+	 * @param lancamentosDisponiveis
+	 */
+	private void associarDtoALancamentos(List<RegistroExtratoDto> dtos, List<LancamentoVO> lancamentosDisponiveis) {
+		//tentar associar por documento
+    	List<LancamentoVO> naoAssociadosPorDocumento = associarPorDocumento(mapearLancamentosPorDocumento(lancamentosDisponiveis), dtos);
+    	//o que sobrar tentar associar por valor
+    	List<LancamentoVO> naoAssociadosPorValor = associarPorValor(mapearLancamentosPorValor(naoAssociadosPorDocumento), dtos.stream().filter(dto -> dto.getArrayIds() == null).collect(Collectors.toList()) );
+    	//o que sobrar manter nos lançamentos que não foram associados
+    	configurarNaoAssociados(dtos, naoAssociadosPorValor);
+	}
+
+	/**
+	 * @param dtos
+	 * @param naoAssociadosPorValor
+	 */
+	private void configurarNaoAssociados(List<RegistroExtratoDto> dtos, List<LancamentoVO> naoAssociadosPorValor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * @param mapLancamentosPorValor
+	 * @param collect
+	 * @return 
+	 */
+	private List<LancamentoVO> associarPorValor(Map<Double, List<LancamentoVO>> mapLancamentosPorValor,
+			List<RegistroExtratoDto> collect) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * @param mapLancamentosPorDocumento
+	 * @param dtos
+	 * @return 
+	 */
+	private List<LancamentoVO> associarPorDocumento(Map<String, List<LancamentoVO>> mapLancamentosPorDocumento,
+			List<RegistroExtratoDto> dtos) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/**
 	 * @param mapLancamentosPorDocumento
