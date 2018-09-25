@@ -5,7 +5,7 @@ public class LancamentoVO extends GerenciadorPadraoVO {
 	/**
 	 * 
 	 */
-
+ 
 	private Integer id;
 
 	private Short numero;

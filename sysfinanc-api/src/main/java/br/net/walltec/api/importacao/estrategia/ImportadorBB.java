@@ -10,24 +10,31 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import antlr.collections.impl.IntRange;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.excecoes.WalltecException;
 import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 
 public class ImportadorBB implements ImportadorArquivo {
-    @Override
+
+	private static final String NAO_CREDITO_DEBITO = "[^C|D]";
+	private static final String FLAG_DEBITO = "D";
+	private static final String FLAG_CREDITO = "C";
+	private static final String REGEX_DATA_DOCUMENTO = "[0-9]{2}[/][0-9]{2}[/][0-9]{2}";
+	private static final String QUEBRA_LINHA = "\n";
+	private static final String CHARSET_8859_1 = "ISO-8859-1";
+	private static final String TAG_SALDO = "S A L D O";
+
+	@Override
     public List<RegistroExtratoDto> importar(String nomeArquivo, byte[] dadosArquivo, List<LancamentoVO> listaParcelas) throws WalltecException {
     	
     	Map<String, List<LancamentoVO>> mapLancamentosPorDocumento = mapearLancamentosPorDocumento(listaParcelas);
     	Map<Double, List<LancamentoVO>> mapLancamentosPorValor = mapearLancamentosPorValor(listaParcelas);
 
-        String[] linhas = new String(dadosArquivo, Charset.forName("ISO-8859-1")).split("\n");
+        String[] linhas = new String(dadosArquivo, Charset.forName(CHARSET_8859_1)).split(QUEBRA_LINHA);
         List<LancamentoVO> lancamentosAssociados = new ArrayList<>();
         List<RegistroExtratoDto> dtos = associarLancamentos(mapLancamentosPorDocumento, mapLancamentosPorValor, linhas,
-				lancamentosAssociados);
-        //lista de lancmaentos nao associados: os que não tiverem sido associados, gravar antes de mandar para a tela
+				lancamentosAssociados);        //lista de lancmaentos nao associados: os que não tiverem sido associados, gravar antes de mandar para a tela
         List<LancamentoVO> lancamentosNaoAssociados = 
         			listaParcelas
         			.stream()
@@ -38,7 +45,7 @@ public class ImportadorBB implements ImportadorArquivo {
         			.collect(Collectors.toList());
         					
         dtos.stream()
-        	.filter(dto -> dto.getLancamentos() == null && !dto.getHistorico().equals("S A L D O"))
+        	.filter(dto -> dto.getLancamentos() == null && !dto.getHistorico().equals(TAG_SALDO))
         	.forEach(dto -> dto.setLancamentos(lancamentosNaoAssociados));
         
         return dtos;
@@ -74,8 +81,8 @@ public class ImportadorBB implements ImportadorArquivo {
 		
 		dtos = dtos.stream()
    	          .filter(dto -> 
-   	        	dto.getDataLancamento().matches("[0-9]{2}[/][0-9]{2}[/][0-9]{2}") 
-   	        	&& (dto.getCreditoDebito().trim().equalsIgnoreCase("C") || dto.getCreditoDebito().trim().equalsIgnoreCase("D")) )
+   	        	    dto.getDataLancamento().matches(REGEX_DATA_DOCUMENTO) 
+   	        	&& (dto.getCreditoDebito().trim().equalsIgnoreCase(FLAG_CREDITO) || dto.getCreditoDebito().trim().equalsIgnoreCase(FLAG_DEBITO)) )
    	          .map(dto -> {
 					associarLancamentos(dto, mapLancamentosPorDocumento, mapLancamentosPorValor);
 					if (dto.getLancamentos() != null) {
@@ -146,18 +153,18 @@ public class ImportadorBB implements ImportadorArquivo {
 	}
 
 	/**
-	 * @param dto
-	 * @param mapLancamentosPorDocumento
-	 * @param mapLancamentosPorValor
+	 * @param listaParcelas
+	 * @param linhas
+	 * @param lancamentosAssociados
 	 */
 	private void associarLancamentos(RegistroExtratoDto dto, Map<String, List<LancamentoVO>> mapLancamentosPorDocumento,
 			Map<Double, List<LancamentoVO>> mapLancamentosPorValor) {
 		
-		if (dto.getCreditoDebito().isEmpty() || dto.getCreditoDebito().matches("[^C|D]")) {
+		if (dto.getCreditoDebito().isEmpty() || dto.getCreditoDebito().matches(NAO_CREDITO_DEBITO)) {
 			return;
 		}
 		
-		if (dto.getHistorico().contains("S A L D O")){
+		if (dto.getHistorico().contains(TAG_SALDO)){
 			dto.setConfirmado(true);
 			return;
 		}
@@ -165,16 +172,11 @@ public class ImportadorBB implements ImportadorArquivo {
 		BigDecimal valor = UtilFormatador.formatarStringComoValor(dto.getValor().replaceAll("[.]", "").replaceAll(",", "."));
 		if (mapLancamentosPorDocumento.containsKey(dto.getDocumento())) {
 			dto.setLancamentos(mapLancamentosPorDocumento.get(dto.getDocumento()));
-			dto.setConfirmado(true);
+			//dto.setConfirmado(true);
 		} else {
 			List<LancamentoVO> lancamentos = mapLancamentosPorValor.get(valor.doubleValue());
-			
-			if (lancamentos != null && lancamentos.size() == 1) {
-				dto.setLancamentos( lancamentos );
-			} else if (lancamentos != null) {
-				dto.setLancamentos(Arrays.asList(lancamentos.get(0)));
-			}
-			dto.setConfirmado(dto.getLancamentos() != null && !dto.getLancamentos().isEmpty());
+			dto.setLancamentos( lancamentos );
+		//	dto.setConfirmado(dto.getLancamentos() != null && !dto.getLancamentos().isEmpty());
 		}
 		
 		
