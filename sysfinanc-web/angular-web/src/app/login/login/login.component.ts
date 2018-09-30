@@ -68,9 +68,7 @@ export class LoginComponent implements OnInit {
             this.blockUI.stop(); // Stop blocking
             if (erro.status === 403){
                 this.alerta.exibirMensagem("Usuário ou senha inválidos");
-            } else {
-                this.alerta.exibirMensagem("Erro interno:"+ erro._data);
-            }
+            } 
         });
   }
 

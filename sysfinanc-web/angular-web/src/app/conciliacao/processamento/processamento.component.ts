@@ -43,6 +43,7 @@ export class ProcessamentoComponent implements OnInit {
   private mesFechado: boolean = false;
 
   private paginaAtual: number = 1;
+  private totalConciliado: number = 0.00;
   
   @BlockUI() blockUI: NgBlockUI;   
 
@@ -58,8 +59,14 @@ export class ProcessamentoComponent implements OnInit {
 
    associarExtratoLancamento(){
 
-      let extratosAAtualizar: Array<RegistroExtratoDto> = this.listagemExtrato.filter(extrato => extrato.confirmado == false && extrato.arrayIds && extrato.arrayIds.length > 0);
-      let temAlgumExtratoIncoerente: boolean = false;
+      let extratosAAtualizar: Array<RegistroExtratoDto> = 
+                                        this
+                                        .listagemExtrato
+                                        .filter(extrato => 
+                                          !extrato.conciliado && 
+                                          extrato.confirmado && 
+                                          extrato.arrayIds &&
+                                          extrato.arrayIds.length > 0);
 
       if (extratosAAtualizar.length > 0){
           extratosAAtualizar.forEach(dto => {
@@ -71,11 +78,11 @@ export class ProcessamentoComponent implements OnInit {
                 }
               });
           });
+          this.efetivarAssociacao(extratosAAtualizar);
       } else {
           new AlertaComponent(this.dialogService).exibirMensagem('Selecione um extrato e um lançamento para conciliar');
       }
       
-      this.efetivarAssociacao(extratosAAtualizar);
    }
 
    private efetivarAssociacao(extratosAAtualizar: Array<RegistroExtratoDto>){
@@ -84,7 +91,9 @@ export class ProcessamentoComponent implements OnInit {
           new AlertaComponent(this.dialogService).exibirMensagem('Associações realizadas com sucesso');
           this.efetuarUpload();
         })
-        .catch(erro => new AlertaComponent(this.dialogService).exibirMensagem("Ocorreu um erro ao realizar a(s) associação(ões)."))
+        .catch(erro => {
+            new AlertaComponent(this.dialogService).exibirMensagem("Ocorreu um erro ao realizar a(s) associação(ões).")
+        })
    }
 
    private desfazerAssociacao(){
@@ -115,6 +124,7 @@ export class ProcessamentoComponent implements OnInit {
    }    
 
    protected efetuarUpload(){
+        this.totalConciliado = 0;
 
         if (! this.conteudoArquivoBase64 || this.conteudoArquivoBase64.length === 0){
             new AlertaComponent(this.dialogService).exibirMensagem("Selecione um arquivo");
@@ -142,6 +152,9 @@ export class ProcessamentoComponent implements OnInit {
                   let dto: RegistroExtratoDto = new RegistroExtratoDto();
                   dto.transformar(e);
                   this.listagemExtrato.push(dto);
+                  if (dto.conciliado){
+                     this.totalConciliado += dto.valorExtrato;
+                  }
 
                 });
                 this.tamanhoExtrato = this.listagemExtrato.length;
@@ -191,6 +204,21 @@ export class ProcessamentoComponent implements OnInit {
     return 0.00;
   }
 
+  private marcarLancamentoParaAssociar(dto: RegistroExtratoDto, lancamento: LancamentoVO, event: any){
+    let selecionado: boolean = event.target.checked;
+    if (selecionado){
+        if (! dto.arrayIds.find(id => id === lancamento.id) ){
+          dto.arrayIds.push(lancamento.id);        
+        }
+    } else {
+      dto.arrayIds.forEach((id, index) => {
+        if (id === lancamento.id){
+          dto.arrayIds.splice(index, 1);
+        }
+      })
+    }
+    dto.confirmado = dto.arrayIds.length > 0;
+  }
  
 
 }

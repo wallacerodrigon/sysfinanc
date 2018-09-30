@@ -31,5 +31,12 @@ export class RegistroExtratoDto {
         }
     }
 
+    public get valorExtrato(): number {
+        let fator = 1;
+        if (this.creditoDebito === 'D'){
+            fator = -1;
+        }
+        return Formatadores.formataNumero(this.valor) * fator;
+    }
 
 }
