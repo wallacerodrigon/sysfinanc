@@ -53,7 +53,7 @@
                                 <td>{{row.documento}}</td>
                                 <td>{{row.creditoDebito}}</td>
                                 <td>{{row.valor}}</td>
-                                <td  *ngIf="row.confirmado">
+                                <td  *ngIf="row.conciliado">
                                     <ul *ngFor="let l of row.lancamentos" class="largura-maxima">
                                         <li>{{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}</li>
                                     </ul>

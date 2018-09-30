@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import {HttpModule, Http, XHRBackend, RequestOptions} from '@angular/http';
 
 //HTTP_INTERCEPTORS
-import {HttpFactory} from './servicos/http-factory';
+import {HttpFactory, HttpFactoryError} from './servicos/http-factory';
 import {HttpInterceptor } from './servicos/http-interceptor';
 
 //modulos externos
@@ -30,6 +30,7 @@ import {LancamentosModule} from './lancamentos/lancamentos.module';
 //rotas
 import {RoutesRoutingModule} from './routes-geral-module'; 
 import { ConciliacaoModule } from './conciliacao/conciliacao.module';
+import { HttpInterceptorError } from './servicos/http-interceptor-error';
 
 
 
@@ -58,12 +59,17 @@ import { ConciliacaoModule } from './conciliacao/conciliacao.module';
     RoutesRoutingModule /*deve ser a última para evitar conflitos*/ 
   ],
   providers: [
-        {
+        { 
             provide: HttpInterceptor,
             useFactory: HttpFactory,
             deps: [XHRBackend, RequestOptions, Router, DialogService]
         },
-        AuthGuard
+        { 
+          provide: HttpInterceptorError,
+          useFactory: HttpFactoryError,
+          deps: [XHRBackend, RequestOptions, Router, DialogService]
+      },
+      AuthGuard
     ],
   bootstrap: [AppComponent]
 })
