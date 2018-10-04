@@ -87,6 +87,10 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
 
     public getMapa(ano: number): Observable<any> {
         return this.pesquisarGet(this.uri+"/obter-mapa-ano/"+ano);
-    }   
+    }
+    
+    public getDashboards(mes: number, ano: number): Observable<any> {
+        return this.pesquisarGet(`${this.uri}/obter-dashboards/${mes}/${ano}`);
+    }
 
 }

@@ -1,42 +1,52 @@
 <div class="container-fluid">
   <block-ui> 
      <div class="row">
-        <div *ngIf="chart" class="col-md-6 col-xs-12 col-sm-12 col-lg-6">
-            <canvas baseChart
-            [data]="lineChartData"
-            [labels]="lineChartLabels"
-            [options]="lineChartOptions"
-            [chartType]="lineChartType"
-            (chartHover)="chartHovered($event)"
-            (chartClick)="chartClicked($event)"></canvas>
-        </div>
         <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6">
             <canvas baseChart
-            [data]="pieChartData"
-            [labels]="pieChartLabels"
-            [chartType]="pieChartType"
+               [data]="despesasReceitasMes"
+               [labels]="despesaReceitasMesLabel"
+               [chartType]="pieChart"
+               [options]="pieDespRecOptions"
+               [legend]="exibeLegenda"               
+               (chartHover)="chartHovered($event)"
+               (chartClick)="chartClicked($event)"></canvas>
+       </div>
+
+       <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6">
+            <canvas baseChart
+            [data]="aReceberPagarData"
+            [labels]="aReceberPagarMesLabel"
+            [legend]="exibeLegenda"      
+            [options]="pieRecPagOptions"                     
+            [chartType]="pieChart"
             (chartHover)="chartHovered($event)"
             (chartClick)="chartClicked($event)"></canvas>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-top: 30px">
         <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6">
-             <canvas baseChart
-                [data]="pieChartData"
-                [labels]="pieChartLabels"
-                [chartType]="pieChartType"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+            <canvas baseChart
+            [data]="saldoBancarioData"
+            [labels]="saldoBancarioLabel"
+            [options]="lineSaldoOptions"  
+            [legend]="exibeLegenda"               
+            [chartType]="lineChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
         </div>
+
         <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6">
-				<canvas baseChart
-                [data]="pieChartData"
-                [labels]="pieChartLabels"
-                [chartType]="pieChartType"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>        		
+            <canvas baseChart
+            [data]="despTipoContaData"
+            [labels]="despTipoContaLabel"
+            [chartType]="barChartType"
+            [options]="tipoContaMesOptions"              
+            [legend]="exibeLegenda"               
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
         </div>
+
     </div>
      
   </block-ui>
