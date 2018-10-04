@@ -53,14 +53,13 @@ export class ConsultaComponent implements OnInit {
   private resumos: Array<any> = [
       {nome:"Créditos", valor: "0,00", cor:"#00f", filtro:"TR"}, 
       {nome:"A Receber", valor: "0,00", cor:"#00f", filtro:"AR"}, 
-      {nome:"Já Recebido", valor: "0,00", cor:"#00f", filtro:"RE"}, 
+      {nome:"Recebido", valor: "0,00", cor:"#00f", filtro:"RE"}, 
       {nome:"Débitos", valor: "0,00", cor:"#f00", filtro:"TD"},
       {nome:"A pagar", valor: "0,00", cor:"#f00", filtro:"AP"}, 
-      {nome:"Já Pago", valor: "0,00", cor:"#f00", filtro:"PG"}, 
+      {nome:"Pago", valor: "0,00", cor:"#f00", filtro:"PG"}, 
       {nome:"Saldo Final", valor: "0,00", cor:"#0f0", filtro:"-"}, 
-      {nome:"A conciliar", valor: "0,00", cor:"#f00", filtro:"NC"},
+      {nome:"Resta conciliar", valor: "0,00", cor:"#f00", filtro:"NC"},
       {nome:"Disponível no BB", valor: "0,00", cor:"#00f", filtro:"TC"},
-      {nome:"Disponível no BB - A pagar", valor: "0,00", cor:"#00f", filtro:""},
   ];
 
   private mes: number;
@@ -293,7 +292,6 @@ export class ConsultaComponent implements OnInit {
     this.resumos[6].valor = this.resumos[0].valor - this.resumos[3].valor;
     this.resumos[7].valor = totalCredNaoConciliado - totalDebNaoConciliado;
     this.resumos[8].valor = totalCredConciliado - totalDebConciliado;
-    this.resumos[9].valor = this.resumos[8].valor - totalPagar;
   }
 
     private novoCadastro(){

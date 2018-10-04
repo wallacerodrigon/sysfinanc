@@ -9,6 +9,7 @@ export class RegistroExtratoDto {
         public documento: string = null, 
         public valor: string = null,
         public creditoDebito: string = null,
+        public conciliado: boolean = false, 
         public lancamentos: Array<LancamentoVO> = null,
         public arrayIds: Array<number> = []
         ){}
@@ -30,5 +31,12 @@ export class RegistroExtratoDto {
         }
     }
 
+    public get valorExtrato(): number {
+        let fator = 1;
+        if (this.creditoDebito === 'D'){
+            fator = -1;
+        }
+        return Formatadores.formataNumero(this.valor) * fator;
+    }
 
 }

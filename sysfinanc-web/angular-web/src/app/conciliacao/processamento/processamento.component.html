@@ -38,6 +38,10 @@
                     <button class="btn btn-default" id="btnAssociar" *ngIf="!mesFechado" (click)="associarExtratoLancamento()">Associar Marcados</button>
                     <button class="btn btn-default" id="btnDesfazer"  *ngIf="!mesFechado" (click)="desfazerAssociacao()">Desfazer Conciliações</button>
                 </div>
+                <div class="right-block">
+                    <label>Total conciliado:</label>
+                    <span>{{totalConciliado|moeda}}</span>
+                </div>
                 <br/>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover table-bordered">
@@ -53,27 +57,22 @@
                                 <td>{{row.documento}}</td>
                                 <td>{{row.creditoDebito}}</td>
                                 <td>{{row.valor}}</td>
-                                <td  *ngIf="row.confirmado">
-                                    <ul *ngFor="let l of row.lancamentos" class="largura-maxima">
-                                        <li>{{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}</li>
+                                <td>
+                                    <ul *ngFor="let l of row.lancamentos" style="list-style: none">
+                                        <li><input type="checkbox" value="S" [disabled]="row.conciliado" [checked]="row.conciliado" (change)="marcarLancamentoParaAssociar(row, l, $event)">
+                                            {{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}
+                                        </li>
                                     </ul>
+                                    
                                     <ul *ngIf="row.lancamentos && row.lancamentos.length > 1">
                                         <span class="label label-info">Total R$ {{calcularTotal(row.lancamentos)}}</span>
                                     </ul>
                                 </td>
-
-                                <td  *ngIf="!row.confirmado">
-                                    <select multiple [(ngModel)]="row.arrayIds" class="largura-maxima">
-                                        <option *ngFor="let l of row.lancamentos" value="{{l.id}}">
-                                            {{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}
-                                        </option>
-                                    </select>
-                                </td>
                                 <td>
-                                    <button class="btn btn-default" *ngIf="!row.confirmado && !mesFechado" (click)="novoCadastro()">
+                                    <button class="btn btn-default" *ngIf="!row.conciliado && !mesFechado" (click)="novoCadastro()">
                                             <i class=" glyphicon glyphicon-plus"></i>
                                     </button>
-                                    <button class="btn btn-default" *ngIf="!row.confirmado && !mesFechado" (click)="limpar(row)">
+                                    <button class="btn btn-default" *ngIf="!row.conciliado && !mesFechado" (click)="limpar(row)">
                                             <i class=" glyphicon glyphicon-erase"></i>
                                     </button>
                                 </td>

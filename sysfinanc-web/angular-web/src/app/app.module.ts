@@ -16,6 +16,7 @@ import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import {NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TextMaskModule } from 'angular2-text-mask';
 import { DialogService } from "ng2-bootstrap-modal";
+//import { ChartModule } from 'angular-highcharts';
 
 //serviços
 import {AuthGuard} from './servicos/auth-guard.service';
@@ -31,7 +32,7 @@ import {LancamentosModule} from './lancamentos/lancamentos.module';
 import {RoutesRoutingModule} from './routes-geral-module'; 
 import { ConciliacaoModule } from './conciliacao/conciliacao.module';
 
-
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -40,12 +41,13 @@ import { ConciliacaoModule } from './conciliacao/conciliacao.module';
   imports: [
     //externos
     BrowserModule,
+    ChartsModule,
     FormsModule, 
     HttpModule, 
     CommonModule,
     BootstrapModalModule, 
     NgbModule.forRoot(),
-
+    
     //modulos do sistema
     LoginModule, 
     HomeModule, 
@@ -58,15 +60,16 @@ import { ConciliacaoModule } from './conciliacao/conciliacao.module';
     RoutesRoutingModule /*deve ser a última para evitar conflitos*/ 
   ],
   providers: [
-        {
+        { 
             provide: HttpInterceptor,
             useFactory: HttpFactory,
             deps: [XHRBackend, RequestOptions, Router, DialogService]
         },
-        AuthGuard
+      AuthGuard
     ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule {  
 
 

@@ -1,7 +1,12 @@
 package br.net.walltec.api.excecoes;
 
 public class TotalConciliadoInvalidoException extends NegocioException {
-    public TotalConciliadoInvalidoException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public TotalConciliadoInvalidoException(String message) {
         super(message);
     }
 
