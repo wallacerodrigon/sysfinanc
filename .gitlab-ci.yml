@@ -5,9 +5,9 @@ stages:
 
 test:
   stage: test
-  script: echo "Running tests"
+  script: mvn clean test
 
-build:
+/*build:
   stage: build
   script: echo "Building the app"
 
@@ -20,3 +20,4 @@ deploy_staging:
     url: https://staging.example.com
   only:
   - master
+*/
