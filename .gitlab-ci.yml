@@ -3,7 +3,11 @@ stages:
   - build
   - deploy
 
-test:
+job1:
   stage: test
-  script: mvn clean test
+  script: 
+  "echo teste inicial"
 
+job2:
+  stage: build
+  script: "echo build"
