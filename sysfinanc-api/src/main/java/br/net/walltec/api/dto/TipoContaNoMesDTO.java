@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @author wallace
  *
  */
-public class TipoContaMesDTO implements Serializable {
+public class TipoContaNoMesDTO implements Serializable {
 
 	/**
 	 * 
@@ -20,6 +20,19 @@ public class TipoContaMesDTO implements Serializable {
 	private String nomeTipoConta;
 	
 	private BigDecimal valor;
+	
+	
+
+	/**
+	 * @param nomeTipoConta
+	 * @param descMes
+	 * @param valor
+	 */
+	public TipoContaNoMesDTO(String nomeTipoConta, BigDecimal valor) {
+		super();
+		this.nomeTipoConta = nomeTipoConta;
+		this.valor = valor;
+	}
 
 	/**
 	 * @return the nomeTipoConta

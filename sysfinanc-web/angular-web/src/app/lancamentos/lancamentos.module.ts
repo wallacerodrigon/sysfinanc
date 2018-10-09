@@ -5,6 +5,7 @@ import { GeracaoComponent } from './geracao/geracao.component';
 import { EdicaoComponent } from './edicao/edicao.component';
 import { ComponentesModule } from '../componentes/componentes.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChartsModule } from 'ng2-charts';
 
 import { HomeModule } from '../home/home.module';
 import { LancamentoOuterLink } from '../lancamentos/lancamentos-outer-link';
@@ -36,7 +37,8 @@ const rotas: Routes = [
   imports: [
     CommonModule,  HomeModule,ComponentesModule,
     FormsModule, RubricasModule,BlockUIModule,
-    RouterModule.forChild(rotas), ReactiveFormsModule
+    RouterModule.forChild(rotas), ReactiveFormsModule,
+    ChartsModule
   ],
   declarations: [ConsultaComponent, GeracaoComponent, EdicaoComponent, LancamentoOuterLink, 
     UtilizacaoComponent, VisaoUsosComponent, CadastroComponent, MapaLancamentosComponent],

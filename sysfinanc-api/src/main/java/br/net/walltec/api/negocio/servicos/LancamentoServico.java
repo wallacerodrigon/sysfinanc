@@ -13,7 +13,7 @@ import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
-import br.net.walltec.api.dto.TipoContaMesDTO;
+import br.net.walltec.api.dto.TipoContaNoMesDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.NegocioException;
@@ -61,7 +61,7 @@ public interface LancamentoServico extends CrudPadraoServico<Lancamento, Lancame
 	
 	boolean isMesFechado(int mes, int ano) throws NegocioException;
 	
-	Set<TipoContaMesDTO> getResumoPorTipoConta(List<Lancamento> lancamentos) throws NegocioException;
+	Set<TipoContaNoMesDTO> getResumoPorTipoConta(List<Lancamento> lancamentos) throws NegocioException;
 
 	/**
 	 * @param ano

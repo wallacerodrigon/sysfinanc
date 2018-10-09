@@ -21,7 +21,7 @@ public class Constantes {
 	
 	public static final Integer ID_FORMA_PAGAMENTO_DEBITO = 34;
 
-	public static final int INTERVALO_TOKEN = 60000*30; // 30 min
+	public static final int INTERVALO_TOKEN = 60000*60; // 60 min
 
 	public static final String X_CSRF = "X-CSRF";
 

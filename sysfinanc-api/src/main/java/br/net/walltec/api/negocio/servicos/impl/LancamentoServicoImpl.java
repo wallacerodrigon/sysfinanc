@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -28,9 +27,8 @@ import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.RegistroExtratoDto;
-import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
-import br.net.walltec.api.dto.TipoContaMesDTO;
+import br.net.walltec.api.dto.TipoContaNoMesDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.entidades.Conta;
 import br.net.walltec.api.entidades.FechamentoContabil;
@@ -39,6 +37,7 @@ import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.CampoObrigatorioException;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.PersistenciaException;
+import br.net.walltec.api.excecoes.TotalConciliadoInvalidoException;
 import br.net.walltec.api.excecoes.WebServiceException;
 import br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao;
 import br.net.walltec.api.negocio.servicos.LancamentoServico;
@@ -315,10 +314,49 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 */
 	@Override
 	public MapaDashboardDTO montarDashboards(Integer mes, Integer ano) throws NegocioException {
-		return null;
+		List<Lancamento> lancamentos = null;
+		try {
+			lancamentos = this.filtrarParcelas(new FiltraParcelasDto(mes, ano));
+			
+			//ResumoMesAnoDTO: retoranr um objeto com os valores de entradas e saídas nesse objeto
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		BigDecimal[] valoresEntradaSaida = getValoresEntradaSaida(lancamentos);
+		
+		//montar um builder com DSL
+		MapaDashboardDTO dto = new MapaDashboardDTO()
+									.adicioneEssesTiposContasPorMes(getResumoPorTipoConta(lancamentos))
+									.comEsseValorDeEntrada(valoresEntradaSaida[0])
+									.comEsseValorDeSaida(valoresEntradaSaida[1])
+									.comEsseValorParaPagar(this.getTotalPagar(lancamentos))
+									.comEsseValorParaReceber(this.getTotalReceber(lancamentos))
+									.monteOMapaDeDashboard();
+		
+		return dto;
 	}
 	
 	
+
+	/**
+	 * @param lancamentos
+	 * @return
+	 */
+	private BigDecimal[] getValoresEntradaSaida(List<Lancamento> lancamentos) {
+		
+		Map<Boolean, Double> mapPorDespesa =
+				lancamentos
+					.stream()
+					.collect(Collectors.groupingBy(Lancamento::getDespesa, Collectors.summingDouble(Lancamento::getValorEmDouble)));
+							
+		return 
+				new BigDecimal[] {
+						new BigDecimal(mapPorDespesa.get(false)),
+						new BigDecimal(mapPorDespesa.get(true))};
+		
+	}
 
 	/**
 	 * @param listaMesAtual
@@ -363,39 +401,19 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 * @param mesAnoAtual
 	 * @return
 	 */
-	public Set<TipoContaMesDTO> getResumoPorTipoConta(List<Lancamento> lancamentos)  throws NegocioException {
-		Set<TipoContaMesDTO> lista = new HashSet<>(); 
+	public Set<TipoContaNoMesDTO> getResumoPorTipoConta(List<Lancamento> lancamentos)  throws NegocioException {
+		Set<TipoContaNoMesDTO> lista = new HashSet<>(); 
 		lancamentos
 				.stream()
 				.collect(Collectors.groupingBy(Lancamento::getTipoConta, Collectors.summingDouble(Lancamento::getValorEmDouble)))
 				.forEach((tipoConta, valor) -> {
-					TipoContaMesDTO dto = new TipoContaMesDTO();
-					dto.setNomeTipoConta(tipoConta.getDescricao());
-					dto.setValor(new BigDecimal(valor));
+					TipoContaNoMesDTO dto = new TipoContaNoMesDTO(tipoConta.getDescricao(), new BigDecimal(valor));
 					lista.add(dto);
 				});
 
 		return lista;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#obterResumoMesAno(br.net.walltec.api.dto.FiltraParcelasDto)
-	 */
-	@Deprecated
-	public ResumoMesAnoDTO obterResumoMesAno(FiltraParcelasDto dtoFiltro) throws NegocioException {
-		log.info("Parametros:" + dtoFiltro);
-		return null;
-
-	}
-
-	/* (non-Javadoc)
-	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#obterResumoDetalhadoMesAno(br.net.walltec.api.dto.FiltraParcelasDto)
-	 */
-	@Deprecated
-	public ResumoDetalhadoMesAnoDTO obterResumoDetalhadoMesAno(FiltraParcelasDto dtoFiltro) throws NegocioException {
-		return null;	
-
-	}
 
 	/* (non-Javadoc)
 	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#gerarLancamentos(br.net.walltec.api.dto.GeracaoParcelasDto)
@@ -475,22 +493,34 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	@Override
 	public void associarLancamentos(List<RegistroExtratoDto> lancamentos) throws NegocioException {
 		
-		List<LancamentoVO> lancamentosAAtualizar = new ArrayList<>();
-		
-		lancamentos
+		List<RegistroExtratoDto> lancamentosAAtualizar = 		
+				lancamentos
+				.stream()
+				.filter(dto -> ! hasValorDiferente(dto))
+				.filter(dto -> !dto.isConciliado())
+				.filter(dto -> dto.isConfirmado())
+				.collect(Collectors.toList());
+
+		if (lancamentosAAtualizar
 			.stream()
-			.filter(dto -> ! hasValorDiferente(dto))
+			.filter(dto -> hasValorDiferente(dto))
+			.findFirst()
+			.isPresent()) {
+			throw new TotalConciliadoInvalidoException("Existem extratos com valores de lançamentos incoerentes");
+		}
+		List<LancamentoVO> lancamentosAAtualizarNaBase = new ArrayList<>(); 
+		lancamentosAAtualizar
 			.forEach(dto -> {
 				dto.getLancamentos()
 					.forEach(vo -> {
 						vo.setBolConciliado(true);
 						vo.setDataVencimentoStr(dto.getDataLancamento());
 						vo.setNumDocumento(dto.getDocumento());
-						lancamentosAAtualizar.add(vo);
+						lancamentosAAtualizarNaBase.add(vo);
 					});
 			});
 
-		for(LancamentoVO vo : lancamentosAAtualizar) {
+		for(LancamentoVO vo : lancamentosAAtualizarNaBase) {
 			try {
 				lancamentoDao.associarLancamentoComExtrato(vo.getId(), vo.getNumDocumento(), UtilData.getData(vo.getDataVencimentoStr(), "/"));
 			} catch (PersistenciaException e) {

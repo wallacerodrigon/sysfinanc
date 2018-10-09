@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -167,6 +166,10 @@ public class Lancamento extends EntidadeBasica<Lancamento> {
 
 	public void setNumDocumento(String numDocumento) {
 		this.numDocumento = numDocumento;
+	}
+	
+	public boolean getDespesa() {
+		return this.conta.getDespesa();
 	}
 	
 	public boolean isDespesa() {

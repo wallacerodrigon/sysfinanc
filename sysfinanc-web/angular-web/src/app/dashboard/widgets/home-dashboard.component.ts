@@ -20,10 +20,10 @@ export class HomeDashboardComponent implements OnInit {
   private barChartType:string= 'bar';
   private lineChartType:string = 'line';
 
-  protected despesaReceitasMesLabel:string[] = ['Receitas', 'Despesas'];
+  protected despesaReceitasMesLabel:string[] = ['Despesas','Receitas'];
   protected despesasReceitasMes: Array<any> = [0,0];  
 
-  protected aReceberPagarMesLabel:string[] = ['A Receber', 'A Pagar'];
+  protected aReceberPagarMesLabel:string[] = ['A Pagar', 'A Receber'];
   protected aReceberPagarData: Array<any> = [0, 0];  
 
   protected saldoBancarioLabel:Array<any> = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -72,10 +72,10 @@ export class HomeDashboardComponent implements OnInit {
   ngOnInit() {
       this.blockUI.start('Montando dashboards, aguarde...');
 
-      this.lancamentoService.getDashboards(this.data.getMonth(), this.data.getFullYear())
+      this.lancamentoService.getDashboards(this.data.getUTCMonth()+1, this.data.getUTCFullYear())
         .subscribe(dados => {
             let mapa: any = dados;
-            this.despesasReceitasMes = [mapa.totalEntradas, mapa.totalSaidas];
+            this.despesasReceitasMes = [mapa.totalSaidas, mapa.totalEntradas];
             this.aReceberPagarData = [mapa.totalPagar, mapa.totalReceber];
             this.saldoBancarioData = mapa.saldosPorMes;
             mapa.tiposContasPorMes.forEach(tc => {

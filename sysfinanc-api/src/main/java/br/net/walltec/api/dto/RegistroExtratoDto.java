@@ -24,6 +24,8 @@ public class RegistroExtratoDto {
     
     private int[] arrayIds;
     
+    private boolean conciliado;
+    
 
     public String getDataLancamento() {
         return dataLancamento;
@@ -120,6 +122,20 @@ public class RegistroExtratoDto {
 	 */
 	public void setArrayIds(int[] arrayIds) {
 		this.arrayIds = arrayIds;
+	}
+
+	/**
+	 * @return the conciliado
+	 */
+	public boolean isConciliado() {
+		return conciliado;
+	}
+
+	/**
+	 * @param conciliado the conciliado to set
+	 */
+	public void setConciliado(boolean conciliado) {
+		this.conciliado = conciliado;
 	}
 
 

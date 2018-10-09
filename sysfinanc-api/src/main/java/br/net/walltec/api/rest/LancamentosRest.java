@@ -21,17 +21,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.net.walltec.api.dto.ConsultaLancamentosDTO;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.GravacaoArquivoDto;
 import br.net.walltec.api.dto.RegistroExtratoDto;
-import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.RetornoArquivoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.excecoes.TotalConciliadoInvalidoException;
 import br.net.walltec.api.excecoes.WalltecException;
 import br.net.walltec.api.excecoes.WebServiceException;
 import br.net.walltec.api.importacao.estrategia.ImportadorArquivo;
@@ -278,6 +279,8 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
         try {
         	servico.associarLancamentos(lista);
             return Response.ok(lista).build();
+        } catch(TotalConciliadoInvalidoException e) {
+        	throw new WebServiceException(Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build());
         } catch (NegocioException e) {
             throw new WebServiceException(e.getMessage());
         } catch(Exception e){

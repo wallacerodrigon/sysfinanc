@@ -23,6 +23,21 @@
             [atributosColunas]="atributos">
         </app-crud-componente>
       </div>
+
+      <div id="graficos" class="row">
+
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <canvas baseChart
+            [data]="despReceitaData"
+            [labels]="despReceitaLabel"
+            [chartType]="lineChartType"
+            [legend]="exibeLegenda"  
+            [options]="lineDespRecOptions"
+            ></canvas>
+        </div>      
+
+      </div>
+
     </block-ui>
 
 </div>

@@ -5,7 +5,10 @@ package br.net.walltec.api.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
+
+import br.net.walltec.api.excecoes.NegocioException;
 
 /**
  * @author wallace
@@ -24,11 +27,45 @@ public class MapaDashboardDTO implements Serializable {
 	
 	private BigDecimal totalPagar;
 	
-	private BigDecimal totalPago;
+	private BigDecimal totalReceber;
 	
-	private BigDecimal saldoEmConta;
+	private Set<TipoContaNoMesDTO> tiposContasPorMes = new HashSet<>();
+
 	
-	private Set<TipoContaMesDTO> rubricaMesAnoDTO;
+	public MapaDashboardDTO comEsseValorDeEntrada(BigDecimal valor) {
+		this.totalEntradas = valor;
+		return this;
+	}
+	
+	public MapaDashboardDTO comEsseValorDeSaida(BigDecimal valor) {
+		this.totalSaidas = valor;
+		return this;
+	}
+	
+	public MapaDashboardDTO comEsseValorParaPagar(BigDecimal valor) {
+		this.totalPagar = valor;
+		return this;
+	}
+	
+	public MapaDashboardDTO comEsseValorParaReceber(BigDecimal valor) {
+		this.totalReceber = valor;
+		return this;
+	}
+	
+	public MapaDashboardDTO adicioneEssesTiposContasPorMes(Set<TipoContaNoMesDTO> tiposContasPorMes) {
+		this.tiposContasPorMes = tiposContasPorMes;
+		return this;
+	}
+	
+	public MapaDashboardDTO adicioneEsteTipoContaNoMesDto(TipoContaNoMesDTO dto) {
+		tiposContasPorMes.add(dto);
+		return this;
+	}	
+	
+	public MapaDashboardDTO monteOMapaDeDashboard() throws NegocioException {
+		//valida os dados e se estiver ok, retorna o dto
+		return this;
+	}
 
 	/**
 	 * @return the totalEntradas
@@ -73,49 +110,31 @@ public class MapaDashboardDTO implements Serializable {
 	}
 
 	/**
-	 * @return the saldoEmConta
+	 * @return the totalReceber
 	 */
-	public BigDecimal getSaldoEmConta() {
-		return saldoEmConta;
+	public BigDecimal getTotalReceber() {
+		return totalReceber;
 	}
 
 	/**
-	 * @param saldoEmConta the saldoEmConta to set
+	 * @param totalReceber the totalReceber to set
 	 */
-	public void setSaldoEmConta(BigDecimal saldoEmConta) {
-		this.saldoEmConta = saldoEmConta;
+	public void setTotalReceber(BigDecimal totalReceber) {
+		this.totalReceber = totalReceber;
 	}
 
 	/**
-	 * @return the rubricaMesAnoDTO
+	 * @return the tiposContasPorMes
 	 */
-	public Set<TipoContaMesDTO> getRubricaMesAnoDTO() {
-		return rubricaMesAnoDTO;
+	public Set<TipoContaNoMesDTO> getTiposContasPorMes() {
+		return tiposContasPorMes;
 	}
 
 	/**
-	 * @param rubricaMesAnoDTO the rubricaMesAnoDTO to set
+	 * @param tiposContasPorMes the tiposContasPorMes to set
 	 */
-	public void setRubricaMesAnoDTO(Set<TipoContaMesDTO> rubricaMesAnoDTO) {
-		this.rubricaMesAnoDTO = rubricaMesAnoDTO;
+	public void setTiposContasPorMes(Set<TipoContaNoMesDTO> tiposContasPorMes) {
+		this.tiposContasPorMes = tiposContasPorMes;
 	}
-
-	/**
-	 * @return the totalPago
-	 */
-	public BigDecimal getTotalPago() {
-		return totalPago;
-	}
-
-	/**
-	 * @param totalPago the totalPago to set
-	 */
-	public void setTotalPago(BigDecimal totalPago) {
-		this.totalPago = totalPago;
-	}
-	
-	
-	
-
 	
 }
