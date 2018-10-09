@@ -1,0 +1,12 @@
+stages:
+  - test
+  - build
+  - deploy
+
+job1:
+  stage: test
+  script: "echo teste inicial"
+
+job2:
+  stage: build
+  script: "echo build"
