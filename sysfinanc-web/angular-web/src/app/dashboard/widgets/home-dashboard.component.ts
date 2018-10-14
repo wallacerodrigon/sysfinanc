@@ -26,9 +26,6 @@ export class HomeDashboardComponent implements OnInit {
   protected aReceberPagarMesLabel:string[] = ['A Pagar', 'A Receber'];
   protected aReceberPagarData: Array<any> = [0, 0];  
 
-  protected saldoBancarioLabel:Array<any> = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-  protected saldoBancarioData:Array<any> = [0];
-
   protected despTipoContaLabel: Array<any> = [' ',' '];
   protected despTipoContaData:Array<any>= [0,0];
 
@@ -42,12 +39,6 @@ export class HomeDashboardComponent implements OnInit {
     responsive: true,
     title: {
       display: true, text: 'A Receber x A Pagar'
-    }
-  }
-  public lineSaldoOptions: any = {
-    responsive: true,
-    title: {
-      display: true, text: 'Saldo por mês'
     }
   }
   public tipoContaMesOptions: any = {
@@ -77,15 +68,10 @@ export class HomeDashboardComponent implements OnInit {
             let mapa: any = dados;
             this.despesasReceitasMes = [mapa.totalSaidas, mapa.totalEntradas];
             this.aReceberPagarData = [mapa.totalPagar, mapa.totalReceber];
-            this.saldoBancarioData = mapa.saldosPorMes;
             mapa.tiposContasPorMes.forEach(tc => {
               this.despTipoContaData.push(tc.valor);
               this.despTipoContaLabel.push(tc.nomeTipoConta);
             })
-            mapa.saldosPorMes.forEach(tc => {
-              this.saldoBancarioData.push(tc.valor);
-            })
-
         })
         
 

@@ -32,7 +32,7 @@ export class MapaLancamentosComponent implements OnInit {
 
   
   private exibeLegenda: boolean = true;
-  private lineChartType:string = 'bar';
+  private lineChartType:string = 'line';
 
   public lineDespRecOptions: any = {
     responsive: true,

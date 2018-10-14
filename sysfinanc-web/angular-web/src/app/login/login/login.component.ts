@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
             Validators.required,
             Validators.maxLength(8)
         ]),
-      });      
+      });   
   }
 
   efetuarLogin(){
@@ -71,5 +71,4 @@ export class LoginComponent implements OnInit {
             } 
         });
   }
-
 }

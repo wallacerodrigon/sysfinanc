@@ -1,4 +1,4 @@
-<div id="wrapper">
+<div id="wrapper" class="active">
 
     <div id="sidebar-wrapper" class="borda-redonda">
         <nav id="spy">
@@ -33,14 +33,34 @@
                             <a  [routerLink]="['/lancamentos']" class="list-group-item" data-scroll>
                                 <span>Consulta</span>
                             </a>   
+                        </div>
+                        
+                        <a class="list-group-item disabled" (click)="toggleSubMenu('subMenuEstatisticas', 'iconeEstatisticas')">
+                            <span class="glyphicon glyphicon-plus-sign" id="iconeEstatisticas"></span>
+                            Estatísticas
+                        </a>  
+                        
+                        <div id="subMenuEstatisticas" class="hidden">
+                            <a [routerLink]="['/dashboard']"  class="list-group-item" data-scroll>
+                                Dashboard
+                            </a>
+
                             <a  [routerLink]="['/mapa-lancamentos']" class="list-group-item" data-scroll>
                                 <span>Mapa</span>
                             </a>   
                         </div>
- 
-                        <a [routerLink]="['/dashboard']"  class="list-group-item" data-scroll>
-                            Dashboard
-                        </a>
+
+                        <a class="list-group-item disabled" (click)="toggleSubMenu('subMenuRelatorios', 'iconeEstatisticas')">
+                                <span class="glyphicon glyphicon-plus-sign" id="iconeEstatisticas"></span>
+                                Relatórios
+                        </a>  
+    
+                        <div id="subMenuRelatorios" class="hidden">
+                                <a [routerLink]="['/dashboard']"  class="list-group-item" data-scroll>
+                                    Lançamentos por Rubrica
+                                </a>
+    
+                        </div>                        
                         
                         <a (click)="logout()" data-scroll  class="list-group-item disabled">
                                 <span class="ponteiro-maozinha">Sair</span>

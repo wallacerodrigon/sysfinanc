@@ -69,8 +69,11 @@
                                     </ul>
                                 </td>
                                 <td>
+                                    <button class="btn btn-default" *ngIf="!row.conciliado && !mesFechado" (click)="utilizarLancamento()">
+                                            <i class=" glyphicon glyphicon-refresh"></i>
+                                    </button>
                                     <button class="btn btn-default" *ngIf="!row.conciliado && !mesFechado" (click)="novoCadastro()">
-                                            <i class=" glyphicon glyphicon-plus"></i>
+                                        <i class=" glyphicon glyphicon-plus"></i>
                                     </button>
                                     <button class="btn btn-default" *ngIf="!row.conciliado && !mesFechado" (click)="limpar(row)">
                                             <i class=" glyphicon glyphicon-erase"></i>

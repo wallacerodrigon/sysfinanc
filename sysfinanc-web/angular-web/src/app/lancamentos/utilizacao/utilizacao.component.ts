@@ -7,6 +7,7 @@ import {UtilData} from '../../utilitarios/util-data';
 import { UtilizacaoParcelasDto } from '../../dominio/dto/utilizacao-parcelas-dto';
 import { Formatadores } from '../../utilitarios/formatadores';
 import { LancamentoService } from '../lancamento.service';
+import { FiltraParcelasDto } from '../../dominio/dto/filtra-parcelas-dto';
 
 declare var jQuery: any;
 
@@ -15,11 +16,15 @@ declare var jQuery: any;
   templateUrl: './utilizacao.component.html',
   styleUrls: ['./utilizacao.component.css']
 })
-export class UtilizacaoComponent extends DialogComponent<null, boolean> implements OnInit {
+export class UtilizacaoComponent extends DialogComponent<null, LancamentoVO> implements OnInit {
 
   public lancamento: LancamentoVO = new LancamentoVO();
   protected utilizacaoDto: UtilizacaoParcelasDto = new UtilizacaoParcelasDto();
   public funcaoCallBack: Function;
+  public bolListaLancamentos: boolean = false;
+  public dataBaseLancamentos: Date = null;
+  private listaLancamentos: Array<LancamentoVO> = [];
+  private idLancamento: number = 0;
 
   @ViewChild("dataUtilizacao") dataUtilizacao: ElementRef;
   @ViewChild("valorUtilizadoStr") valorUtilizadoStr: ElementRef;
@@ -43,17 +48,45 @@ export class UtilizacaoComponent extends DialogComponent<null, boolean> implemen
         this.fechar();
         return;
       }
-      this.utilizacaoDto.idLancamentoOrigem = this.lancamento.id;
       this.dataUtilizacao.nativeElement.value = UtilData.converterToString(new Date());
 
-     // this.valorUtilizadoStr.nativeElement.value = Formatadores.formataMoeda(this.lancamento.valor );
+      if (this.bolListaLancamentos){
+         this.dataBaseLancamentos = new Date();
+         this.carregarLancamentos();
+      }
     }
 
+  private carregarLancamentos(){
+    this.lancamentoService.filtrar(
+            new FiltraParcelasDto(this.dataBaseLancamentos.getMonth()+1, this.dataBaseLancamentos.getFullYear())
+       )
+      .subscribe(lancamentos => {
+        let retornoJSON = lancamentos.json();
+        this.listaLancamentos = retornoJSON.lancamentos.filter(vo => vo.idParcelaOrigem == null || vo.idParcelaOrigem == vo.id);
+      });
+  }
+
+  private recuperarLancamento(): LancamentoVO {
+      return this.listaLancamentos.find(vo => vo.id == this.idLancamento);
+  }
 
   protected registrar(){
       this.utilizacaoDto.dataUtilizacaoStr = this.dataUtilizacao.nativeElement.value;
       this.utilizacaoDto.valorUtilizadoStr = this.valorUtilizadoStr.nativeElement.value;
-      this.result = false;
+
+      this.result = null;
+
+      if (this.bolListaLancamentos){
+         this.lancamento = this.recuperarLancamento();
+      }
+
+      if (this.lancamento ==null || this.lancamento.id == null ||
+          this.utilizacaoDto.dataUtilizacaoStr == "" || this.utilizacaoDto.descricao.trim() == "" ||
+          this.utilizacaoDto.valorUtilizado == null || this.utilizacaoDto.idFormaPagamento == null ){
+            new AlertaComponent(this.dialogService).
+                exibirMensagem("Informe todos os dados marcados com (*) para continuar!");
+            return;
+      }
 
       if (this.utilizacaoDto.valorUtilizado > this.lancamento.valor){
           
@@ -62,20 +95,14 @@ export class UtilizacaoComponent extends DialogComponent<null, boolean> implemen
           return;
       }
 
-      if (this.utilizacaoDto.dataUtilizacaoStr == "" || this.utilizacaoDto.descricao.trim() == "" ||
-          this.utilizacaoDto.valorUtilizado == null || this.utilizacaoDto.idFormaPagamento == null ){
-            new AlertaComponent(this.dialogService).
-                exibirMensagem("Informe todos os dados para continuar!");
-            return;
-          
-          }
-
+      this.utilizacaoDto.idLancamentoOrigem = this.lancamento.id;
 
       this.lancamentoService.utilizar(this.utilizacaoDto)
           .then((lista) => {
             new AlertaComponent(this.dialogService).
                 exibirMensagem("Utilização realizada com sucesso!");
-            this.result = true;
+
+            this.result = Object.assign(new LancamentoVO(), lista[1]);
             this.close();
           })
           .catch( erro => {

@@ -7,6 +7,16 @@
   
         <div class="modal-body">
             <form class=" form-group">
+                <div class="row" *ngIf="bolListaLancamentos">
+                    <div class="col col-md-12 col-xs-12 col-lg-12">
+                        <label class="obrigatorio">Lançamento a Utilizar</label>
+                        <select class="form-control"  [(ngModel)]="idLancamento" name="idLancamento">
+                            <option value="">Selecione um lançamento</option>
+                            <option *ngFor="let l of listaLancamentos" value="{{l.id}}">{{l.descricao}}</option> 
+                        </select>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col col-md-12 col-xs-12 col-lg-6">
                         <label for="dataUtilizacao">Data Utilização</label>                
@@ -45,7 +55,8 @@
                 
                 <hr>
                 <div class="row">
-                    <button class="btn btn-primary col col-md-12 col-xs-12 col-lg-12" (click)="registrar()">Registrar</button>
+                    <button class="btn btn-primary col col-md-5 col-xs-5 col-lg-5" (click)="fechar()">Fechar</button>
+                    <button class="btn btn-primary col col-md-5 col-xs-5 col-lg-5 col-lg-offset-2 col-md-offset-2" (click)="registrar()">Registrar</button>
                 </div>
             </form>
         </div>

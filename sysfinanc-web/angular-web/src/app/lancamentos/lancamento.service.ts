@@ -31,7 +31,10 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
     }
 
     public utilizar(dto: UtilizacaoParcelasDto): Promise<LancamentoVO[]> {
-        return this.executarPost(this.uri + '/utilizar', dto);
+        return this.executarPost(this.uri + '/utilizar', dto)
+            .then(retorno => retorno.json() )
+            .catch(error => error)
+
 
     }
 

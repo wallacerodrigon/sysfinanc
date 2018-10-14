@@ -16,6 +16,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { CadastroComponent } from '../../lancamentos/cadastro/cadastro.component';
 import { ConfirmComponent } from '../../componentes/mensagens/confirm.component';
 import { Constantes } from '../../utilitarios/constantes';
+import { UtilizacaoComponent } from '../../lancamentos/utilizacao/utilizacao.component';
 
 declare var jQuery: any;
 
@@ -188,7 +189,34 @@ export class ProcessamentoComponent implements OnInit {
         if (lancamentoCadastrado && lancamentoCadastrado.idFormaPagamento == Constantes.DEBITO_CONTA){
             this.listagemExtrato
               .filter(dto => dto.confirmado == false)
-              .forEach(dto => dto.lancamentos.push(lancamentoCadastrado));
+              .forEach(dto => {
+                if (dto.arrayIds == null){
+                  dto.arrayIds = [lancamentoCadastrado.id];
+                } else {
+                  dto.arrayIds.push(lancamentoCadastrado.id);
+                }
+                dto.lancamentos.push(lancamentoCadastrado)
+              });
+        }
+    }); 
+  }
+
+  private utilizarLancamento(){
+    this.dialogService.addDialog(UtilizacaoComponent, {
+      bolListaLancamentos: true, dataBaseLancamentos: this.databaseFiltro
+    })
+    .subscribe(lancamentoUtilizado => {
+        if (lancamentoUtilizado && lancamentoUtilizado.idFormaPagamento == Constantes.DEBITO_CONTA){
+            this.listagemExtrato
+              .filter(dto => dto.confirmado == false)
+              .forEach(dto => {
+                if (dto.arrayIds == null){
+                  dto.arrayIds = [lancamentoUtilizado.id];
+                } else {
+                  dto.arrayIds.push(lancamentoUtilizado.id);
+                }
+                dto.lancamentos.push(lancamentoUtilizado)
+              });
         }
     }); 
   }
