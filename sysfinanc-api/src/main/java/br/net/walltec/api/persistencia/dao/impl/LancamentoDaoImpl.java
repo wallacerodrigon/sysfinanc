@@ -2,6 +2,7 @@ package br.net.walltec.api.persistencia.dao.impl;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
+import br.net.walltec.api.dto.LancamentosPorRubricaDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.PersistenciaException;
@@ -142,12 +144,38 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 				.collect(Collectors.toList());
 	}
 
-	//lançamentos por ano
-//	select  year(dt_vencimento), month(dt_vencimento), sum(va_parcela) as total
-//	from lancamento 
-//	where bolconciliado = 1
-//	and year(dt_vencimento) = 2018 
-//	group by year(dt_vencimento), month(dt_vencimento)
-//	order by 1,2
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.persistencia.dao.LancamentoDao#listarLancamentosPorRubricaEAno(java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	public List<LancamentosPorRubricaDTO> listarLancamentosPorRubricaEAno(Integer ano, Integer idRubrica)
+			throws PersistenciaException {
+		StringBuilder builder = new StringBuilder();
+		builder.append("select month(l.dataVencimento), ");
+		builder.append("       sum(l.valor) ");
+		builder.append(" from Lancamento l ");
+		builder.append(" join l.conta c ");
+		builder.append(" where year(l.dataVencimento) = :ano ");
+		builder.append("   and c.id = :idRubrica ");
+		builder.append("   and l.bolPaga = true ");
+		builder.append(" group by month(l.dataVencimento) ");
+		builder.append(" order by 1 ");
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("ano", ano);
+		params.put("idRubrica", idRubrica);
+		List<Object[]> resultado = this.listarQueryECachear(builder.toString(), Object[].class, params);
+		
+		return resultado
+				.stream()
+				.map(dados -> {
+					BigDecimal totalDoMes =  (BigDecimal)dados[1];
+					LancamentosPorRubricaDTO dto = new LancamentosPorRubricaDTO((Integer)dados[0], "", totalDoMes, 0.0);
+					dto.setAno(ano);
+					return dto;
+				})
+				.collect(Collectors.toList());
+		
+	}
 	
 }

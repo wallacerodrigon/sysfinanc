@@ -25,6 +25,7 @@ import javax.transaction.Transactional.TxType;
 
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
+import br.net.walltec.api.dto.LancamentosPorRubricaDTO;
 import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
@@ -623,6 +624,19 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new NegocioException(e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#listarLancamentosPorRubricaEAno(java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	public List<LancamentosPorRubricaDTO> listarLancamentosPorRubricaEAno(Integer ano, Integer idRubrica)
+			throws NegocioException {
+		try {
+			return lancamentoDao.listarLancamentosPorRubricaEAno(ano, idRubrica);
+		} catch (PersistenciaException e) {
 			throw new NegocioException(e);
 		}
 	}

@@ -342,6 +342,20 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		}
 	}
 	
+	@GET
+	@Path("/rubricas-lancamentos/{ano}/{rubrica}")
+	public Response obterLancamentosPorRubricaEAno(@PathParam("rubrica") Integer idRubrica, @PathParam("ano") Integer ano) throws WebServiceException {
+		if (ano == null || ano == 0 || idRubrica == null) {
+			throw new WebServiceException("Ano e rubrica devem ser informados!");
+		}
+		
+		try {
+			return Response.ok().entity(this.servico.listarLancamentosPorRubricaEAno(ano, idRubrica)).build();		
+		} catch(NegocioException e) {
+			e.printStackTrace();
+		    throw new WebServiceException(e.getMessage());
+		}		
+	}
 
 }
 
