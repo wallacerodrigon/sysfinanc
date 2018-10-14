@@ -1,0 +1,4 @@
+#Wed Sep 19 00:17:13 BRT 2018
+base.0=E\:\\Desenvolvimento\\Sistemas\\workspace\\novo_sysfinanc\\SysfinancMobile\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+path.0=classes.dex
+renamed.0=classes.dex
