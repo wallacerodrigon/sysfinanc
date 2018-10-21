@@ -3,10 +3,27 @@ stages:
   - build
   - deploy
 
-job1:
+teste:
   stage: test
-  script: "echo teste inicial"
+  script: 
+    - mvn test -U
+  target:
+    - master
 
-job2:
+build:
   stage: build
-  script: "echo build"
+  script:
+    - mvn package -U
+  artifacts:
+    paths:
+      - target/*.war
+  only:
+    - master
+
+#o deploy vai ser no servidor do integrator via ftp
+#build:
+ # script: "echo build"
+  #environment:
+   # name: production
+    #url: https://prod.example.com
+
