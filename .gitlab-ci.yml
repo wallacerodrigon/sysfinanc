@@ -7,8 +7,9 @@ teste:
   stage: test
   script: 
     - mvn test -U
-  target:
-    - master
+  except:
+    - tags
+    - branches
 
 build:
   stage: build
