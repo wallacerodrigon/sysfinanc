@@ -1,3 +1,10 @@
 --> O problema do NPM foi o proxy. Retirar a tag de proxy no arquivo .npmrc dentro de c:\users\wallce\<>
 Instalar o mdb: material for bootstrap and angular
 https://mdbootstrap.com/angular/5min-quickstart/
+
+Dados do flexbox:
+
+justifyContent: disposição do conteúdo frente ao conteiner
+flexDirection: row ou column
+flex: qtd de ocupação
+alignItems: alinhamento dos itens frente ao conteúdo (mesmos valores).

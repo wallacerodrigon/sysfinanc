@@ -1,0 +1,25 @@
+﻿Reverter:
+git reset HEAD~1 --hard|soft
+
+git rm <arquivo>
+Remove o arquivo do repositório
+
+git pull --rebase (força a atualização local)
+git merge :branch --ff
+
+git log --all
+
+Mergeando branches
+git merge develop
+
+Escolhendo nosso lado do conflito de alterações
+git checkout --our file.txt
+
+Escolhendo as alterações remoto
+git checkout --theirs file.txt
+
+Abortando o merge
+git merge –abort
+
+--subir uma tag específica
+git push origin v1.17.0

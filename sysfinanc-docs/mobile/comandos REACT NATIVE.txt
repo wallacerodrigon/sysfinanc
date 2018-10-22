@@ -1,0 +1,151 @@
+﻿cd criar projeto REACT-CLI
+react-native init <nome do app>
+
+para rodar
+react-native run-android
+
+sem REACT-CLI
+npm install -g create-react-native-app
+
+create-react-native-app AwesomeProject
+
+cd AwesomeProject
+npm start
+
+npm run android
+
+--
+https://facebook.github.io/react-native/docs/navigation#react-navigation
+
+http://facebook.github.io/react-native/blog/
+
+
+Navegação:
+----------
+
+npm install --save react-navigation
+
+
+import {
+  createStackNavigator,
+} from 'react-navigation';
+
+const App = createStackNavigator({
+  Home: { screen: HomeScreen },
+  Profile: { screen: ProfileScreen },
+});
+
+export default App;
+
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Welcome',
+  };
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <Button
+        title="Go to Jane's profile"
+        onPress={() =>
+          navigate('Profile', { name: 'Jane' })
+        }
+      />
+    );
+  }
+}
+
+
+--ajuste de erro
+C:\WINDOWS\system32>react-native -v
+react-native-cli: 2.0.1
+react-native: 0.56.0
+then i uninstall react-native
+
+C:\WINDOWS\system32>npm uninstall -g react-native-cli
+removed 41 packages in 3.999s
+then i installed react-native
+
+npm install react-native@0.55.4
+again intsalled
+
+npm install -g react-native-cli@1.2.0
+then this installation of creating react-native project work out
+
+react-native init --version="0.55.4" myprojectname
+
+comando para gerar o APK
+
+react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/
+
+*Caso ocorra o erro "ENOENT: no such file or directory, open ...." acesse o diretório "<RAIZ_DO_PROJETO>/android/app/src/main/" e crie o diretório "assets".
+
+gerar o certificado:
+
+keytool -genkey -v -keystore my-release-key.keystore -alias app3 -keyalg RSA -keysize 2048 -validity 10000
+
+1) Utilizando um editor de textos como o sublime text ou o bloco de notas, abra o arquivo "gradle.properties" localizado no diretório "<RAIZ_DO_PROJETO>/android/".
+2) Já com o arquivo aberto no editor de texto inclua as linhas abaixo no final do arquivo:
+
+MYAPP_RELEASE_STORE_FILE=my-release-key.keystore
+MYAPP_RELEASE_KEY_ALIAS=coloque_aqui_o_alias_do_seu_app_definido_na_segunda_etapa
+MYAPP_RELEASE_STORE_PASSWORD=coloque_aqui_a_senha_definida_segunda_etapa
+MYAPP_RELEASE_KEY_PASSWORD=coloque_aqui_a_senha_definida_segunda_etapa
+
+*Atenção para substituição dos valores das chaves acima.
+*Salve e feche o arquivo.
+
+3) Utilizando um editor de textos como o sublime text ou o bloco de notas, abra o arquivo "build.gradle" localizado no diretório "<RAIZ_DO_PROJETO>/android/app".
+4) Já com o arquivo aberto faça as modificações abaixo:
+
+...trecho de código...
+android {
+    ...trecho de código...
+    defaultConfig { ...trecho de código... }
+    signingConfigs {
+        release {
+            storeFile file(MYAPP_RELEASE_STORE_FILE)
+            storePassword MYAPP_RELEASE_STORE_PASSWORD
+            keyAlias MYAPP_RELEASE_KEY_ALIAS
+            keyPassword MYAPP_RELEASE_KEY_PASSWORD
+        }
+    }
+    buildTypes {
+        release {
+            ...trecho de código...
+            signingConfig signingConfigs.release
+        }
+    }
+}
+...trecho de código...
+
+*Basicamente o que você deve fazer é incluir a chave "signingConfigs" logo após a chave "defaultConfig". Além disso dentro da chave "buildTypes/release" você deve incluir a instrução "signingConfig signingConfigs.release".
+*Não apague os demais código, apenas faça a inclusão.
+*Salve e feche o arquivo.
+
+Por fim:
+
+1) Abra uma instância do Prompt do Dos e acesse do diretório "android" dentro do diretório raiz do projeto.
+2) Já dentro do diretório "android" execute o comando "gradlew assembleRelease" (sem aspas). Aguarde o processo finalizar.
+3) Após a conclusão do comando do passo anterior acesse o diretório "<RAIZ_DO_PROJETO>/android/app/build/outputs/apk/" através do explorer e localize o arquivo "app-release.apk".
+
+
+
+
+-----
+COm o projeto criado pelo react-native cli, acionar o emulador no android e executar o comando abaixo para abrir o projeto no emulador.
+
+react-native run-android
+
+
+DEPLOY STANDALONE
+------------------
+https://docs.expo.io/versions/v28.0.0/distribution/building-standalone-apps
+
+npm run eject
+cria o projeto como projeto android
+
+executar o comando: react-native run-android
+* antes de executá-lo, abriro genymotion com a VM abertos ou o smartphone ligado no usb.
+
+
+react-native eject
