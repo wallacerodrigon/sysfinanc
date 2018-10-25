@@ -1,0 +1,72 @@
+<div class="page-content-wrapper">
+    <block-ui>
+        <ol class="breadcrumb">
+            <li><a href="#">Relatórios</a></li>
+            <li class="active">Lançamentos Por Rubrica</li>
+        </ol>    
+        <div class="col col-md-12 col-lg-12 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="form-group">
+                              <div class="col col-md-6 col-lg-6 col-xs-12">
+                                <label>Rubrica</label>
+                                <input type="text" [(ngModel)]="rubricaSelecionada" class="form-control" id="rubrica" name="rubrica" list="listaRubricas"
+                                (change)="acaoSelecaoRubrica()">
+                                <datalist id="listaRubricas"  class="col col-md-6 col-lg-6 col-xs-12">
+                                    <select>
+                                        <option  *ngFor="let r of listaRubricas" value="{{r.descricaoCombo}}"></option>
+                                    </select>
+                                </datalist>                                 
+                              </div>
+
+                              <div class="col col-md-2 col-lg-2 col-xs-12">
+                                <label>Ano</label>
+                                <input type="number" min="{{minAno}}" max="{{maxAno}}" class="form-control" [(ngModel)]="ano" >
+                              </div>
+
+                              <div class="col col-md-2 col-lg-2 col-xs-12" style="margin-top: 25px">
+                                <button class="btn btn-default" (click)="pesquisar()"><i class="glyphicon glyphicon-filter"></i> Pesquisar</button>
+                              </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-bordered">
+                                <thead>
+                                  <th class="text-center">Mês</th>
+                                  <th class="text-center">Total</th>
+                                </thead>
+
+                                <tbody>
+                                  <tr *ngFor="let row of listaLancamentosPorMes">
+                                    <td class="text-center">{{row.descMesAno}}</td>
+                                    <td class="text-center">{{row.totalDoMes|moeda}}</td>
+                                  </tr>
+                                <tfoot>
+                                    <td class="text-right">Total Geral:</td>
+                                    <td class="text-center">{{totalListado|moeda}}</td>
+                                    <td>&nbsp;</td>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div id="grafico">
+                      <canvas baseChart
+                              [data]="dadosGrafico"
+                              [labels]="labelsGrafico"
+                              [chartType]="lineChartType"
+                              [legend]="exibeLegenda"  
+                              [options]="graficoOptions"
+                      ></canvas>                      
+                    </div>
+                </div>
+        </div>
+    </block-ui>
+</div>            
