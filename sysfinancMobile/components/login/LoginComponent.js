@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {View, Text, StyleSheet, TextInput, Button, Image} from 'react-native';
 
 import {Botao} from '../botao/Botao';
-import {EstiloPadrao} from '../../assets/styles/EstiloPadrao';
+import estilosComuns from '../../assets/styles/estilos';
 
 const imgLogo = require('../../assets/img/logo-login.png');
 
@@ -10,10 +10,10 @@ export default class LoginComponent extends Component {
 
     render() {
         //const {estiloPadrao} = estilos;
-        console.log(EstiloPadrao);
+       // console.log(EstiloPadrao);
 
         return (
-            <View style={[estiloLogin.container, estiloLogin.margem, estiloLogin.bordaCinza, estiloLogin.bordaArredondada, estiloLogin.sombra]}>
+            <View style={[estilosComuns.container, estiloLogin.margem, estiloLogin.bordaCinza, estiloLogin.bordaArredondada, estiloLogin.sombra]}>
                 <View style={[estiloLogin.lembrete, estiloLogin.bordaArredondada, estiloLogin.margem]}>
                     <Image source={imgLogo}/>
                     <Text style={estiloLogin.chamadaEntrada}>Para entrar,</Text>

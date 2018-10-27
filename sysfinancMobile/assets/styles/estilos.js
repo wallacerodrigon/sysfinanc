@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-const EstiloPadrao = StyleSheet.create({
+const estilosComuns = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -13,4 +13,4 @@ const EstiloPadrao = StyleSheet.create({
     }
 });
 
-export default EstiloPadrao;
+export default estilosComuns;
