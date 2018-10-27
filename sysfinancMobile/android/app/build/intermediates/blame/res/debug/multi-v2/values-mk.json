@@ -4,41 +4,17 @@
             "outputFile": "E:\\Desenvolvimento\\Sistemas\\workspace\\novo_sysfinanc\\new-sysfinanc\\sysfinancMobile\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-mk\\values-mk.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-basement-10.2.4.aar\\9899fcc601278b0a79d3c8f984e09e4d\\res\\values-mk\\values.xml",
+                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\4a85646727e3c0ea4456df76b38288dc\\res\\values-mk\\values-mk.xml",
                     "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "285",
-                        "endColumns": "195",
-                        "endOffsets": "480"
-                    },
-                    "to": {
-                        "startLines": "36",
-                        "startColumns": "4",
-                        "startOffsets": "3888",
-                        "endColumns": "195",
-                        "endOffsets": "4079"
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,213,317,425,511,616,735,818,900,987,1093,1200,1301,1408,1519,1623,1779,1877",
+                        "endColumns": "107,103,107,85,104,118,82,81,86,105,106,100,106,110,103,155,97,83",
+                        "endOffsets": "208,312,420,506,611,730,813,895,982,1088,1195,1296,1403,1514,1618,1774,1872,1956"
                     }
                 },
                 {
-                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\02be3c674a0f1e7e22963cdeb9a3731f\\res\\values-mk\\values-mk.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,213,317,425,511,616,735,818,900,997,1096,1193,1293,1400,1499,1600,1696,1793,1884,1971,2077,2184,2285,2392,2503,2607,2763,2861",
-                        "endColumns": "107,103,107,85,104,118,82,81,96,98,96,99,106,98,100,95,96,90,86,105,106,100,106,110,103,155,97,83",
-                        "endOffsets": "208,312,420,506,611,730,813,895,992,1091,1188,1288,1395,1494,1595,1691,1788,1879,1966,2072,2179,2280,2387,2498,2602,2758,2856,2940"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,46",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,213,317,425,511,616,735,818,900,997,1096,1193,1293,1400,1499,1600,1696,1793,1884,1971,2077,2184,2285,2392,2503,2607,2763,5443",
-                        "endColumns": "107,103,107,85,104,118,82,81,96,98,96,99,106,98,100,95,96,90,86,105,106,100,106,110,103,155,97,83",
-                        "endOffsets": "208,312,420,506,611,730,813,895,992,1091,1188,1288,1395,1494,1595,1691,1788,1879,1966,2072,2179,2280,2387,2498,2602,2758,2856,5522"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-28.0.0.aar\\c296ca4b980c38302be1e5b772e31a4f\\res\\values-mk\\values-mk.xml",
+                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\45d20b34c16f39c8480cbbd4da383248\\res\\values-mk\\values-mk.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -47,28 +23,11 @@
                         "endOffsets": "151"
                     },
                     "to": {
-                        "startLines": "47",
+                        "startLines": "20",
                         "startColumns": "4",
-                        "startOffsets": "5527",
+                        "startOffsets": "1961",
                         "endColumns": "100",
-                        "endOffsets": "5623"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-10.2.4.aar\\73c288c06f288215a20ab27b21f7043d\\res\\values-mk\\values.xml",
-                    "from": {
-                        "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
-                        "startOffsets": "283,388,581,712,820,1024,1155,1290,1506,1611,1808,1939,2151,2336,2431,2521",
-                        "endColumns": "104,192,130,107,203,130,134,215,104,196,130,211,184,94,89,103",
-                        "endOffsets": "387,580,711,819,1023,1154,1289,1505,1610,1807,1938,2150,2335,2430,2520,2624"
-                    },
-                    "to": {
-                        "startLines": "29,30,31,32,33,34,35,37,38,39,40,41,42,43,44,45",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "2861,2970,3163,3298,3410,3614,3749,4084,4300,4409,4606,4741,4953,5142,5241,5335",
-                        "endColumns": "108,192,134,111,203,134,138,215,108,196,134,211,188,98,93,107",
-                        "endOffsets": "2965,3158,3293,3405,3609,3744,3883,4295,4404,4601,4736,4948,5137,5236,5330,5438"
+                        "endOffsets": "2057"
                     }
                 }
             ]
