@@ -12,6 +12,6 @@
   <modules>
   	<module>./sysfinanc-api</module>
    	<module>./sysfinanc-web</module>
-<!-- 	<module>../e-sysfinanc</module> -->
+
   </modules>
 </project>
