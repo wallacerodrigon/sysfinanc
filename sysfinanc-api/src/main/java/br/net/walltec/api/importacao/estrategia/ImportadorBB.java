@@ -17,7 +17,7 @@ public class ImportadorBB implements ImportadorArquivo {
 
 	private static final String FLAG_DEBITO = "D";
 	private static final String FLAG_CREDITO = "C";
-	private static final String REGEX_DATA_DOCUMENTO = "[0-9]{2}[/][0-9]{2}[/][0-9]{2}";
+	private static final String REGEX_DATA_DOCUMENTO = "[0-9]{2}[/][0-9]{2}[/][0-9]{4}";
 	private static final String QUEBRA_LINHA = "\n";
 	private static final String CHARSET_8859_1 = "ISO-8859-1";
 	private static final String TAG_SALDO = "S A L D O";
@@ -195,11 +195,24 @@ public class ImportadorBB implements ImportadorArquivo {
    	    	  .skip(9)
    	          .map(linha -> {
   	        	    RegistroExtratoDto dto = new RegistroExtratoDto();
-					dto.setDataLancamento(linha.substring(0,8));
-					dto.setHistorico(linha.substring(17, 43).trim());
-					dto.setDocumento(linha.substring(43, 66).trim());
-					dto.setValor( linha.substring(67,78).trim().isEmpty() ? "0" : linha.substring(67,78).trim() );
-					dto.setCreditoDebito( linha.substring(79, 80).trim() );
+  	        	    boolean isSaldo = linha.contains("S A L D O");
+  	        	    if (linha.trim().length() > 80 && !isSaldo) {
+  	        	    	dto.setDataLancamento(linha.substring(0,10));
+  	        	    	dto.setHistorico(linha.substring(19, 41).trim());
+  	        	    	dto.setDocumento(linha.substring(45, 64).trim().isEmpty() ? "0" : linha.substring(45, 64).trim());
+  	        	    	dto.setValor( linha.substring(73,81).trim() );
+  	        	    	dto.setCreditoDebito( linha.substring(81,83).trim());
+  	        	    } else if (isSaldo) {
+  	        	    	dto.setDataLancamento(linha.substring(0,10));
+  	        	    	dto.setHistorico("SALDO FINAL");
+  	        	    	dto.setDocumento("-999");
+  	        	    	dto.setValor( linha.substring(90,103).trim() );
+  	        	    	dto.setCreditoDebito( "C" );
+  	        	    } else {
+  	        	    	dto.setDataLancamento("");
+  	        	    	dto.setHistorico(linha.trim()); 
+  	        	    }
+  	        	    
 					return dto;
    	          })
    	          .collect(Collectors.toList());
