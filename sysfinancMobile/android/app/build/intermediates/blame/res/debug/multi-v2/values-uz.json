@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Desenvolvimento\\Sistemas\\workspace\\novo_sysfinanc\\new-sysfinanc\\sysfinancMobile\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-uz\\values-uz.xml",
+            "outputFile": "/media/wallace/Documentos/Desenvolvimento/Sistemas/workspace/novo_sysfinanc/new-sysfinanc/sysfinancMobile/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-uz/values-uz.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\4a85646727e3c0ea4456df76b38288dc\\res\\values-uz\\values-uz.xml",
+                    "source": "/home/wallace/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8d543cbc4ce72dce061c9f0145012e62/res/values-uz/values-uz.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\45d20b34c16f39c8480cbbd4da383248\\res\\values-uz\\values-uz.xml",
+                    "source": "/home/wallace/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/3eb9932e793f21bf3880b6775f595419/res/values-uz/values-uz.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

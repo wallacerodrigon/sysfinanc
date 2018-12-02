@@ -1,10 +1,20 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Desenvolvimento\\Sistemas\\workspace\\novo_sysfinanc\\new-sysfinanc\\sysfinancMobile\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v16\\values-v16.xml",
+            "outputFile": "/media/wallace/Documentos/Desenvolvimento/Sistemas/workspace/novo_sysfinanc/new-sysfinanc/sysfinancMobile/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v16/values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\4a85646727e3c0ea4456df76b38288dc\\res\\values-v16\\values-v16.xml",
+                    "source": "/home/wallace/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/3eb9932e793f21bf3880b6775f595419/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                },
+                {
+                    "source": "/home/wallace/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8d543cbc4ce72dce061c9f0145012e62/res/values-v16/values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -20,16 +30,6 @@
                         "endLines": "6",
                         "endColumns": "12",
                         "endOffsets": "289"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\wallace\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\45d20b34c16f39c8480cbbd4da383248\\res\\values-v16\\values-v16.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "65",
-                        "endOffsets": "116"
                     }
                 }
             ]
