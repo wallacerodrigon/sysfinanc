@@ -1,0 +1,34 @@
+Mapa no reactive:
+- instalar: install react-native-maps --save
+- instalar dependencias: react-native link react-native-maps
+- importar react-native-maps
+   import MapView from 'react-native-maps'
+
+- criar o componente MapView
+    <MapView style....
+	region: {{
+		latitude: xxx, longitude: xxx, 
+		latitudeDelta: 0.1, longitudeDelta: 0.1
+	}}
+    >
+- restart the app para corrigir o erro.
+- para marcar um ponto
+	<MapView.Marker
+		coordinate: {{
+			latitude: 000,
+			longitude: 000,
+		}}
+		title: {xxx}
+		description: {'''}
+
+Se o react-native link não funcionar:
+
+npm install native-base --save
+npm install
+react-native link
+
+https://www.youtube.com/watch?v=2takPFib5uE
+
+https://www.youtube.com/watch?v=RjW1hMOA9M0
+
+https://blog.rocketseat.com.br/react-native-mapbox/
