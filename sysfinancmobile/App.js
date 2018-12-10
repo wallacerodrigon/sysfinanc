@@ -7,14 +7,14 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-//import {LoginComponent} from 'components/login/LoginComponent';
+import {View, Text} from 'react-native';
+import LoginComponent from './components/login/LoginComponent';
 
-export default class App extends Component<Props> {
+export default class App extends Component {
   render() {
     return (
       <View>
-	<Text>Teste do sysfinancMobile</Text>
+	      <LoginComponent/>
       </View>
     );
   }

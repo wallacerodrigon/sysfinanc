@@ -1,46 +1,40 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet, TextInput, Button, Image} from 'react-native';
 
-import {Botao} from '../botao/Botao';
-import estilosComuns from '../../assets/styles/estilos';
-
+import Botao from '../botao/Botao';
+import EstilosComuns from '../../assets/estilos/estilos';
 const imgLogo = require('../../assets/img/logo-login.png');
-
+ 
 export default class LoginComponent extends Component {
 
     render() {
-        //const {estiloPadrao} = estilos;
-       // console.log(EstiloPadrao);
-
         return (
-            <View style={[estilosComuns.container, estiloLogin.margem, estiloLogin.bordaCinza, estiloLogin.bordaArredondada, estiloLogin.sombra]}>
-                <View style={[estiloLogin.lembrete, estiloLogin.bordaArredondada, estiloLogin.margem]}>
+            <View style={{flex: 1}}>
+                <View style={{flex: 3}}>
                     <Image source={imgLogo}/>
                     <Text style={estiloLogin.chamadaEntrada}>Para entrar,</Text>
                     <Text style={estiloLogin.chamadaEntrada}>informe seu login e senha.</Text>
                 </View>
 
-                <View style={[estiloLogin.centroLogin, estiloLogin.margem]}>
-                     <TextInput style={estiloLogin.inputText} placeholder="Login"></TextInput>
+                <View style={{flex: 5}}>
+                    <Text>Login</Text>
+                     {/* <TextInput style={estiloLogin.inputText} placeholder="Login"></TextInput>
                      <TextInput style={estiloLogin.inputText} placeholder="Senha"></TextInput>
-                     <Botao tituloBotao="Entrar" aoClicar={()=> null}/>
+                     <Botao tituloBotao="Entrar" aoClicar={()=> null}/> */}
                  </View>
 
-                 <View style={[estiloLogin.rodape, estiloLogin.bordaArredondada, estiloLogin.margem]}>
-                     <Botao tituloBotao="Cadastrar-me" aoClicar={()=> alert('ok')}/>
-                     <Botao tituloBotao="Esqueci a senha" aoClicar={()=> null}/>
-                 </View>
+                 <View style={{flex: 1}}>
+                     <Text>Rodapé</Text>
+                     {/* <Botao tituloBotao="Cadastrar-me" aoClicar={()=> alert('ok')}/>
+                     <Botao tituloBotao="Esqueci a senha" aoClicar={()=> null}/> */}
+                 </View> 
             </View>
         )
     }
 }
 
+
 const estiloLogin = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
     sombra: {
         shadowColor: '#666',
         shadowOpacity: 0.3,
@@ -49,36 +43,27 @@ const estiloLogin = StyleSheet.create({
     margem: {
         margin: 5,
     },
-    bordaCinza: {
-        borderColor: '#666',
-        borderWidth: 3,
-    },
-    bordaArredondada: {
-        borderRadius: 30,
-    },
-    lembrete: {
+    blocoLembrete: {
         flex: 3,
         justifyContent:'center',
         alignItems: 'center',
         alignSelf: "stretch",
+        backgroundColor: '#666'
     },
-  
-    centroLogin: {
+    blocoLogin: {
         flex: 5,
         width: 200,
         justifyContent: 'flex-start',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: '#00f'
     },
-    rodape: {
+    blocoRodape: {
         flex: 1, 
         flexDirection: 'row',
         alignSelf: 'stretch',
         justifyContent: 'space-between',
         alignItems: 'center',
+        backgroundColor: '#f00'
     },
-    inputText: {
-        flex: 1,
-        alignSelf: 'stretch'
-    }
-})
 
+})

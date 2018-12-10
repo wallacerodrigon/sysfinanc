@@ -1,0 +1,30 @@
+Para resolver o problema do adb sem permissão:
+
+a) Acrescentar a tag no manifest do android:
+
+android:debuggable="true"
+
+b) criar o arquivo etc/51-android.rules
+
+c) Acrescentar o conteúdo abaixo neste arquivo:
+
+# Linux
+SUBSYSTEM=="usb", ATTR{idVendor}=="0003", MODE="0666", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTR{idVendor}=="0002", MODE="0666", GROUP="plugdev"
+
+# Realtek
+SUBSYSTEM=="usb", ATTR{idVendor}=="57b8", MODE="0666", GROUP="plugdev"
+
+#Lite-on
+SUBSYSTEM=="usb", ATTR{idVendor}=="300b", MODE="0666", GROUP="plugdev"
+
+# Motorola PCS
+SUBSYSTEM=="usb", ATTR{idVendor}=="2e81", MODE="0666", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTR{idVendor}=="22b8", MODE="0666", GROUP="plugdev"
+
+#acer
+SUBSYSTEM=="usb", ATTR{idVendor}=="0502", MODE="0666", GROUP="plugdev"
+
+reiniciar o ubuntu para ver o resultado.
+
+Depois reiniciar o android studio
