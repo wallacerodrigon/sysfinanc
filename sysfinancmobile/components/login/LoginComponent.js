@@ -9,21 +9,22 @@ export default class LoginComponent extends Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
-                <View style={{flex: 3}}>
-                    <Image source={imgLogo}/>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+                <View style={estiloLogin.blocoLembrete}>
+                    <Text>Header</Text>
+                    {/* <Image source={imgLogo}/>
                     <Text style={estiloLogin.chamadaEntrada}>Para entrar,</Text>
-                    <Text style={estiloLogin.chamadaEntrada}>informe seu login e senha.</Text>
+                    <Text style={estiloLogin.chamadaEntrada}>informe seu login e senha.</Text> */}
                 </View>
 
-                <View style={{flex: 5}}>
+                <View style={estiloLogin.blocoCentral}>
                     <Text>Login</Text>
                      {/* <TextInput style={estiloLogin.inputText} placeholder="Login"></TextInput>
                      <TextInput style={estiloLogin.inputText} placeholder="Senha"></TextInput>
                      <Botao tituloBotao="Entrar" aoClicar={()=> null}/> */}
                  </View>
 
-                 <View style={{flex: 1}}>
+                 <View style={estiloLogin.blocoRodape}>
                      <Text>Rodapé</Text>
                      {/* <Botao tituloBotao="Cadastrar-me" aoClicar={()=> alert('ok')}/>
                      <Botao tituloBotao="Esqueci a senha" aoClicar={()=> null}/> */}
@@ -45,24 +46,24 @@ const estiloLogin = StyleSheet.create({
     },
     blocoLembrete: {
         flex: 3,
-        justifyContent:'center',
-        alignItems: 'center',
-        alignSelf: "stretch",
+        color: '#666',
+        // justifyContent:'center',
+        // alignItems: 'center',
+        // alignSelf: "stretch",
         backgroundColor: '#666'
     },
-    blocoLogin: {
+    blocoCentral: {
         flex: 5,
-        width: 200,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
+        // width: 200,
+        // justifyContent: 'flex-start',
+        // alignItems: 'center',
         backgroundColor: '#00f'
     },
     blocoRodape: {
         flex: 1, 
-        flexDirection: 'row',
-        alignSelf: 'stretch',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        // alignSelf: 'stretch',
+        // justifyContent: 'space-between',
+        // alignItems: 'center',
         backgroundColor: '#f00'
     },
 

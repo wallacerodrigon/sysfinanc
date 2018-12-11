@@ -82,9 +82,9 @@ public class ImportadorBB implements ImportadorArquivo {
 			Map<String, List<LancamentoVO>> lancamentosPorDocumento) {
 		List<LancamentoVO> lancamentosAssociadosPorDocumento = extrairLancamentoVO(lancamentosPorDocumento);		
 		return lancamentosDisponiveis
-    													.stream()
-    													.filter(vo -> !lancamentosAssociadosPorDocumento.contains(vo))
-    													.collect(Collectors.toList());
+				.stream()
+				.filter(vo -> !lancamentosAssociadosPorDocumento.contains(vo))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class ImportadorBB implements ImportadorArquivo {
   	        	    	dto.setDataLancamento(linha.substring(0,10));
   	        	    	dto.setHistorico(linha.substring(19, 41).trim());
   	        	    	dto.setDocumento(linha.substring(45, 64).trim().isEmpty() ? "0" : linha.substring(45, 64).trim());
-  	        	    	dto.setValor( linha.substring(73,81).trim() );
+  	        	    	dto.setValor( linha.substring(70,81).trim() );
   	        	    	dto.setCreditoDebito( linha.substring(81,83).trim());
   	        	    } else if (isSaldo) {
   	        	    	dto.setDataLancamento(linha.substring(0,10));
