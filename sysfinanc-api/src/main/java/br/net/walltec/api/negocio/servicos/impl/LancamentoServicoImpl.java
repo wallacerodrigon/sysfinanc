@@ -120,11 +120,46 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
         
         try {
         	List<Lancamento> listaParcelas = filtrarParcelas(dtoFiltro);
-			return getConversor().converterEntidadeParaPojo(listaParcelas);
+        	Map<Integer, List<Lancamento>> mapLancamentosPorOrigem = mapearLancamentosFilhos(listaParcelas);
+			List<LancamentoVO> lancamentosPais = converterLancamentosPais(listaParcelas);
+			lancamentosPais.stream()
+					   .forEach(vo -> {
+						  if (mapLancamentosPorOrigem.containsKey(vo.getId())) {
+							  vo.setLancamentosUtilizados(
+									  getConversor().converterEntidadeParaPojo(mapLancamentosPorOrigem.get(vo.getId())
+											  ));
+						  }
+					   });
+					   
+			return lancamentosPais;
         } catch (PersistenciaException e) {
             throw new NegocioException(e);
         }
     }
+
+	/**
+	 * @param listaParcelas
+	 * @return
+	 */
+	private List<LancamentoVO> converterLancamentosPais(List<Lancamento> listaParcelas) {
+		List<LancamentoVO> lancamentos = getConversor()
+				.converterEntidadeParaPojo(listaParcelas.stream()
+												.filter(parcela -> parcela.getIdLancamentoOrigem().equals(0))
+												.collect(Collectors.toList()));
+		return lancamentos;
+	}
+
+	/**
+	 * @param listaParcelas
+	 * @return
+	 */
+	private Map<Integer, List<Lancamento>> mapearLancamentosFilhos(List<Lancamento> listaParcelas) {
+		Map<Integer, List<Lancamento>> mapLancamentosPorOrigem = listaParcelas
+																	.stream()
+																	.filter(lancamento -> !lancamento.getIdLancamentoOrigem().equals(0))
+																	.collect(Collectors.groupingBy(Lancamento::getIdLancamentoOrigem));
+		return mapLancamentosPorOrigem;
+	}
 
 	private List<Lancamento> filtrarParcelas(FiltraParcelasDto dtoFiltro) throws PersistenciaException {
 		Date dataInicial = null;

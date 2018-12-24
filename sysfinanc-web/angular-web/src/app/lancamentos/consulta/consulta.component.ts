@@ -28,7 +28,7 @@ import { ConfirmComponent } from '../../componentes/mensagens/confirm.component'
 export class ConsultaComponent implements OnInit {
 
     //falta informar se é debito ou crédito
-  private colunas: string[] = ["Data Vencimento", "Descrição", "Crédito", "Débito", "Pago", "Num.Doc.", "Meio Pagto"];
+  private colunas: string[] = ["id","Data Vencimento", "Descrição", "Crédito", "Débito", "Pago", "Num.Doc.", "Meio Pagto"];
   private listagem: Array<LancamentoVO> = [];
   private listagemOriginal: Array<LancamentoVO> = [];
 
@@ -36,11 +36,12 @@ export class ConsultaComponent implements OnInit {
   private habilitaEdicao: boolean = false;
 
   private tamanhoListagem: number = 0;
-  private atributos: Array<string> = ["dataVencimentoStr", "descricao", "valorCreditoStr", "valorDebitoStr", "bolPagaIcone", "numDocumento", "descFormaPagamento"];
+  private atributos: Array<string> = ["id","dataVencimentoStr", "descricao", "valorCreditoStr", "valorDebitoStr", "bolPagaIcone", "numDocumento", "descFormaPagamento"];
   private totalizadores: Array<number> = [];
 
     private valor: string = "0,00";
     private mesFechado: boolean = false;
+  private controleExibicao = [];
 
   protected listaAcoes: Array<AcoesRegistroTabela> = [
     //  {nomeAcao:"Clonar", classeCss:"glyphicon glyphicon-eye-open", eventoAcao: this.abrirUsosLancamento},      
@@ -245,7 +246,7 @@ export class ConsultaComponent implements OnInit {
     this.filtrar();
 
   }
-
+  
   private montarResumo(): any {
     let totalReceber: number = 0.00;
     let totalPagar : number = 0.00;
@@ -329,5 +330,68 @@ export class ConsultaComponent implements OnInit {
     exibeMesAnoAtual(): string {
         return `${this.mes}/${this.ano}`;
     }
+
+    public exibeLancamentos(item: LancamentoVO) {
+        this.controleExibicao[item.id] = !this.controleExibicao[item.id];
+        this.exibeMostraTabela(item);
+    }
+
+    exibeMostraTabela(lancamento: LancamentoVO){
+        
+        let idElemento = lancamento.id.toString();
+        let tbody = document.getElementById('tbody');
+        let trs = tbody.getElementsByTagName('tr');
+        let idTagToAdd = -1;
+        //criar método para tratar o id
+        for(let i = 0; i < trs.length; i++){
+            if (trs[i].id == idElemento){
+                idTagToAdd = i;
+                break;
+            }
+        }
+        let idElementoBefore = null;
+        if (idTagToAdd > trs.length - 1){
+            idElementoBefore = 'last';
+        } else {
+            idElementoBefore = trs[idTagToAdd+1].id;
+        }
+
+        //criar método para excluir um elemento
+        let linha = document.getElementById(idElementoBefore);
+        let newId = 'divChildOf'+idElemento;
+        if (document.getElementById(newId)){
+            tbody.removeChild(document.getElementById(newId));
+            return;		
+        }
+
+        let divTabelaUsos = document.createElement('tr');
+        divTabelaUsos.setAttribute('id', newId);
+
+        lancamento.lancamentosUtilizados.forEach(vo => {
+            //criar método para montar a tabela
+            let trFilha = document.createElement('tr');
+            trFilha.setAttribute('colspan', "9");
+
+            let tdFilha = document.createElement("td");
+            tdFilha.innerHTML = "7732";
+            trFilha.appendChild(tdFilha);
+
+            let tdFilha2 = document.createElement("td");
+            tdFilha2.innerHTML = "teste";
+            trFilha.appendChild(tdFilha2);
+        
+
+            // this.atributos.forEach(atributo => {
+            //     let tdFilha = document.createElement("td");
+            //     tdFilha.innerHTML = vo[atributo];
+            //     trFilha.appendChild(tdFilha);
+            // })
+            divTabelaUsos.appendChild(trFilha);
+        
+        })
+        idElementoBefore == 'last' ? 
+            tbody.appendChild(divTabelaUsos):
+            tbody.insertBefore(divTabelaUsos, linha);
+    }    
  
 }

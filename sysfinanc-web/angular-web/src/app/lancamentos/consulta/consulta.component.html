@@ -34,37 +34,56 @@
         </div>
         
         <div class="col col-md-9 col-lg-9 col-xs-12">
-                <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <button type="button" class="btn btn-default" (click)="filtrar()">
-                                <i class="glyphicon glyphicon-filter"></i> Listar Tudo</button> 
+           <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button type="button" class="btn btn-default" (click)="filtrar()">
+                        <i class="glyphicon glyphicon-filter"></i> Listar Tudo</button> 
 
-                            <button type="button" id='btnBaixa' class="btn btn-default" (click)="baixarLista()"  [disabled]="mesFechado" data-loading-text="Baixando Lançamento..." autocomplete="off">
-                                    <i class="glyphicon glyphicon-ok"></i> Baixar Marcados</button>
-                            
-                            <button type="button" class="btn btn-default" (click)="novoCadastro()"  [disabled]="mesFechado">
-                                            <i class="glyphicon glyphicon-plus"></i> Novo Lançamento</button>
-
-                            <button type="button" class="btn btn-default" (click)="fecharMes()" [disabled]="mesFechado">
-                                <i class="glyphicon glyphicon-close"></i> Fechar Mês</button>
-    
-               </div>
-        </div>
-                
+                    <button type="button" id='btnBaixa' class="btn btn-default" (click)="baixarLista()"  [disabled]="mesFechado" data-loading-text="Baixando Lançamento..." autocomplete="off">
+                            <i class="glyphicon glyphicon-ok"></i> Baixar Marcados</button>
                     
-            <app-crud-componente #crudComponente [nomesColunas]="colunas" 
-                    [listaDados]="listagem" 
-                    [tamanhoListagem]="tamanhoListagem"
-                    [atributosColunas]="atributos"
-                    [exibeAcoes]="! mesFechado"
-                    [exibeExcluir]="!mesFechado"
-                    [exibeEditar]="!mesFechado"
-                    [listaAcoes]="listaAcoes"
-                    [exibeCheckboxes]="! mesFechado"
-                    [exibeFiltroColuna]="false"
-                    (onExcluir)="excluir($event)"
-                    (onEditar)="editar($event)" >
-            </app-crud-componente>
+                    <button type="button" class="btn btn-default" (click)="novoCadastro()"  [disabled]="mesFechado">
+                                    <i class="glyphicon glyphicon-plus"></i> Novo Lançamento</button>
+
+                    <button type="button" class="btn btn-default" (click)="fecharMes()" [disabled]="mesFechado">
+                        <i class="glyphicon glyphicon-close"></i> Fechar Mês</button>
+
+                </div>
+                
+                <div class="panel-body">
+                    <div class="row">
+                        <label class="col-md-8">Retornados {{listagem.length}} Registros</label>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <th>+</th>
+                                <th *ngFor="let col of colunas; let i=index">
+                                    <span text-center>{{col}}</span>
+                                </th>
+                                <th colspan="2" class="text-center" *ngIf="!mesFechado">
+                                    Ações
+                                </th>
+                            </thead>
+             
+                            <tbody id="tbody">
+                                <tr *ngFor="let item of listagem" id="{{item.id}}">
+                                    <td><a class="glyphicon glyphicon-plus-sign" *ngIf="item.lancamentosUtilizados && !controleExibicao[item.id]" (click)="exibeLancamentos(item)" ></a>
+                                        <a class="glyphicon glyphicon-minus-sign" *ngIf="item.lancamentosUtilizados && controleExibicao[item.id]" (click)="exibeLancamentos(item)" ></a>
+                                    </td>
+                                    
+                                    <td *ngFor="let campo of atributos" >
+                                        <span>{{item[campo]}}</span>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    
+                                </tr>
+                            </tbody>
+            
+                        </table>
+                    </div>
+                </div>    
+            </div>            
         </div>
     </block-ui>
 </div>

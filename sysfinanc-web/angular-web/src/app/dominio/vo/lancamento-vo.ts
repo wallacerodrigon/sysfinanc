@@ -19,7 +19,8 @@ export class LancamentoVO  {
         public  despesa: boolean =false,
         public  dataFimStr: string = null,
         public idFormaPagamento?: number,
-        public descFormaPagamento?: string
+        public descFormaPagamento?: string,
+        public lancamentosUtilizados: Array<LancamentoVO> = []
     ){
       //  super();
     }
@@ -44,4 +45,5 @@ export class LancamentoVO  {
     public descCombo(): string {
         return this.descricao + '-' + this.valorStr;
     }
+
 }

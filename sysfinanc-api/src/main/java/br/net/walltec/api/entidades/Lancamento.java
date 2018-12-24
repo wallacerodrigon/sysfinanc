@@ -196,6 +196,10 @@ public class Lancamento extends EntidadeBasica<Lancamento> {
 	public TipoConta getTipoConta() {
 		return this.conta != null ? this.conta.getTipoConta() : null;
 	}
+	
+	public Integer getIdLancamentoOrigem() {
+		return this.getLancamentoOrigem() != null && !this.getLancamentoOrigem().getId().equals(this.id) ? this.getLancamentoOrigem().getId() : 0;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

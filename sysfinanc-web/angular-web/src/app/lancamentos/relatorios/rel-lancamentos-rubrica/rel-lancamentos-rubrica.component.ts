@@ -71,7 +71,7 @@ export class RelLancamentosRubricaComponent implements OnInit {
     
     let idRubrica: number = this.getRubrica().id;
 
-    this.lancamentoService.getRelatorioLancamentosPorRubrica(this.ano, idRubrica)
+    /*this.lancamentoService.getRelatorioLancamentosPorRubrica(this.ano, idRubrica)
       .subscribe(retorno => {
         this.listaLancamentosPorMes = retorno
                                       .map(json => LancamentosPorRubricaDTO.associar(json));
@@ -85,7 +85,7 @@ export class RelLancamentosRubricaComponent implements OnInit {
         console.log(error._body);
         this.blockUI.stop();
       })
-
+*/
 
   }
 

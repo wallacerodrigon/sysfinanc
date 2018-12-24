@@ -1,5 +1,7 @@
 package br.net.walltec.api.vo;
 
+import java.util.List;
+
 public class LancamentoVO extends GerenciadorPadraoVO {
 
 	/**
@@ -39,6 +41,8 @@ public class LancamentoVO extends GerenciadorPadraoVO {
 	private Integer idFormaPagamento;
 	
 	private String descFormaPagamento;
+	
+	private List<LancamentoVO> lancamentosUtilizados;
 
 
     public Integer getId() {
@@ -232,5 +236,13 @@ public class LancamentoVO extends GerenciadorPadraoVO {
 
 	public void setDescFormaPagamento(String descFormaPagamento) {
 		this.descFormaPagamento = descFormaPagamento;
+	}
+
+	public List<LancamentoVO> getLancamentosUtilizados() {
+		return lancamentosUtilizados;
+	}
+
+	public void setLancamentosUtilizados(List<LancamentoVO> lancamentosUtilizados) {
+		this.lancamentosUtilizados = lancamentosUtilizados;
 	}
 }
