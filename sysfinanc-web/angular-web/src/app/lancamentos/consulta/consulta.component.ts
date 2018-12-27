@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter,ViewChild } from '@angular/core';
+import { Component, OnInit, EventEmitter,ViewChild, transition } from '@angular/core';
 import { LancamentoVO } from '../../dominio/vo/lancamento-vo';
 import { LancamentoService } from '../../lancamentos/lancamento.service';
 import { Formatadores } from '../../utilitarios/formatadores';
@@ -20,6 +20,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs/Observable';
 import { ConfirmComponent } from '../../componentes/mensagens/confirm.component';
 import { removeDebugNodeFromIndex } from '@angular/core/src/debug/debug_node';
+import { Constantes } from '../../utilitarios/constantes';
 
 @Component({
   selector: '..-consulta',
@@ -45,9 +46,7 @@ export class ConsultaComponent implements OnInit {
   private controleExibicao = [];
 
   protected listaAcoes: Array<AcoesRegistroTabela> = [
-    //  {nomeAcao:"Clonar", classeCss:"glyphicon glyphicon-eye-open", eventoAcao: this.abrirUsosLancamento},      
       {nomeAcao:"Utilizar", classeCss:"glyphicon glyphicon-scissors", eventoAcao: this.abrirUtilizacaoLancamento, callBack: this.filtrar},
-      {nomeAcao:"Histórico de Usos", classeCss:"glyphicon glyphicon-eye-open", eventoAcao: this.abrirUsosLancamento}
   ];
   
   @BlockUI() blockUI: NgBlockUI;  
@@ -86,12 +85,12 @@ export class ConsultaComponent implements OnInit {
 
   }
 
-  public abrirUtilizacaoLancamento(item: any, indice: number, dialogService: DialogService, callBack?: Function){
-      dialogService.addDialog(UtilizacaoComponent, {
+  public abrirUtilizacaoLancamento(item: any){
+      this.dialogService.addDialog(UtilizacaoComponent, {
           lancamento: item
       }).subscribe(efetuado => {
           if (efetuado){
-            window.location.reload(true);
+            this.filtrar();
           }
       });
 
@@ -169,7 +168,19 @@ export class ConsultaComponent implements OnInit {
       this.calcularTotalizadores();
   }
 
-  private excluir(lancamentoAExcluir: LancamentoVO): any{
+  public excluirLancamento(lancamento: LancamentoVO, indice: number){
+    let disposable = this.dialogService.addDialog(ConfirmComponent, {
+        title:'Exclusão', 
+        message: 'Confirma a exclusão do registro?' })
+        .subscribe(confirmado=> {
+            this.excluir(lancamento, indice);
+        });
+    setTimeout(()=>{
+        disposable.unsubscribe();
+    },10000);         
+  }
+
+  private excluir(lancamentoAExcluir: LancamentoVO, indice: number): any{
       if (lancamentoAExcluir != null){
           
           if (lancamentoAExcluir.bolConciliado){
@@ -180,7 +191,7 @@ export class ConsultaComponent implements OnInit {
           this.servico.excluir(lancamentoAExcluir.id)
             .then( () => {
                 this.blockUI.stop();
-                this.listagem.splice(this.crudComponente.indiceItem, 1);
+                this.listagem.splice(indice, 1);
                 this.calcularTotalizadores();
                 this.montarResumo();
                 new AlertaComponent(this.dialogService).exibirMensagem('Registro excluído com sucesso');
@@ -194,7 +205,8 @@ export class ConsultaComponent implements OnInit {
   }
 
   public filtrar(event: Event = null) {
-    this.removeFilhasTrsUtilizacao(document.getElementById('tbody'));      
+    this.removeFilhasTrsUtilizacao(document.getElementById('tbody'));   
+    this.controleExibicao = [];   
     this.blockUI.start('Filtrando Lançamentos. Aguarde!');
     let dto: FiltraParcelasDto = new FiltraParcelasDto(this.mes, this.ano);
     this.servico.filtrar(dto)
@@ -216,7 +228,6 @@ export class ConsultaComponent implements OnInit {
   private calcularTotalizadores(){
       let totalCreditos: number = 0.00;
       let totalDebitos : number = 0.00;
-      let saldo: number = 0.00;
 
       this.listagem.forEach(vo => {
             if (vo.despesa){
@@ -224,11 +235,17 @@ export class ConsultaComponent implements OnInit {
             } else {
                 totalCreditos += vo.valor;
             }
+            if (vo.lancamentosUtilizados){
+                let totalFilhos = vo.lancamentosUtilizados.reduce( (previous, vo) => vo.valor, 0);
+                totalDebitos += vo.despesa ? totalFilhos : 0;
+                totalCreditos += vo.despesa ? 0 : totalFilhos;
+            }
       });
 
       this.totalizadores[this.indicesValores[0]] = totalCreditos;
       this.totalizadores[this.indicesValores[1]] = totalDebitos;
   }
+
 
   protected filtrarProximo(){
         if (this.mes == 12){
@@ -280,9 +297,9 @@ export class ConsultaComponent implements OnInit {
                 totalReceber += vo.valor;
             }
 
-            if (vo.bolConciliado){
+            if (vo.bolConciliado && vo.idFormaPagamento == Constantes.DEBITO_CONTA){
                 totalCredConciliado += vo.valor;
-            } else {
+            } else if (vo.idFormaPagamento == Constantes.DEBITO_CONTA) {
                 totalCredNaoConciliado += vo.valor;
             }
         }
@@ -310,7 +327,7 @@ export class ConsultaComponent implements OnInit {
 
     formatar(){
         let valor: number = Number(this.valor);
-        alert(Formatadores.formataMoeda(valor));
+        //alert(Formatadores.formataMoeda(valor));
     }
 
     fecharMes(){
@@ -367,33 +384,44 @@ export class ConsultaComponent implements OnInit {
             let tr = document.createElement('tr');
             tr.setAttribute('class', 'tr_child');
             tr.setAttribute('_ngcontent-c2', '');
-            tr.innerHTML = "<td>&nbsp;</td>";
-            this.atributos.forEach(atributo => {
-                tr.innerHTML += "<td class='fonte-destacada'>" + vo[atributo] + "</td>"
-            });
-            totalCred += vo.creditoDebito == 'C' ? vo.valor : 0;
-            totalDeb  += vo.creditoDebito == 'D' ? vo.valor : 0;
+            tr.innerHTML  = "<td class='fonte-destacada text-right' colspan='2'>" + vo.dataVencimentoStr + "</td>"
+            tr.innerHTML += "<td class='fonte-destacada'>" + vo.descricao + "</td>"
+            tr.innerHTML += "<td class='fonte-destacada'>" + vo.valorCreditoStr + "</td>"
+            tr.innerHTML += "<td class='fonte-destacada'>" + vo.valorDebitoStr + "</td>"
+            tr.innerHTML += "<td class='fonte-destacada'>"+  (vo.bolPaga ? "<i class='glyphicon glyphicon-thumbs-up'/>":"") +"</td>"
+            tr.innerHTML += "<td class='fonte-destacada'>" + (vo.numDocumento ? vo.numDocumento : "") + "</td>"
+            tr.innerHTML += "<td colspan='2' class='fonte-destacada'>" + vo.descFormaPagamento + "</td>"
 
-            if (trParaInsercao != null){
-                tbody.insertBefore(tr, trParaInsercao);
-            } else {
-                tbody.append(tr);
-            }
+            totalCred += vo.despesa ? 0 : vo.valor;
+            totalDeb  += vo.despesa ? vo.valor : 0;
+
+            this.insereLinha(tbody, tr, trParaInsercao);
         })
 
-        let tr = document.createElement('tr');
-        tr.setAttribute('class', 'tr_child');
-        tr.setAttribute('_ngcontent-c2', '');
-        tr.innerHTML = "<td colspan='3'>TOTALIZADOR DE USOS:</td>";
-        tr.innerHTML +=`<td>${totalCred}</td>`;
-        tr.innerHTML +=`<td>${totalDeb}</td>`;        
-        tr.innerHTML +=`<td colspan='4'></td>`;
+        let totalUsado : number = lancamento.despesa ? totalDeb : totalCred;
+
+        this.criarTotalizador(tbody, totalUsado, lancamento.valor + totalUsado, trParaInsercao);
+    }
+
+    private insereLinha(tbody, trAlvo, trParaInsercao){
         if (trParaInsercao != null){
-            tbody.insertBefore(tr, trParaInsercao);
+            tbody.insertBefore(trAlvo, trParaInsercao);
         } else {
-            tbody.append(tr);
+            tbody.append(trAlvo);
         }
 
+    }
+
+    private criarTotalizador(tbody, totalGasto, totalGeral, trParaInsercao){
+
+        let tr = document.createElement('tr');
+        tr.setAttribute('class', 'tr_child borda sombra');
+        tr.setAttribute('_ngcontent-c2', '');
+        tr.innerHTML += "<td colspan='2' class='text-right fonte-destacada'>TOTAL JÁ UTILIZADO:</td>";
+        tr.innerHTML +=`<td class='fonte-destacada'>${ Formatadores.formataMoeda(totalGasto) }</td>`;
+        tr.innerHTML += "<td colspan='2' class='text-right fonte-destacada'>O GASTO TOTAL SERÁ DE:</td>";
+        tr.innerHTML +=`<td class='fonte-destacada' colspan='3'>${ Formatadores.formataMoeda(totalGeral) }</td>`;
+        this.insereLinha(tbody, tr, trParaInsercao);
     }
 
     exibeMostraTabela(lancamento: LancamentoVO, exibe: boolean){

@@ -26,12 +26,12 @@ export class LancamentoVO  {
     }
 
 
-    public get bolPagaStr(){
+    public get bolPagaStr(): string {
         return this.bolPaga ? "SIM" : "NÃO";
     }
 
     public get bolPagaIcone(): string {
-        return this.bolPaga ? 'icone:glyphicon glyphicon-thumbs-up' : '-';
+        return this.bolPaga ? 'glyphicon glyphicon-thumbs-up' : '';
     }
 
     public get valorStr(): string {

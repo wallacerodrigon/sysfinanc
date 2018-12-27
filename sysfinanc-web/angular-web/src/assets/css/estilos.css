@@ -29,6 +29,8 @@ label.obrigatorio:after {
 
 .borda-redonda {border-radius: 25px }
 
+.sombra {box-shadow: 1px 1px 5px #ccc; }
+
 .header { width: 96.6%; box-shadow: 1px 1px 5px #ccc; }    
 
 .nome-sistema {
