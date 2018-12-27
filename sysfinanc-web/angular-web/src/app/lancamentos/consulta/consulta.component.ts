@@ -19,6 +19,7 @@ import { CadastroComponent } from '../cadastro/cadastro.component';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs/Observable';
 import { ConfirmComponent } from '../../componentes/mensagens/confirm.component';
+import { removeDebugNodeFromIndex } from '@angular/core/src/debug/debug_node';
 
 @Component({
   selector: '..-consulta',
@@ -28,7 +29,7 @@ import { ConfirmComponent } from '../../componentes/mensagens/confirm.component'
 export class ConsultaComponent implements OnInit {
 
     //falta informar se é debito ou crédito
-  private colunas: string[] = ["id","Data Vencimento", "Descrição", "Crédito", "Débito", "Pago", "Num.Doc.", "Meio Pagto"];
+  private colunas: string[] = ["Data Vencimento", "Descrição", "Crédito", "Débito", "Pago", "Num.Doc.", "Meio Pagto"];
   private listagem: Array<LancamentoVO> = [];
   private listagemOriginal: Array<LancamentoVO> = [];
 
@@ -36,11 +37,11 @@ export class ConsultaComponent implements OnInit {
   private habilitaEdicao: boolean = false;
 
   private tamanhoListagem: number = 0;
-  private atributos: Array<string> = ["id","dataVencimentoStr", "descricao", "valorCreditoStr", "valorDebitoStr", "bolPagaIcone", "numDocumento", "descFormaPagamento"];
+  private atributos: Array<string> = ["dataVencimentoStr", "descricao", "valorCreditoStr", "valorDebitoStr", "bolPagaIcone", "numDocumento", "descFormaPagamento"];
   private totalizadores: Array<number> = [];
-
-    private valor: string = "0,00";
-    private mesFechado: boolean = false;
+  private numColunas = this.colunas.length + 2;
+  private valor: string = "0,00";
+  private mesFechado: boolean = false;
   private controleExibicao = [];
 
   protected listaAcoes: Array<AcoesRegistroTabela> = [
@@ -65,6 +66,8 @@ export class ConsultaComponent implements OnInit {
 
   private mes: number;
   private ano: number;
+  public paginaAtual: number = 1;
+  public itensPorPagina: number = 6;
 
   @ViewChild("crudComponente") crudComponente: CrudComponente;
 
@@ -191,6 +194,7 @@ export class ConsultaComponent implements OnInit {
   }
 
   public filtrar(event: Event = null) {
+    this.removeFilhasTrsUtilizacao(document.getElementById('tbody'));      
     this.blockUI.start('Filtrando Lançamentos. Aguarde!');
     let dto: FiltraParcelasDto = new FiltraParcelasDto(this.mes, this.ano);
     this.servico.filtrar(dto)
@@ -333,65 +337,81 @@ export class ConsultaComponent implements OnInit {
 
     public exibeLancamentos(item: LancamentoVO) {
         this.controleExibicao[item.id] = !this.controleExibicao[item.id];
-        this.exibeMostraTabela(item);
+        this.exibeMostraTabela(item, this.controleExibicao[item.id]);
     }
 
-    exibeMostraTabela(lancamento: LancamentoVO){
-        
-        let idElemento = lancamento.id.toString();
-        let tbody = document.getElementById('tbody');
-        let trs = tbody.getElementsByTagName('tr');
-        let idTagToAdd = -1;
-        //criar método para tratar o id
+    private adicionaChild(tbody, lancamento){
+        let trs: HTMLCollection = tbody.getElementsByTagName('tr');
+        let bolEncontrou = false;
+        let indiceEncontrado = -1;
         for(let i = 0; i < trs.length; i++){
-            if (trs[i].id == idElemento){
-                idTagToAdd = i;
+            if (trs[i].id == lancamento.id.toString()){
+                bolEncontrou = true;
+                indiceEncontrado = i;
+            } else if (bolEncontrou && i < trs.length -1){
+                this.criarLinhas(tbody, lancamento, trs[i]);
                 break;
             }
-        }
-        let idElementoBefore = null;
-        if (idTagToAdd > trs.length - 1){
-            idElementoBefore = 'last';
-        } else {
-            idElementoBefore = trs[idTagToAdd+1].id;
-        }
+        };
 
-        //criar método para excluir um elemento
-        let linha = document.getElementById(idElementoBefore);
-        let newId = 'divChildOf'+idElemento;
-        if (document.getElementById(newId)){
-            tbody.removeChild(document.getElementById(newId));
-            return;		
+        if (bolEncontrou && indiceEncontrado == trs.length-1 ){
+            this.criarLinhas(tbody, lancamento, null);
         }
+    }
 
-        let divTabelaUsos = document.createElement('tr');
-        divTabelaUsos.setAttribute('id', newId);
-
+    private criarLinhas(tbody, lancamento: LancamentoVO, trParaInsercao) {
+        let totalCred: number = 0.00;
+        let totalDeb : number = 0.00;
+        
         lancamento.lancamentosUtilizados.forEach(vo => {
-            //criar método para montar a tabela
-            let trFilha = document.createElement('tr');
-            trFilha.setAttribute('colspan', "9");
+            let tr = document.createElement('tr');
+            tr.setAttribute('class', 'tr_child');
+            tr.setAttribute('_ngcontent-c2', '');
+            tr.innerHTML = "<td>&nbsp;</td>";
+            this.atributos.forEach(atributo => {
+                tr.innerHTML += "<td class='fonte-destacada'>" + vo[atributo] + "</td>"
+            });
+            totalCred += vo.creditoDebito == 'C' ? vo.valor : 0;
+            totalDeb  += vo.creditoDebito == 'D' ? vo.valor : 0;
 
-            let tdFilha = document.createElement("td");
-            tdFilha.innerHTML = "7732";
-            trFilha.appendChild(tdFilha);
-
-            let tdFilha2 = document.createElement("td");
-            tdFilha2.innerHTML = "teste";
-            trFilha.appendChild(tdFilha2);
-        
-
-            // this.atributos.forEach(atributo => {
-            //     let tdFilha = document.createElement("td");
-            //     tdFilha.innerHTML = vo[atributo];
-            //     trFilha.appendChild(tdFilha);
-            // })
-            divTabelaUsos.appendChild(trFilha);
-        
+            if (trParaInsercao != null){
+                tbody.insertBefore(tr, trParaInsercao);
+            } else {
+                tbody.append(tr);
+            }
         })
-        idElementoBefore == 'last' ? 
-            tbody.appendChild(divTabelaUsos):
-            tbody.insertBefore(divTabelaUsos, linha);
+
+        let tr = document.createElement('tr');
+        tr.setAttribute('class', 'tr_child');
+        tr.setAttribute('_ngcontent-c2', '');
+        tr.innerHTML = "<td colspan='3'>TOTALIZADOR DE USOS:</td>";
+        tr.innerHTML +=`<td>${totalCred}</td>`;
+        tr.innerHTML +=`<td>${totalDeb}</td>`;        
+        tr.innerHTML +=`<td colspan='4'></td>`;
+        if (trParaInsercao != null){
+            tbody.insertBefore(tr, trParaInsercao);
+        } else {
+            tbody.append(tr);
+        }
+
+    }
+
+    exibeMostraTabela(lancamento: LancamentoVO, exibe: boolean){
+        let tbody = document.getElementById('tbody');
+
+        if (exibe){
+            this.adicionaChild(tbody, lancamento);
+        } else {
+           this.removeFilhasTrsUtilizacao(tbody);
+        }
+
     }    
+
+    removeFilhasTrsUtilizacao(tbody){
+        let trFilhas = document.getElementsByClassName('tr_child');
+           while(trFilhas.length > 0){
+               tbody.removeChild(trFilhas[0]);
+           }        
+    }
  
 }

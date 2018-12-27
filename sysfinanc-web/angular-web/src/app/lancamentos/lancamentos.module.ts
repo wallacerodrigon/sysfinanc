@@ -18,7 +18,7 @@ import { VisaoUsosComponent } from './visao-usos/visao-usos.component';
 import { UtilizacaoLancamentoVO } from '../dominio/vo/utilizacao-lancamento-vo';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { RubricasModule } from '../rubricas/rubricas.module';
-
+import {NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUIModule } from 'ng-block-ui';
 import { MapaLancamentosComponent } from './mapa-lancamentos/mapa-lancamentos.component';
  
@@ -38,8 +38,7 @@ const rotas: Routes = [
     CommonModule,  HomeModule,ComponentesModule,
     FormsModule, RubricasModule,BlockUIModule,
     RouterModule.forChild(rotas), ReactiveFormsModule,
-    ChartsModule
-  ],
+    ChartsModule, NgbModule  ],
   declarations: [ConsultaComponent, GeracaoComponent, EdicaoComponent, LancamentoOuterLink, 
     UtilizacaoComponent, VisaoUsosComponent, CadastroComponent, MapaLancamentosComponent],
   providers: [LancamentoService],

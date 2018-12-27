@@ -79,3 +79,10 @@ label.obrigatorio:after {
     }    
 }
 
+.subtabela {
+    background-color: #fff;
+}
+
+.fonte-destacada {
+    background-color: #ddd
+}
