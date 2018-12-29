@@ -4,11 +4,11 @@
   <artifactId>sysfinanc-api</artifactId>
   <packaging>war</packaging>
   <name>sysfinanc-api</name>
-  
+	  
   <parent>
 	  <groupId>br.net.walltec</groupId>
 	  <artifactId>sysfinanc-parent</artifactId>
-	  <version>${sistema.version}</version>
+	  <version>1.21.0</version>
 	  <relativePath>../pom.xml</relativePath>
   
   </parent>
