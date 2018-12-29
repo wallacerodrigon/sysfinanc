@@ -22,8 +22,8 @@ public class CorsResponseFilter implements ContainerResponseFilter {
 		
 		responseContext.getHeaders().putSingle("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, X-Codingpedia,Authorization,X-CSRF");
 		responseContext.getHeaders().putSingle("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-		responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", "http://www.walltec.net.br");
-		responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", "http://localhost:4200");
+		//responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", "http://www.walltec.net.br");
+		responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", "*");
 		responseContext.getHeaders().putSingle("Content-Security-Policy","script-src 'self';img-src 'self';style-src 'self';base-uri 'self'");
 	}
 

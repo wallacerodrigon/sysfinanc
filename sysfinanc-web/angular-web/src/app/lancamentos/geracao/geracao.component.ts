@@ -36,7 +36,7 @@ export class GeracaoComponent implements OnInit {
 
   private tamanhoListagem: number = 0;
   private atributos: Array<string> = ["descricao", "dataVencimentoStr", "valorCreditoStr", "valorDebitoStr", "descFormaPagamento"];
-  private totalizadores: Array<string> = ["Total:", "-", "0,00", "0,00"];
+  private totalizadores: Array<string> = ["Total:", "-", "0,00", "0,00", ""];
   private frmGeracao: FormGroup;
 
   private mudaParaParcial: boolean = false;
@@ -93,10 +93,13 @@ export class GeracaoComponent implements OnInit {
       dto.quantidade = this.frmGeracao.value['quantidade'];
       dto.valorVencimento = Formatadores.formataNumero(this.valor.nativeElement.value);
       dto.idFormaPagamento = this.frmGeracao.value['formaPagamento'];
-
+      this.totalizadores = [];
       this.lancamentoService.gerarLancamentosComDto(dto)
           .subscribe(retorno => {
               this.listagem = retorno;
+
+              console.log(this.listagem);
+
               this.tamanhoListagem = this.listagem.length;
 
               if (rubrica.despesa){
@@ -104,11 +107,12 @@ export class GeracaoComponent implements OnInit {
               } else {
                 this.totalizadores[2]= ""+dto.calcularTotal();
               }
-              this.blockUI.stop();
-              new AlertaComponent(this.dialogService).exibirMensagem('Lançamentos gerados com sucesso! Visualize-os na tabela!');
+              this.totalizadores[4]= "";
               this.mudaParaParcial = true;
+              this.blockUI.stop();
               if (!dto.parcial){
-                  this.inicializarControles();             
+                this.inicializarControles();             
+                new AlertaComponent(this.dialogService).exibirMensagem('Lançamentos gerados com sucesso!');
               }
 
             },
@@ -138,11 +142,13 @@ export class GeracaoComponent implements OnInit {
 
   }
 
-  private iniciarNovaGeracao(){
+  public iniciarNovaGeracao(){
      this.mudaParaParcial = false;
-     this.inicializarControles();
+     //no caso de geração dos lançamentos, zera os controles
+     if (this.frmGeracao.value['modoGeracao'] === "N"){
+       this.inicializarControles();
+     }
   } 
-
 
 
 }

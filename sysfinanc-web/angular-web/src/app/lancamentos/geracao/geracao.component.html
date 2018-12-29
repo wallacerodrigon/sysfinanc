@@ -1,6 +1,6 @@
 <div class="container-fluid">
         <div class="panel panel-default">
-            <div class="panel-heading">Geração de Lançamentos</div>
+            <div class="panel-heading breadcrumb">Geração de Lançamentos</div>
             <div class="panel-body">
                 <ul class="nav nav-tabs" role="tablist" >
                     <li role="presentation" [class]="!mudaParaParcial? 'active': ''"><a aria-controls="dados" role="tab" data-toggle="tab" [class]="mudaParaParcial? 'hidden': 'show'">Dados básicos</a></li>
@@ -95,7 +95,7 @@
                     <div role="tabpanel"  [class]="mudaParaParcial? 'tab-pane fade in active':'tab-pane'" id="parcial">
                         <div class="panel panel-default" >
                             <div class="table-responsive">
-                                <app-crud-componente #crudComponente [nomesColunas]="colunas" 
+                                <app-crud-componente #crudComponente [nomesColunas]="colunas"  
                                             [listaDados]="listagem" 
                                             [tamanhoListagem]="tamanhoListagem"
                                             [atributosColunas]="atributos"
@@ -103,7 +103,8 @@
                                             [totalizadores]="totalizadores">
                                 </app-crud-componente>
                             </div>
-                            <button class="btn btn-default center-block" (click)="iniciarNovaGeracao()" [disabled]="!this.mudaParaParcial">Gerar novos</button>
+                            <button class="btn btn-default center-block" (click)="iniciarNovaGeracao()" [disabled]="!this.mudaParaParcial">Ir para Dados Básicos</button>
+                            
                         </div>
                     </div>
                       

@@ -16,8 +16,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import br.net.walltec.api.entidades.comum.EntidadeBasica;
+import br.net.walltec.api.enums.EnumClassificacaoConta;
+import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 
 @Entity
@@ -71,6 +74,8 @@ public class Lancamento extends EntidadeBasica<Lancamento> {
 	
 	private String numDocumento;
 
+	@Transient
+	private String descStatus;
 
 	public Integer getId() {
 		return id;
@@ -230,6 +235,21 @@ public class Lancamento extends EntidadeBasica<Lancamento> {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getDescStatus() {
+		return descStatus;
+	}
+
+	public void setDescStatus(String descStatus) {
+		this.descStatus = descStatus;
+	}
+	
+	public void addStatus(EnumClassificacaoConta enumClassificacao) {
+		if (this.getDescStatus() == null) {
+			this.setDescStatus("");
+		}
+		this.setDescStatus(this.getDescStatus() + Constantes.SEPARADOR_STATUS + enumClassificacao.getTipo());
 	}
 }
  

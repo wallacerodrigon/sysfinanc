@@ -1,8 +1,8 @@
 <div class="page-content-wrapper">
     <block-ui>
         <ol class="breadcrumb">
-            <li><a href="#">Lançamentos</a></li>
-            <li class="active">Consulta</li>
+            <li>Lançamentos</li>
+            <li>Consulta</li>
         </ol>    
         <div class="col col-md-3">
                 <div class="panel panel-default">
@@ -67,29 +67,30 @@
                             </thead>
              
                             <tbody id="tbody">
-                                <tr *ngFor="let item of listagem; let indice=index" id="{{item.id}}">
+                                <tr *ngFor="let item of listagem; let indice=index" id="{{item.id}}" [ngClass]="{'classPago': item.bolPaga && item.despesa, 'classRecebido': !item.despesa && item.bolPaga  }">
                                     <td>
                                         <a class="glyphicon glyphicon-plus-sign" *ngIf="item.lancamentosUtilizados && !controleExibicao[item.id]" (click)="exibeLancamentos(item)" ></a>
                                         <a class="glyphicon glyphicon-minus-sign" *ngIf="item.lancamentosUtilizados && controleExibicao[item.id]" (click)="exibeLancamentos(item)" ></a>
                                     </td>
-                                    
-                                    <td>{{item.dataVencimentoStr}} </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" *ngIf="!mesFechado && !item.bolPaga" [checked]="item.selecionado" class="chkbox" 
+                                            (click)="selectItem(item, indice)"
+                                            >
+                                        {{item.dataVencimentoStr}} </td>
                                     <td>{{item.descricao}}</td> 
                                     <td>{{item.valorCreditoStr}}</td> 
                                     <td>{{item.valorDebitoStr}}</td> 
-                                    <td><i class="glyphicon glyphicon-thumbs-up" *ngIf="item.bolPaga"></i></td> 
                                     <td>{{item.numDocumento}}</td> 
                                     <td>{{item.descFormaPagamento}}</td>
                                     <td *ngIf="!mesFechado">
-                                        <i class="glyphicon glyphicon-edit ponteiro-maozinha"  (click)="editar(item, indice)"></i>
-                                        <i class="glyphicon glyphicon-trash ponteiro-maozinha" (click)="excluirLancamento(item, indice)"></i>
-                                        <i class="glyphicon glyphicon-scissors ponteiro-maozinha" (click)="abrirUtilizacaoLancamento(item)"></i>
+                                        <i class="glyphicon glyphicon-edit ponteiro-maozinha"  (click)="editar(item, indice)"  *ngIf="!item.bolConciliado" ></i>
+                                        <i class="glyphicon glyphicon-trash ponteiro-maozinha" (click)="excluirLancamento(item, indice)" *ngIf="!item.bolConciliado" ></i>
+                                        <i class="glyphicon glyphicon-scissors ponteiro-maozinha" (click)="abrirUtilizacaoLancamento(item)"  *ngIf="!item.bolPaga"></i>
                                     </td>
     
                                 </tr>
                                 
                             </tbody>
-            
                         </table>
                     </div>
                 </div>    

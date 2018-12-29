@@ -20,7 +20,8 @@ export class LancamentoVO  {
         public  dataFimStr: string = null,
         public idFormaPagamento?: number,
         public descFormaPagamento?: string,
-        public lancamentosUtilizados: Array<LancamentoVO> = []
+        public lancamentosUtilizados: Array<LancamentoVO> = [],
+        public descStatus: string = ""
     ){
       //  super();
     }

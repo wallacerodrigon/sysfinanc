@@ -16,6 +16,8 @@ public class ConsultaLancamentosDTO extends DtoPadrao {
 	private boolean mesFechado;
 	
 	private List<LancamentoVO> lancamentos;
+	
+	private ResumoDetalhadoMesAnoDTO resumo;
 
 	/**
 	 * @return the mesFechado
@@ -43,6 +45,14 @@ public class ConsultaLancamentosDTO extends DtoPadrao {
 	 */
 	public void setLancamentos(List<LancamentoVO> lancamentos) {
 		this.lancamentos = lancamentos;
+	}
+
+	public ResumoDetalhadoMesAnoDTO getResumo() {
+		return resumo;
+	}
+
+	public void setResumo(ResumoDetalhadoMesAnoDTO resumo) {
+		this.resumo = resumo;
 	}
 	
 	

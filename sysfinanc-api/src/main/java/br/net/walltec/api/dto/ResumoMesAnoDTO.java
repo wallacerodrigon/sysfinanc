@@ -23,7 +23,7 @@ public class ResumoMesAnoDTO {
 	
 	private BigDecimal valorConciliado;
 	
-	
+	private BigDecimal valorNaoConciliado = BigDecimal.ZERO;
 
 	/**
 	 * @param ano
@@ -170,6 +170,14 @@ public class ResumoMesAnoDTO {
 	 */
 	public void setValorConciliado(BigDecimal valorConciliado) {
 		this.valorConciliado = valorConciliado;
+	}
+
+	public BigDecimal getValorNaoConciliado() {
+		return valorNaoConciliado;
+	}
+
+	public void setValorNaoConciliado(BigDecimal valorNaoConciliado) {
+		this.valorNaoConciliado = valorNaoConciliado;
 	}
 	
 	

@@ -23,11 +23,13 @@ import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
+import br.net.walltec.api.dto.ConsultaLancamentosDTO;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.LancamentosPorRubricaDTO;
 import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.RegistroExtratoDto;
+import br.net.walltec.api.dto.ResumoDetalhadoMesAnoDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.TipoContaNoMesDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
@@ -35,6 +37,7 @@ import br.net.walltec.api.entidades.Conta;
 import br.net.walltec.api.entidades.FechamentoContabil;
 import br.net.walltec.api.entidades.FormaPagamento;
 import br.net.walltec.api.entidades.Lancamento;
+import br.net.walltec.api.enums.EnumClassificacaoConta;
 import br.net.walltec.api.excecoes.CampoObrigatorioException;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.PersistenciaException;
@@ -52,6 +55,7 @@ import br.net.walltec.api.persistencia.dao.impl.FechamentoContabilDaoImpl;
 import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
 import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
 import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
+import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
@@ -110,7 +114,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     }
 
     @Override
-    public List<LancamentoVO> listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException {
+    public ConsultaLancamentosDTO listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException {
         if (dtoFiltro == null) {
             throw new CampoObrigatorioException("Filtro não informado");
         }
@@ -120,6 +124,11 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
         
         try {
         	List<Lancamento> listaParcelas = filtrarParcelas(dtoFiltro);
+        	ConsultaLancamentosDTO consulta = new ConsultaLancamentosDTO();
+        	consulta.setResumo(montarResumo(listaParcelas));
+        	consulta.getResumo().setAno(dtoFiltro.getAno());
+        	consulta.getResumo().setMes(dtoFiltro.getMes());
+        	
         	Map<Integer, List<Lancamento>> mapLancamentosPorOrigem = mapearLancamentosFilhos(listaParcelas);
 			List<LancamentoVO> lancamentosPais = converterLancamentosPais(listaParcelas);
 			lancamentosPais.stream()
@@ -131,11 +140,38 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 						  }
 					   });
 					   
-			return lancamentosPais;
+			consulta.setLancamentos(lancamentosPais);
+			return consulta;
         } catch (PersistenciaException e) {
             throw new NegocioException(e);
         }
     }
+
+	/**
+	 * @param listaParcelas
+	 * @return
+	 */
+	private ResumoDetalhadoMesAnoDTO montarResumo(List<Lancamento> listaParcelas) {
+		ResumoDetalhadoMesAnoDTO resumo = new ResumoDetalhadoMesAnoDTO();
+		listaParcelas
+			.stream()
+			.forEach(lancamento -> {
+				resumo.addTotalDespesas( lancamento );
+				resumo.addTotalReceitas(lancamento);
+				
+				resumo.addTotalPagar(lancamento);
+				resumo.addTotalReceber(lancamento);
+				
+				resumo.addTotalPago(lancamento);
+				resumo.addTotalRecebido(lancamento);
+				
+				resumo.addTotalConciliado(lancamento);
+				resumo.addTotalNaoConciliado(lancamento);
+			});
+		
+		resumo.setSaldoFinal( resumo.getTotalReceitas().subtract(resumo.getTotalDespesas()) );
+		return resumo;
+	}
 
 	/**
 	 * @param listaParcelas
@@ -301,11 +337,17 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 		List<Lancamento> lancamentos = new ArrayList<>();
 		FormaPagamento fp = getFormaPagamento(dto);
 		
+		Conta conta = null;
+		try {
+			conta = contaDao.find(dto.getIdConta());
+		} catch (PersistenciaException e) {
+			e.printStackTrace();
+			throw new NegocioException(e);
+		}
+		
 		for(int i = 0; i < dto.getQuantidade(); i++) {
 			Lancamento lancamento = new Lancamento();
-			lancamento.setConta(new Conta());
-			lancamento.getConta().setId(dto.getIdConta());
-			lancamento.getConta().setDespesa(dto.isDespesa());
+			lancamento.setConta(conta);
 			
 			lancamento.setNumero(Integer.valueOf( ++numParcela).shortValue() );
 			lancamento.setDataVencimento(dataInicialAux);
@@ -676,13 +718,5 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 		}
 	}
 	
-	//usar como modelo
-//	private List<PaisDTO> convertToDto(List<Pais> paises) {
-//		return paises
-//				.stream()
-//				.map(pais -> FabricaDTO.getInstance().criarPaisDTO(pais))
-//				.collect(Collectors.toList());
-//				
-//	}	
 	
 }

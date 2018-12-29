@@ -7,6 +7,7 @@ package br.net.walltec.api.negocio.servicos;
 import java.util.List;
 import java.util.Set;
 
+import br.net.walltec.api.dto.ConsultaLancamentosDTO;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.LancamentosPorRubricaDTO;
@@ -29,7 +30,7 @@ import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
  */
 public interface LancamentoServico extends CrudPadraoServico<Lancamento, LancamentoVO> {
 	
-	List<LancamentoVO> listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException;
+	ConsultaLancamentosDTO listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException;
 	
 	boolean baixarParcelas(List<Integer> idsLancamentos) throws NegocioException;
 

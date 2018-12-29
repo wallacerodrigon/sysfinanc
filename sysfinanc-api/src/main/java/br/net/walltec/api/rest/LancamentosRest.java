@@ -82,10 +82,8 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
     @Path(value="/buscarLancamentos/{mes}/{ano}")
 	public Response buscarLancamentos(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano){
         try {
-        	ConsultaLancamentosDTO dtoRetorno = new ConsultaLancamentosDTO();
         	FiltraParcelasDto dto = new FiltraParcelasDto(mes, ano);
-        	
-			dtoRetorno.setLancamentos(servico.listarParcelas(dto));
+        	ConsultaLancamentosDTO dtoRetorno = servico.listarParcelas(dto);
         	dtoRetorno.setMesFechado(servico.isMesFechado(mes, ano));
             return Response.ok(dtoRetorno).build();
         } catch (NegocioException e) {
@@ -187,7 +185,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			Integer ano = Integer.valueOf(dadosData[2]);
 			dadosArquivo = importarArquivo(
 					conteudoArquivoDesformatado, 
-					servico.listarParcelas(new FiltraParcelasDto(mes, ano)));
+					servico.listarParcelas(new FiltraParcelasDto(mes, ano)).getLancamentos());
 			
 			RetornoArquivoDTO retorno = montarRetornoArquivoDTO(dadosArquivo, mes, ano);
 			

@@ -34,6 +34,8 @@ public class ConversorLancamento extends AbstractConverter<Lancamento, Lancament
         lancamentoVO.setNumero(entidade.getNumero());
         lancamentoVO.setIdFormaPagamento(entidade.getFormaPagamento().getId());
         lancamentoVO.setDescFormaPagamento(entidade.getFormaPagamento().getDescricao());
+        lancamentoVO.setValor(entidade.getValorEmDouble());
+        lancamentoVO.setDescStatus(entidade.getDescStatus());
         return lancamentoVO;
     }
 

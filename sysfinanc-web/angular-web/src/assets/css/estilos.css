@@ -88,3 +88,11 @@ label.obrigatorio:after {
 .fonte-destacada {
     background-color: #ddd
 }
+
+.classPago {
+    background-color: lightsalmon !important
+}
+
+.classRecebido {
+    background-color: lightblue !important
+}

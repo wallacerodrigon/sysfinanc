@@ -25,6 +25,7 @@ public class Constantes {
 
 	public static final String X_CSRF = "X-CSRF";
 
+	public static final String SEPARADOR_STATUS = ";";
 
 
 }

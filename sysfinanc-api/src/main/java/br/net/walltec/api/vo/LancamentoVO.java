@@ -44,7 +44,8 @@ public class LancamentoVO extends GerenciadorPadraoVO {
 	
 	private List<LancamentoVO> lancamentosUtilizados;
 
-
+	private String descStatus;
+	
     public Integer getId() {
         return id;
     }
@@ -244,5 +245,13 @@ public class LancamentoVO extends GerenciadorPadraoVO {
 
 	public void setLancamentosUtilizados(List<LancamentoVO> lancamentosUtilizados) {
 		this.lancamentosUtilizados = lancamentosUtilizados;
+	}
+
+	public String getDescStatus() {
+		return descStatus;
+	}
+
+	public void setDescStatus(String descStatus) {
+		this.descStatus = descStatus;
 	}
 }
