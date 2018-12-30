@@ -18,6 +18,7 @@ import br.net.walltec.api.dto.TipoContaNoMesDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
 import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.NegocioException;
+import br.net.walltec.api.excecoes.PersistenciaException;
 import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
 import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
@@ -30,7 +31,9 @@ import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
  */
 public interface LancamentoServico extends CrudPadraoServico<Lancamento, LancamentoVO> {
 	
-	ConsultaLancamentosDTO listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException;
+	ConsultaLancamentosDTO consultaParcelasEmArvore(FiltraParcelasDto dtoFiltro) throws NegocioException;
+	
+	List<Lancamento> listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException;
 	
 	boolean baixarParcelas(List<Integer> idsLancamentos) throws NegocioException;
 

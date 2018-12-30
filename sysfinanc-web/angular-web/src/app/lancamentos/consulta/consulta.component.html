@@ -19,11 +19,11 @@
                     <div class="panel-body">
                         <table class="table table-striped table-hover table-bordered">
                             <tbody>
-                                <tr *ngFor="let resumo of resumos" (click)="filtrarLancamentos(resumo.filtro)">
+                                <tr *ngFor="let resumo of resumos" class="ponteiro-maozinha" (click)="filtrarLancamentosPeloResumo(resumo.filtro)">
                                     <td>{{resumo.nome}}</td>
                                     <td>
                                         <a href="javascript:void(0)"
-                                          (click)="filtrarLancamentos(resumo.filtro)">{{resumo.valor|moeda}}</a>
+                                          (click)="filtrarLancamentosPeloResumo(resumo.filtro)">{{resumo.valor|moeda}}</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -36,18 +36,30 @@
         <div class="col col-md-9 col-lg-9 col-xs-12">
            <div class="panel panel-default">
                 <div class="panel-heading">
-                    <button type="button" class="btn btn-default" (click)="filtrar()">
-                        <i class="glyphicon glyphicon-filter"></i> Listar Tudo</button> 
-
-                    <button type="button" id='btnBaixa' class="btn btn-default" (click)="baixarLista()"  [disabled]="mesFechado" data-loading-text="Baixando Lançamento..." autocomplete="off">
-                            <i class="glyphicon glyphicon-ok"></i> Baixar Marcados</button>
-                    
-                    <button type="button" class="btn btn-default" (click)="novoCadastro()"  [disabled]="mesFechado">
-                                    <i class="glyphicon glyphicon-plus"></i> Novo Lançamento</button>
-
-                    <button type="button" class="btn btn-default" (click)="fecharMes()" [disabled]="mesFechado">
-                        <i class="glyphicon glyphicon-close"></i> Fechar Mês</button>
-
+                    <nav class="navbar navbar-default">
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                <ul class="nav navbar-nav">
+                                    <button type="button" class="btn btn-default navbar-btn" (click)="filtrar()">
+                                        <i class="glyphicon glyphicon-filter"></i> Listar</button> 
+                
+                                    <button type="button" id='btnBaixa' class="btn btn-default  navbar-btn" (click)="baixarLista()"  
+                                        [disabled]="mesFechado" data-loading-text="Baixando Lançamento..." autocomplete="off">
+                                            <i class="glyphicon glyphicon-ok"></i> Baixar Lançamentos </button>
+                                    
+                                    <button type="button" class="btn btn-default  navbar-btn" (click)="novoCadastro()"  [disabled]="mesFechado">
+                                                    <i class="glyphicon glyphicon-plus"></i> Incluir Lançamento</button>
+                
+                                    <button type="button" class="btn btn-default  navbar-btn" (click)="fecharMes()" [disabled]="mesFechado">
+                                        <i class="glyphicon glyphicon-close"></i> Fechar Mês</button>
+                                </ul>
+                                <form class="navbar-form navbar-right" *ngIf="false">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="expressaoBusca" [(ngModel)]="expressaoBusca" placeholder="Expressão de Busca">
+                                    </div>
+                                    <button class="btn btn-default" type="button" (click)="filtrarLancamentosPelaBusca()"><i class="glyphicon glyphicon-search"></i></button>
+                                </form>
+                                </div><!-- /.navbar-collapse -->                            
+                    </nav>
                 </div>
                 
                 <div class="panel-body">

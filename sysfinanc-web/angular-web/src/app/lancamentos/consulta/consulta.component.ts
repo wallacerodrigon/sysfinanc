@@ -5,20 +5,15 @@ import { Formatadores } from '../../utilitarios/formatadores';
 import { FiltraParcelasDto } from '../../dominio/dto/filtra-parcelas-dto';
 import { DialogService } from 'ng2-bootstrap-modal/dist/dialog.service';
 import { AlertaComponent } from '../../componentes/mensagens/alert.component';
-import { AcoesRegistroTabela } from '../../componentes/crud-componente/acoes-registro-tabela';
+import {FormBuilder} from '@angular/forms';
 
 //
 import {UtilizacaoComponent} from '../utilizacao/utilizacao.component';
-import {VisaoUsosComponent} from '../visao-usos/visao-usos.component';
-import { UtilizacaoLancamentoVO } from '../../dominio/vo/utilizacao-lancamento-vo';
 import { BaixaLancamentoDTO } from '../../dominio/dto/baixa-lancamento-dto';
-import { CrudComponente } from '../../componentes/crud-componente/crud-componente.component';
-import { UtilObjeto } from '../../utilitarios/util-objeto';
 import { EdicaoComponent } from '../edicao/edicao.component';
 import { CadastroComponent } from '../cadastro/cadastro.component';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ConfirmComponent } from '../../componentes/mensagens/confirm.component';
-import { Constantes } from '../../utilitarios/constantes';
 import { EnumClassificacao } from '../../utilitarios/EnumClassificacao';
 
 @Component({
@@ -54,6 +49,7 @@ export class ConsultaComponent implements OnInit {
 
   private mes: number;
   private ano: number;
+  private expressaoBusca: string;
 
   constructor(private servico: LancamentoService, public dialogService: DialogService) { }
 
@@ -112,11 +108,10 @@ export class ConsultaComponent implements OnInit {
       
   }
 
-  private filtrarLancamentos(tipoFiltro: string) {
+  private filtrarLancamentosPeloResumo(tipoFiltro: string) {
       if (tipoFiltro != EnumClassificacao.SALDO){
           this.listagem = this.listagemOriginal
                     .filter(lancamento => lancamento.descStatus.split(';').filter(status => status === tipoFiltro).length > 0);
-           console.log(this.listagem);
       }
   }
 
@@ -125,7 +120,9 @@ export class ConsultaComponent implements OnInit {
         title:'Exclusão', 
         message: 'Confirma a exclusão do registro?' })
         .subscribe(confirmado=> {
-            this.excluir(lancamento, indice);
+            if (confirmado){
+                this.excluir(lancamento, indice);
+            }
         });
     setTimeout(()=>{
         disposable.unsubscribe();
@@ -277,7 +274,7 @@ export class ConsultaComponent implements OnInit {
             this.criarLinhas(tbody, lancamento, null);
         }
     }
-
+ 
     private criarLinhas(tbody, lancamento: LancamentoVO, trParaInsercao) {
         let totalCred: number = 0.00;
         let totalDeb : number = 0.00;
@@ -291,7 +288,13 @@ export class ConsultaComponent implements OnInit {
             tr.innerHTML += "<td class='fonte-destacada'>" + vo.valorCreditoStr + "</td>"
             tr.innerHTML += "<td class='fonte-destacada'>" + vo.valorDebitoStr + "</td>"
             tr.innerHTML += "<td class='fonte-destacada'>" + (vo.numDocumento ? vo.numDocumento : "") + "</td>"
-            tr.innerHTML += "<td colspan='2' class='fonte-destacada'>" + vo.descFormaPagamento + "</td>"
+            tr.innerHTML += "<td class='fonte-destacada'>" + vo.descFormaPagamento + "</td>"
+            tr.innerHTML += "<td colspan='2' class='fonte-destacada'>&nbsp;</td>";
+
+            // if (vo.bolConciliado){
+            // }  else {
+            //     tr.innerHTML += "<td class='fonte-destacada'><i class=\"glyphicon glyphicon-edit ponteiro-maozinha\"  (click)=\"editar(vo, indice)\"></i>";
+            // }
 
             totalCred += vo.despesa ? 0 : vo.valor;
             totalDeb  += vo.despesa ? vo.valor : 0;
@@ -345,6 +348,26 @@ export class ConsultaComponent implements OnInit {
            while(trFilhas.length > 0){
                tbody.removeChild(trFilhas[0]);
            }        
+    }
+
+    filtrarLancamentosPelaBusca(){
+        if (this.expressaoBusca){
+            let campoPesquisa = null;
+            if (this.expressaoBusca.indexOf(':') > -1){
+                campoPesquisa = this.expressaoBusca.split(':')[0].trim();
+            }
+
+            this.listagem = this.listagemOriginal.filter(lancamento => {
+                if (campoPesquisa == null){
+                    return lancamento.descricao.toLowerCase().indexOf(this.expressaoBusca.toLowerCase()) > -1;
+                } else {
+                    return lancamento[campoPesquisa].indexOf(this.expressaoBusca) > -1;
+                }
+            });
+
+        } else {
+            this.listagem = this.listagemOriginal;
+        }
     }
  
 }

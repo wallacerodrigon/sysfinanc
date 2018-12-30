@@ -109,11 +109,12 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 	@Override
 	public boolean associarLancamentoComExtrato(Integer idLancamento, String numDocumento, Date dataVencimento) throws PersistenciaException {
 		String hql = 
-				  "update Lancamento set numDocumento = :numDocumento, bolPaga = true, bolConciliado = true "
+				  "update Lancamento set numDocumento = :numDocumento, bolPaga = true, bolConciliado = true, dataVencimento = :dataVencimento "
 				+ "where id = :idLancamento and bolConciliado = false";
 		Map<String, Object> mapParams = new HashMap<>();
 		mapParams.put("idLancamento", idLancamento);
 		mapParams.put("numDocumento", numDocumento);
+		mapParams.put("dataVencimento", dataVencimento);
 		
 		return this.executarUpdateHql(hql, mapParams);
 		

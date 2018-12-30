@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import br.net.walltec.api.conversores.FabricaConversores;
 import br.net.walltec.api.dto.ConsultaLancamentosDTO;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
@@ -31,6 +32,7 @@ import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.RetornoArquivoDTO;
 import br.net.walltec.api.dto.UtilizacaoParcelasDto;
+import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.TotalConciliadoInvalidoException;
 import br.net.walltec.api.excecoes.WalltecException;
@@ -83,7 +85,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	public Response buscarLancamentos(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano){
         try {
         	FiltraParcelasDto dto = new FiltraParcelasDto(mes, ano);
-        	ConsultaLancamentosDTO dtoRetorno = servico.listarParcelas(dto);
+        	ConsultaLancamentosDTO dtoRetorno = servico.consultaParcelasEmArvore(dto);
         	dtoRetorno.setMesFechado(servico.isMesFechado(mes, ano));
             return Response.ok(dtoRetorno).build();
         } catch (NegocioException e) {
@@ -183,9 +185,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			String dadosData[] = dto.getStrDataVencimento().split("/");
 			Integer mes = Integer.valueOf(dadosData[1]);
 			Integer ano = Integer.valueOf(dadosData[2]);
+			List<LancamentoVO> lancamentos = FabricaConversores.getInstance().criarConversor(Lancamento.class, LancamentoVO.class)
+					.converterEntidadeParaPojo(servico.listarParcelas(new FiltraParcelasDto(mes, ano)));
 			dadosArquivo = importarArquivo(
 					conteudoArquivoDesformatado, 
-					servico.listarParcelas(new FiltraParcelasDto(mes, ano)).getLancamentos());
+					lancamentos
+					);
 			
 			RetornoArquivoDTO retorno = montarRetornoArquivoDTO(dadosArquivo, mes, ano);
 			

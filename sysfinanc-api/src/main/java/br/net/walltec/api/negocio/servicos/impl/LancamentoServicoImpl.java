@@ -37,7 +37,6 @@ import br.net.walltec.api.entidades.Conta;
 import br.net.walltec.api.entidades.FechamentoContabil;
 import br.net.walltec.api.entidades.FormaPagamento;
 import br.net.walltec.api.entidades.Lancamento;
-import br.net.walltec.api.enums.EnumClassificacaoConta;
 import br.net.walltec.api.excecoes.CampoObrigatorioException;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.PersistenciaException;
@@ -55,7 +54,6 @@ import br.net.walltec.api.persistencia.dao.impl.FechamentoContabilDaoImpl;
 import br.net.walltec.api.persistencia.dao.impl.LancamentoDaoImpl;
 import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
 import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
-import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
@@ -114,7 +112,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     }
 
     @Override
-    public ConsultaLancamentosDTO listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException {
+    public ConsultaLancamentosDTO consultaParcelasEmArvore(FiltraParcelasDto dtoFiltro) throws NegocioException {
         if (dtoFiltro == null) {
             throw new CampoObrigatorioException("Filtro não informado");
         }
@@ -122,29 +120,25 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
         	throw new CampoObrigatorioException("Parâmetros dos filtros não foram informados");
         }
         
-        try {
-        	List<Lancamento> listaParcelas = filtrarParcelas(dtoFiltro);
-        	ConsultaLancamentosDTO consulta = new ConsultaLancamentosDTO();
-        	consulta.setResumo(montarResumo(listaParcelas));
-        	consulta.getResumo().setAno(dtoFiltro.getAno());
-        	consulta.getResumo().setMes(dtoFiltro.getMes());
-        	
-        	Map<Integer, List<Lancamento>> mapLancamentosPorOrigem = mapearLancamentosFilhos(listaParcelas);
-			List<LancamentoVO> lancamentosPais = converterLancamentosPais(listaParcelas);
-			lancamentosPais.stream()
-					   .forEach(vo -> {
-						  if (mapLancamentosPorOrigem.containsKey(vo.getId())) {
-							  vo.setLancamentosUtilizados(
-									  getConversor().converterEntidadeParaPojo(mapLancamentosPorOrigem.get(vo.getId())
-											  ));
-						  }
-					   });
-					   
-			consulta.setLancamentos(lancamentosPais);
-			return consulta;
-        } catch (PersistenciaException e) {
-            throw new NegocioException(e);
-        }
+    	List<Lancamento> listaParcelas = listarParcelas(dtoFiltro);
+    	ConsultaLancamentosDTO consulta = new ConsultaLancamentosDTO();
+    	consulta.setResumo(montarResumo(listaParcelas));
+    	consulta.getResumo().setAno(dtoFiltro.getAno());
+    	consulta.getResumo().setMes(dtoFiltro.getMes());
+    	
+    	Map<Integer, List<Lancamento>> mapLancamentosPorOrigem = mapearLancamentosFilhos(listaParcelas);
+		List<LancamentoVO> lancamentosPais = converterLancamentosPais(listaParcelas);
+		lancamentosPais.stream()
+				   .forEach(vo -> {
+					  if (mapLancamentosPorOrigem.containsKey(vo.getId())) {
+						  vo.setLancamentosUtilizados(
+								  getConversor().converterEntidadeParaPojo(mapLancamentosPorOrigem.get(vo.getId())
+										  ));
+					  }
+				   });
+				   
+		consulta.setLancamentos(lancamentosPais);
+		return consulta;
     }
 
 	/**
@@ -197,14 +191,20 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 		return mapLancamentosPorOrigem;
 	}
 
-	private List<Lancamento> filtrarParcelas(FiltraParcelasDto dtoFiltro) throws PersistenciaException {
+	public List<Lancamento> listarParcelas(FiltraParcelasDto dtoFiltro) throws NegocioException {
 		Date dataInicial = null;
 		Date dataFinal = null;
 		if (dtoFiltro.getMes() != null && dtoFiltro.getAno() != null) {
 			dataInicial = UtilData.createDataSemHoras(1, dtoFiltro.getMes(), dtoFiltro.getAno());
 			dataFinal   = UtilData.asDate(UtilData.getUltimaDataMes(dtoFiltro.getMes(), dtoFiltro.getAno()));
 		}
-		return lancamentoDao.listarParcelas(dataInicial, dataFinal, dtoFiltro.getIdConta(), dtoFiltro.getIdParcelaOrigem());
+		try {
+			return lancamentoDao.listarParcelas(dataInicial, dataFinal, dtoFiltro.getIdConta(), dtoFiltro.getIdParcelaOrigem());
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new NegocioException(e);
+		}
 	}
 
     @Override
@@ -392,16 +392,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	 */
 	@Override
 	public MapaDashboardDTO montarDashboards(Integer mes, Integer ano) throws NegocioException {
-		List<Lancamento> lancamentos = null;
-		try {
-			lancamentos = this.filtrarParcelas(new FiltraParcelasDto(mes, ano));
-			
-			//ResumoMesAnoDTO: retoranr um objeto com os valores de entradas e saídas nesse objeto
-		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		List<Lancamento> lancamentos = this.listarParcelas(new FiltraParcelasDto(mes, ano));
 		BigDecimal[] valoresEntradaSaida = getValoresEntradaSaida(lancamentos);
 		
 		//montar um builder com DSL
@@ -633,20 +624,15 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			throw new NegocioException("Não é possível desfazer as conciliações deste mês!");
 		}
 		
-		try {
-			List<Lancamento> lancamentos = this.filtrarParcelas(new FiltraParcelasDto(desfazimentoDTO.getMes(), desfazimentoDTO.getAno()));
-			
-			lancamentos
-				.stream()
-				.forEach(entidade -> {
-					entidade.setBolConciliado(false);
-					entidade.setNumDocumento(null);
-				});
-			this.alterar(lancamentos);
-		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		List<Lancamento> lancamentos = this.listarParcelas(new FiltraParcelasDto(desfazimentoDTO.getMes(), desfazimentoDTO.getAno()));
+		
+		lancamentos
+			.stream()
+			.forEach(entidade -> {
+				entidade.setBolConciliado(false);
+				entidade.setNumDocumento(null);
+			});
+		this.alterar(lancamentos);
 		
 	}
 
