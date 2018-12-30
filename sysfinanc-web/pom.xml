@@ -8,7 +8,7 @@
   <parent>
   	<groupId>br.net.walltec</groupId>
   	<artifactId>sysfinanc-parent</artifactId>
-  	<version>1.21.0</version>
+  	<version>1.21.2</version>
   	<relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -16,7 +16,7 @@
 		<buildNumber>${maven.buildNumber}</buildNumber>
 		<destino.dir>WebContent</destino.dir>
 		<dist.dir>angular-web/dist</dist.dir>
-		<gera.build>${project.basedir}\gera-build.bat</gera.build>
+		<gera.build>${project.basedir}\gera-build.sh</gera.build>
 		<app.component>angular-web/src/app/app.component.html</app.component>
 		<caminho.node>E:\\Desenvolvimento\\nodejs\\node.exe</caminho.node>
 		<caminho.npm>C:\\Users\\wallace\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js</caminho.npm>

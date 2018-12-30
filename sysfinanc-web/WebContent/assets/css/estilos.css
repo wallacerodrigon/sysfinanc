@@ -29,6 +29,8 @@ label.obrigatorio:after {
 
 .borda-redonda {border-radius: 25px }
 
+.sombra {box-shadow: 1px 1px 5px #ccc; }
+
 .header { width: 96.6%; box-shadow: 1px 1px 5px #ccc; }    
 
 .nome-sistema {
@@ -68,5 +70,29 @@ label.obrigatorio:after {
     .conteudo {
         width: 100%
     }
+
+    .sistema-mensagem {
+        color: #C0C0C0; 
+        font-style: oblique;
+        font-family:fantasy;
+        text-shadow: black 0.1em 0.1em 0.2em;
+        margin-top: 12.5%;
+        margin-bottom: 12.5%
+    }    
 }
 
+.subtabela {
+    background-color: #fff;
+}
+
+.fonte-destacada {
+    background-color: #ddd
+}
+
+.classPago {
+    background-color: lightsalmon !important
+}
+
+.classRecebido {
+    background-color: lightblue !important
+}
