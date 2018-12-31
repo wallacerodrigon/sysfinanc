@@ -155,6 +155,7 @@ export class ConsultaComponent implements OnInit {
   public filtrar(event: Event = null) {
     this.removeFilhasTrsUtilizacao(document.getElementById('tbody'));   
     this.controleExibicao = [];   
+    this.expressaoBusca = "";
     this.blockUI.start('Filtrando Lançamentos. Aguarde!');
     let dto: FiltraParcelasDto = new FiltraParcelasDto(this.mes, this.ano);
     this.servico.filtrar(dto)
@@ -352,17 +353,11 @@ export class ConsultaComponent implements OnInit {
 
     filtrarLancamentosPelaBusca(){
         if (this.expressaoBusca){
-            let campoPesquisa = null;
-            if (this.expressaoBusca.indexOf(':') > -1){
-                campoPesquisa = this.expressaoBusca.split(':')[0].trim();
-            }
-
             this.listagem = this.listagemOriginal.filter(lancamento => {
-                if (campoPesquisa == null){
-                    return lancamento.descricao.toLowerCase().indexOf(this.expressaoBusca.toLowerCase()) > -1;
-                } else {
-                    return lancamento[campoPesquisa].indexOf(this.expressaoBusca) > -1;
-                }
+                return lancamento.descricao.toLowerCase().indexOf(this.expressaoBusca.toLowerCase()) > -1 ||
+                       (lancamento.numDocumento ? lancamento.numDocumento.toLowerCase().indexOf(this.expressaoBusca.toLowerCase()) > -1: false) ||
+                       lancamento.valorCreditoStr.toLowerCase().indexOf(this.expressaoBusca.toLowerCase()) > -1 ||
+                       lancamento.valorDebitoStr.toLowerCase().indexOf(this.expressaoBusca.toLowerCase()) > -1;
             });
 
         } else {

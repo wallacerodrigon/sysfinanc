@@ -33,6 +33,7 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
 
   protected rubricaSelecionada: string;
   protected habilitaDataFim: boolean = false;
+  protected cadastroOriginadoConciliacao: boolean = false;
 
   constructor(protected dialogService: DialogService, 
               protected lancamentoService: LancamentoService,
@@ -46,7 +47,6 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
     this.dataVencimento.nativeElement.value = UtilData.converterToString(new Date());
     this.listaRubricas = this.rubricaService.getListaCache();
     this.lancamento.bolPaga = this.consideraPago;
-
   }
 
   private getRubrica(): RubricaVO {
@@ -117,6 +117,7 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
     this.lancamento.idConta = rubrica.id;
     this.lancamento.despesa = rubrica.despesa;
     this.lancamento.descricao = this.lancamento.descricao.toLocaleLowerCase();
+
 
     this.lancamentoService.incluir(this.lancamento)
         .then(lancamentoIncluido=> {

@@ -51,10 +51,13 @@
                 
                                     <button type="button" class="btn btn-default  navbar-btn" (click)="fecharMes()" [disabled]="mesFechado">
                                         <i class="glyphicon glyphicon-close"></i> Fechar Mês</button>
-                                </ul>
-                                <form class="navbar-form navbar-right" *ngIf="false">
+                                </ul> 
+                                <form class="navbar-form navbar-right">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="expressaoBusca" [(ngModel)]="expressaoBusca" placeholder="Expressão de Busca">
+                                        <input type="text" class="form-control" name="expressaoBusca" 
+                                        [(ngModel)]="expressaoBusca" placeholder="Expressão de Busca"
+                                        (keyup.enter)="filtrarLancamentosPelaBusca()"
+                                        >
                                     </div>
                                     <button class="btn btn-default" type="button" (click)="filtrarLancamentosPelaBusca()"><i class="glyphicon glyphicon-search"></i></button>
                                 </form>

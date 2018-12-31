@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -524,14 +525,54 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     		throw new WebServiceException("Data Fim não deve ser menor do que a data de Vencimento!");
     	}	
     	
+    	
         if (dataFim != null) {
         	this.gerarLancamentos(objeto, dataVencimento, dataFim);
         	return objeto;
         } else {		
-        	return super.incluirVO(objeto);
+        	return this.verificarUtilizacao(objeto, dataVencimento);
         }
 	}
 	
+
+	/**
+	 * Verifica se no mes de cadastro do lançamento, existe algum lançamento com a mesma rubrica
+	 * Se existir, o valor do cadastro é adicinado ao lançamento e depois será feita uma utilização do mesmo 
+	 * com os dados do lançamento informado
+	 * @param objeto
+	 * @return 
+	 * @throws NegocioException 
+	 */
+	private LancamentoVO verificarUtilizacao(LancamentoVO objeto, Date dataVencimento) throws NegocioException {
+		Optional<Lancamento> optLancamentos = this.listarParcelas(new FiltraParcelasDto(UtilData.getMes(dataVencimento), UtilData.getAno(dataVencimento)))
+													.stream()
+													.filter(lancamento -> lancamento.getConta().getId().equals(objeto.getIdConta()))
+													.findFirst();
+
+		if (optLancamentos.isPresent()) {
+			Lancamento lancamento = optLancamentos.get();
+	    	BigDecimal valor = objeto.isDespesa() 
+	    						? UtilFormatador.formatarStringComoValor(objeto.getValorDebitoStr()) :
+								  UtilFormatador.formatarStringComoValor(objeto.getValorCreditoStr());
+			
+			lancamento.setValor(valor.add(lancamento.getValor()));
+			this.alterar(lancamento);
+			
+			
+			UtilizacaoParcelasDto dto = new UtilizacaoParcelasDto();
+			dto.setDataUtilizacaoStr(objeto.getDataVencimentoStr());
+			dto.setDescricao(objeto.getDescricao());
+			dto.setIdFormaPagamento(objeto.getIdFormaPagamento());
+			dto.setIdLancamentoOrigem(lancamento.getId());
+			dto.setQtdRegistros(1);
+			dto.setValorUtilizado( valor );
+			
+			this.utilizarLancamento(dto);
+			
+			return objeto;
+		}
+    	return super.incluirVO(objeto);
+	}
 
 	/**
 	 * @param objeto
