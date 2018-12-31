@@ -12,22 +12,22 @@ export default class LoginComponent extends Component {
             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
                 <View style={estiloLogin.blocoLembrete}>
                     <Text>Header</Text>
-                    <Image source={imgLogo}/>
+                    {/* <Image source={imgLogo}/>
                     <Text style={estiloLogin.chamadaEntrada}>Para entrar,</Text>
-                    <Text style={estiloLogin.chamadaEntrada}>informe seu login e senha.</Text>
+                    <Text style={estiloLogin.chamadaEntrada}>informe seu login e senha.</Text> */}
                 </View>
 
                 <View style={estiloLogin.blocoCentral}>
                     <Text>Login</Text>
-                    <TextInput style={estiloLogin.inputText} placeholder="Login"></TextInput>
+                     {/* <TextInput style={estiloLogin.inputText} placeholder="Login"></TextInput>
                      <TextInput style={estiloLogin.inputText} placeholder="Senha"></TextInput>
-                     <Botao tituloBotao="Entrar" aoClicar={()=> null}/>
+                     <Botao tituloBotao="Entrar" aoClicar={()=> null}/> */}
                  </View>
 
                  <View style={estiloLogin.blocoRodape}>
                      <Text>Rodapé</Text>
-                     <Botao tituloBotao="Cadastrar-me" aoClicar={()=> alert('ok')}/>
-                     <Botao tituloBotao="Esqueci a senha" aoClicar={()=> null}/>
+                     {/* <Botao tituloBotao="Cadastrar-me" aoClicar={()=> alert('ok')}/>
+                     <Botao tituloBotao="Esqueci a senha" aoClicar={()=> null}/> */}
                  </View> 
             </View>
         )
@@ -47,23 +47,23 @@ const estiloLogin = StyleSheet.create({
     blocoLembrete: {
         flex: 3,
         color: '#666',
-        justifyContent:'center',
-        alignItems: 'center',
-        alignSelf: "stretch",
+        // justifyContent:'center',
+        // alignItems: 'center',
+        // alignSelf: "stretch",
         backgroundColor: '#666'
     },
     blocoCentral: {
         flex: 5,
-        width: 200,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
+        // width: 200,
+        // justifyContent: 'flex-start',
+        // alignItems: 'center',
         backgroundColor: '#00f'
     },
     blocoRodape: {
         flex: 1, 
-        alignSelf: 'stretch',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        // alignSelf: 'stretch',
+        // justifyContent: 'space-between',
+        // alignItems: 'center',
         backgroundColor: '#f00'
     },
 

@@ -1,0 +1,31 @@
+npm install --save react-navigation
+npm install --save axios
+npm install 
+
+
+erro de incompatibilidade com o erro:
+com.android.support:support-v4
+---------------------------------------------------------
+implementation (project(':react-native-camera')) {
+        exclude group: "com.android.support"
+    }
+implementation "com.android.support:exifinterface:+"
+  implementation "com.android.support:support-annotations:+"
+  implementation "com.android.support:support-v4:+"
+
+  video para o splash
+  https://www.youtube.com/watch?v=3Gf9yb53bJM
+  
+  https://medium.com/handlebar-labs/how-to-add-a-splash-screen-to-a-react-native-app-ios-and-android-30a3cec835ae
+
+Desenvolvedor de icones:
+https://apetools.webprofusion.com/app/#/tools/imagegorilla
+
+
+Dados do flexbox:
+
+justifyContent: disposi��o do conte�do frente ao conteiner
+flexDirection: row ou column
+flex: qtd de ocupa��o
+alignItems: alinhamento dos itens frente ao conte�do (mesmos valores).
+
