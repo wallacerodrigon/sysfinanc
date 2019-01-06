@@ -1,7 +1,8 @@
 import React from 'react';
-import {Button, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {TouchableOpacity, Text} from 'react-native';
+import EstilosComuns from '../../assets/estilos/estilos';
 
-export class Botao extends React.Component {
+export default class Botao extends React.Component {
 
     constructor(props){
         super(props); 
@@ -9,27 +10,9 @@ export class Botao extends React.Component {
 
     render() {
         return (
-          <TouchableOpacity onPress={()=> this.props.aoClicar()} style={[styles.botaoDefault, styles.sombra]} >
-            <Text>{this.props.tituloBotao}</Text>
-         </TouchableOpacity>
+          <TouchableOpacity onPress={()=> this.props.onClick()}  style={[EstilosComuns.botao, this.props.styles]}>
+            <Text style={EstilosComuns.fontePadrao}>{this.props.loading ? '↻' : this.props.tituloBotao}</Text>
+          </TouchableOpacity>            
         )
     };
 }
-
-const styles = StyleSheet.create({
-    botaoDefault: {
-        //backgroundColor: '#fff'
-    },
-    sombra: {
-        shadowColor: '#666',
-        shadowOpacity: 0.3,
-        shadowRadius:30
-    },    
-})
-
-/**
- *   <TouchableOpacity onPress={props.onPress} style={styles.touchable} disabled={props.loading}>
-      <Text>{props.loading ? '↻' : props.content}</Text>
-    </TouchableOpacity>
- * 
- */

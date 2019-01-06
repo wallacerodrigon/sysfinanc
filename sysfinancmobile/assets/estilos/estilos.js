@@ -1,17 +1,34 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 
 const EstilosComuns = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20
-         
+        marginTop: 28,
+        marginLeft: 3,
+        marginRight: 3,
+        marginBottom: 3,
+        height: '100%',
+        padding: 5,
+        flexDirection: 'column',
+        borderWidth: 1,
+        borderColor: '#666'
     },
     sombra: {
         shadowColor: '#666',
         shadowOpacity: 0.3,
         shadowRadius:30
+    },
+    fontePadrao: {
+        fontFamily:'Roboto'
+    },
+    botao: {
+        backgroundColor: 'blue',
+        borderWidth: 1,
+        borderColor: 'blue',
+        height: 30,
+        marginTop: 8,
+        justifyContent: 'center',
+        alignItems: 'center'
+
     }
 });
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, TextInput, Button, Image} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity, Image} from 'react-native';
 
 import Botao from '../botao/Botao';
 import EstilosComuns from '../../assets/estilos/estilos';
@@ -7,64 +7,74 @@ const imgLogo = require('../../assets/img/logo-login.png');
  
 export default class LoginComponent extends Component {
 
+    constructor(props){
+        super(props);
+      
+    }
+
     render() {
+
         return (
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-                <View style={estiloLogin.blocoLembrete}>
-                    <Text>Header</Text>
-                    <Image source={imgLogo}/>
-                    <Text style={estiloLogin.chamadaEntrada}>Para entrar,</Text>
-                    <Text style={estiloLogin.chamadaEntrada}>informe seu login e senha.</Text>
-                </View>
-
-                <View style={estiloLogin.blocoCentral}>
-                    <Text>Login</Text>
-                    <TextInput style={estiloLogin.inputText} placeholder="Login"></TextInput>
-                     <TextInput style={estiloLogin.inputText} placeholder="Senha"></TextInput>
-                     <Botao tituloBotao="Entrar" aoClicar={()=> null}/>
-                 </View>
-
-                 <View style={estiloLogin.blocoRodape}>
-                     <Text>Rodapé</Text>
-                     <Botao tituloBotao="Cadastrar-me" aoClicar={()=> alert('ok')}/>
-                     <Botao tituloBotao="Esqueci a senha" aoClicar={()=> null}/>
-                 </View> 
+            <View
+            style={[EstilosComuns.container]}>
+            <View style={styles.header}>
+                <Image source={imgLogo}/>
+                <Text style={[EstilosComuns.fontePadrao, styles.headerEntrada]}>Para entrar,</Text>
+                <Text style={[EstilosComuns.fontePadrao, styles.headerMensagem]}>informe seu login e senha</Text>
             </View>
+
+            <View style={styles.central}>
+                <TextInput style={styles.inputText} placeholder="Login"></TextInput>
+                <TextInput style={styles.inputText} placeholder="Senha"></TextInput>
+
+                <Botao tituloBotao='Entrar'  onClick={()=> alert('entrar')}/>
+            </View>
+
+            <View style={styles.footer}>
+                <Botao tituloBotao='Cadastrar-me' styles={styles.botoesFooter} onClick={()=> alert('cadastrar')}/>
+                <Botao tituloBotao='Esqueci a senha' styles={styles.botoesFooter} onClick={()=> alert('esqueci')}/>
+            </View>
+          </View>            
         )
     }
-}
+};
 
 
-const estiloLogin = StyleSheet.create({
-    sombra: {
-        shadowColor: '#666',
-        shadowOpacity: 0.3,
-        shadowRadius:30
-    },
-    margem: {
-        margin: 5,
-    },
-    blocoLembrete: {
+const styles = StyleSheet.create({
+    header: {
         flex: 3,
-        color: '#666',
-        justifyContent:'center',
+        flexDirection: 'column',
+        justifyContent: 'center', 
         alignItems: 'center',
-        alignSelf: "stretch",
-        backgroundColor: '#666'
-    },
-    blocoCentral: {
-        flex: 5,
-        width: 200,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        backgroundColor: '#00f'
-    },
-    blocoRodape: {
-        flex: 1, 
-        alignSelf: 'stretch',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#f00'
+        padding: 3
     },
 
-})
+    headerEntrada: {
+        fontWeight: 'bold',
+        fontSize: 35,
+    },
+    headerMensagem: {
+        fontSize: 20
+    },
+    central: {
+        flex: 3,
+        flexDirection: 'column',
+        padding: 5
+    },
+    footer: {
+        flex: 1,
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+    },
+    inputText: {
+        borderBottomWidth: 1,
+        borderColor: '#666',
+        textAlign: 'center'
+    },
+
+    botoesFooter: {
+        backgroundColor: '#fff',
+        borderWidth: 0,
+        borderBottomWidth: 1
+    }
+  });
