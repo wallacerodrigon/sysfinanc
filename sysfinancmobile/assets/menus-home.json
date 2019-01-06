@@ -1,0 +1,36 @@
+[   
+    {
+        "title":"Rubricas",
+        "key": "m1",
+        "icon": "../../assets/icons/rubrica.jpeg",
+        "screen": "TELA_LISTA_RUBRICAS"
+    },
+
+    {
+        "title":"Dashboard",
+        "key": "m2",
+        "icon": "../../assets/icons/dashboard.jpeg",
+        "screen": "TELA_DASHBOARD"
+    },    
+
+    {
+        "title":"Lançamentos",
+        "key": "m3",
+        "icon": "../../assets/icons/lancamentos.jpeg",
+        "screen": "TELA_LISTA_LANCAMENTOS"
+    },    
+
+    {
+        "title":"Manter Local",
+        "key": "m4",
+        "icon": "../../assets/icons/busca-local.jpeg",
+        "screen": "TELA_MANTER_LOCAL"
+    },    
+
+    {
+        "title":"Buscar Local",
+        "key": "m5",
+        "icon": "../../assets/icons/salvar-local.jpeg",
+        "screen": "TELA_BUSCAR_LOCAL"
+    }    
+]

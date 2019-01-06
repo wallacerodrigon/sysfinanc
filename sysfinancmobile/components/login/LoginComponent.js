@@ -47,12 +47,12 @@ export default class LoginComponent extends Component {
                 <TextInput style={styles.inputText} placeholder="Login"  maxLength = {10}></TextInput>
                 <TextInput style={styles.inputText} placeholder="Senha"  maxLength = {10} secureTextEntry textContentType="password" ></TextInput>
 
-                <Botao tituloBotao='Entrar'  onClick={()=>this.efetuarLogin()}/>
+                <Botao tituloBotao='Entrar' styles={{backgroundColor: 'blue'}} onClick={()=>this.efetuarLogin()}/>
             </View>
 
             <View style={styles.footer}>
-                <Botao tituloBotao='Cadastrar-me' styles={styles.botoesFooter} onClick={() => this.executarNovoCadastro()}/>
-                <Botao tituloBotao='Esqueci a senha' styles={styles.botoesFooter} onClick={() =>this.executarEsqueciSenha()}/>
+                <Botao tituloBotao='Cadastrar-me'  onClick={() => this.executarNovoCadastro()}/>
+                <Botao tituloBotao='Esqueci a senha' onClick={() =>this.executarEsqueciSenha()}/>
             </View>
           </View>            
         )
@@ -91,10 +91,4 @@ const styles = StyleSheet.create({
         borderColor: '#666',
         textAlign: 'center'
     },
-
-    botoesFooter: {
-        backgroundColor: '#fff',
-        borderWidth: 0,
-        borderBottomWidth: 1
-    }
   });

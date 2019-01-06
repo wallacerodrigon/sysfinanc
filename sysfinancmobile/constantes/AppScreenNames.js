@@ -3,9 +3,9 @@ export default class AppScreenNames {
     static TELA_LOGIN = "login";
     static TELA_CADASTRO = "cadastro";
     static TELA_ESQUECI_SENHA = "esqueciSenha";
-    static TELA_ESQUECI_SENHA2 = "listaRubricas";
-    static TELA_ESQUECI_SENHA2 = "dashboardScreen";
-    static TELA_ESQUECI_SENHA2 = "listaLancamentos";
-    static TELA_ESQUECI_SENHA2 = "manterLocal";
-    static TELA_ESQUECI_SENHA2 = "buscarLocal";
+    static TELA_LISTA_RUBRICAS = "listaRubricas";
+    static TELA_DASHBOARD = "dashboardScreen";
+    static TELA_LISTA_LANCAMENTOS = "listaLancamentos";
+    static TELA_MANTER_LOCAL = "manterLocal";
+    static TELA_BUSCAR_LOCAL = "buscarLocal";
 }

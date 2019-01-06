@@ -21,14 +21,15 @@ const EstilosComuns = StyleSheet.create({
         fontFamily:'Roboto'
     },
     botao: {
-        backgroundColor: 'blue',
+        backgroundColor: '#fff',
         borderWidth: 1,
         borderColor: 'blue',
         height: 30,
         marginTop: 8,
         justifyContent: 'center',
-        alignItems: 'center'
-
+        alignItems: 'center',
+        borderWidth: 0,
+        borderBottomWidth: 1
     }
 });
 
