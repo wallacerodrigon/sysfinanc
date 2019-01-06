@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
 
 import Botao from '../botao/Botao';
 import EstilosComuns from '../../assets/estilos/estilos';
+import AppScreenNames from '../../constantes/AppScreenNames';
 
 const imgLogo = require('../../assets/img/logo-login.png');
  
@@ -20,15 +21,15 @@ export default class LoginComponent extends Component {
     }
 
     efetuarLogin = () => {
-        this.props.navigation.navigate('home');
+        this.props.navigation.navigate(AppScreenNames.TELA_HOME);
     }
 
     executarNovoCadastro= () => {
-        this.props.navigation.navigate('cadastro');
+        this.props.navigation.navigate(AppScreenNames.TELA_CADASTRO);
     }
 
     executarEsqueciSenha = ()=> {
-        this.props.navigation.navigate('esqueciSenha');
+        this.props.navigation.navigate(AppScreenNames.TELA_ESQUECI_SENHA);
     }
 
     render() {

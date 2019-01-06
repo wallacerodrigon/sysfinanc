@@ -1,12 +1,19 @@
-import {Text} from 'react-native';
+import React from 'react';
+import {View, Text} from 'react-native';
 import EstilosComuns from '../../assets/estilos/estilos';
 
-const EsqueciSenha = () => {
-    return (
-        <View style={EstilosComuns.container}>
-        <Text>EsqueciSenha</Text>
-    </View>
-    )
+export default class EsqueciSenha extends React.Component {
+    static navigationOptions = {
+        title: 'Esqueci a Senha',
+        /* No more header config here! */
+      };
+
+    render() {
+        return (
+            <View style={EstilosComuns.container}>
+                <Text>EsqueciSenha</Text>
+            </View>
+        )
+    };
 }
 
-export default EsqueciSenha;

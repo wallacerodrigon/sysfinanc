@@ -3,19 +3,19 @@ import LoginComponent from './components/login/LoginComponent';
 import HomeScreen from './components/home/Home';
 import React from 'react';
 
-import TELA_HOME from './constantes/AppConstantes';
-//import EsqueciSenha from './components/esqueci-senha/EsqueciSenha';
-//import Cadastro from './components/perfil/Cadastro';
+import {TELA_LOGIN} from './constantes/AppScreenNames';
+import EsqueciSenha from './components/esqueci-senha/EsqueciSenha';
+import Cadastro from './components/perfil/Cadastro';
 
 const AppNavigator = createStackNavigator(
     {
         login: {screen: LoginComponent},
         home: {screen: HomeScreen},
-       // esqueciSenha: {screen: EsqueciSenha},
-        //cadastro: {screen: Cadastro}
+        esqueciSenha: {screen: EsqueciSenha},
+        cadastro: {screen: Cadastro}
     },
     {
-        initialRouteName: 'login',
+        initialRouteName: TELA_LOGIN,
     }
      
 );

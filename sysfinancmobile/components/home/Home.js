@@ -1,12 +1,11 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import EstilosComuns from '../../assets/estilos/estilos';
-
+import AppScreenNames from '../../constantes/AppScreenNames';
 
 export default class HomeScreen extends React.Component {
     static navigationOptions = {
         title: 'Home',
-        /* No more header config here! */
       };
 
     render() {
