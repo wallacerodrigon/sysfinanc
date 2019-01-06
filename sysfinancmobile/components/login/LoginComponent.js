@@ -1,15 +1,34 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity, Image} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
 
 import Botao from '../botao/Botao';
 import EstilosComuns from '../../assets/estilos/estilos';
+
 const imgLogo = require('../../assets/img/logo-login.png');
  
 export default class LoginComponent extends Component {
+   
+    static navigationOptions = {
+        title: 'Sysfinanc VI',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+      };
 
-    constructor(props){
-        super(props);
-      
+    constructor(){
+        super()
+    }
+
+    efetuarLogin = () => {
+        this.props.navigation.navigate('home');
+    }
+
+    executarNovoCadastro= () => {
+        this.props.navigation.navigate('cadastro');
+    }
+
+    executarEsqueciSenha = ()=> {
+        this.props.navigation.navigate('esqueciSenha');
     }
 
     render() {
@@ -24,15 +43,15 @@ export default class LoginComponent extends Component {
             </View>
 
             <View style={styles.central}>
-                <TextInput style={styles.inputText} placeholder="Login"></TextInput>
-                <TextInput style={styles.inputText} placeholder="Senha"></TextInput>
+                <TextInput style={styles.inputText} placeholder="Login"  maxLength = {10}></TextInput>
+                <TextInput style={styles.inputText} placeholder="Senha"  maxLength = {10} secureTextEntry textContentType="password" ></TextInput>
 
-                <Botao tituloBotao='Entrar'  onClick={()=> alert('entrar')}/>
+                <Botao tituloBotao='Entrar'  onClick={()=>this.efetuarLogin()}/>
             </View>
 
             <View style={styles.footer}>
-                <Botao tituloBotao='Cadastrar-me' styles={styles.botoesFooter} onClick={()=> alert('cadastrar')}/>
-                <Botao tituloBotao='Esqueci a senha' styles={styles.botoesFooter} onClick={()=> alert('esqueci')}/>
+                <Botao tituloBotao='Cadastrar-me' styles={styles.botoesFooter} onClick={() => this.executarNovoCadastro()}/>
+                <Botao tituloBotao='Esqueci a senha' styles={styles.botoesFooter} onClick={() =>this.executarEsqueciSenha()}/>
             </View>
           </View>            
         )
