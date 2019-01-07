@@ -20,6 +20,11 @@ export default class HomeScreen extends React.Component {
         
     }
 
+    abrirTela(item){
+       // this.props.navigation.navigate(item.screen);
+       alert('ok')
+    }
+
     render() {
         return (
             <View style={EstilosComuns.container}>
@@ -27,7 +32,7 @@ export default class HomeScreen extends React.Component {
                     <FlatList
                         data={menus}
                         renderItem = {({ item }) => 
-                            <WidgetMenu itemMenu={item} onClick={()=> alert(item.key)}/>
+                            <WidgetMenu itemMenu={item} onClick={()=> this.abrirTela(item) }/>
                         }
                         keyExtractor={item => item.key}
                         numColumns={2}

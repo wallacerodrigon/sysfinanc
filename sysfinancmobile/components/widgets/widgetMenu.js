@@ -3,9 +3,9 @@ import {Text, StyleSheet, View, Dimensions, Image} from 'react-native';
 
 const WidgetMenu = ({ itemMenu }) => (
     <View style={styles.conteiner}>
-        <View style={styles.widget}>
-            <Image source={itemMenu.icon} style={styles.icone}/>
-            <Text onPress={() => itemMenu.onClick()} >
+        <View style={[styles.widget, styles.circle]} >
+            <Image onPress={() => itemMenu.onClick()} source={require("../../assets/icons/rubrica.jpeg")} style={styles.widgetIcone}/>
+            <Text  style={styles.widgetText} >
                  {itemMenu.title}
             </Text> 
         </View>
@@ -15,18 +15,25 @@ const WidgetMenu = ({ itemMenu }) => (
 const styles = StyleSheet.create({
     conteiner: {
         flex: 1,
-        padding: 5,
         height: Dimensions.get('window').width /2,
     },
     widget: {
-        flex: 1,
-        borderWidth: 1, 
-
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 5
     },
-    icone: {
+    widgetText: {
+        fontWeight: 'bold',
+        marginBottom: 5
+    },
+    widgetIcone: {
         width: "100%", 
-        height: "50%"
-    }
+    },
+    circle: {
+        // borderWidth: 1,
+        // borderColor: '#666'
+    }    
 });
 
 export default WidgetMenu;
