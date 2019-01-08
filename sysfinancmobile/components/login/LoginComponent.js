@@ -47,7 +47,7 @@ export default class LoginComponent extends Component {
                 <TextInput style={styles.inputText} placeholder="Login"  maxLength = {10}></TextInput>
                 <TextInput style={styles.inputText} placeholder="Senha"  maxLength = {10} secureTextEntry textContentType="password" ></TextInput>
 
-                <Botao tituloBotao='Entrar' styles={{backgroundColor: 'blue'}} onClick={()=>this.efetuarLogin()}/>
+                <Botao tituloBotao='Entrar'  onClick={()=>this.efetuarLogin()}/>
             </View>
 
             <View style={styles.footer}>

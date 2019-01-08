@@ -22,14 +22,16 @@ const EstilosComuns = StyleSheet.create({
     },
     botao: {
         backgroundColor: '#fff',
-        borderWidth: 1,
-        borderColor: 'blue',
+        borderColor: '#666',
         height: 30,
         marginTop: 8,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 0,
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        borderRightWidth: 1,
+        shadowColor: '#666',
+        
     }
 });
 
