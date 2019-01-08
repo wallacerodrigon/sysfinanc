@@ -62,7 +62,7 @@ import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 @Path("/lancamentos")
 @Produces(value=MediaType.APPLICATION_JSON)
 @Interceptors({RequisicaoInterceptor.class})
-
+@Api(value="Consultas de lançamentos")
 public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 
 	private static Map<String, ImportadorArquivo> mapImportadores = new HashMap<String, ImportadorArquivo>();
@@ -82,6 +82,13 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 
 	@GET
     @Path(value="/buscarLancamentos/{mes}/{ano}")
+	@ApiOperation("Filtra os lançamentos por mês e ano")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido", response=RespostaDTO.class ),
+				@ApiResponse(code=204, message="Sem retorno", response=RespostaDTO.class ),
+				@ApiResponse(code=500, message="Erro interno", response=RespostaDTO.class),
+				@ApiResponse(code=400, message="Parâmetros de entrada não informados", response=RespostaDTO.class )
+	 })    
 	public Response buscarLancamentos(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano){
         try {
         	FiltraParcelasDto dto = new FiltraParcelasDto(mes, ano);
