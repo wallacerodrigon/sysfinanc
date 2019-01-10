@@ -18,6 +18,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	  	<jasper.version>6.4.1</jasper.version>
+	    <swagger.version>1.5.7</swagger.version>	  	
 	</properties>
 	  
   <dependencies>
@@ -106,6 +107,12 @@
 		<scope>provided</scope>	
 	</dependency>
 		
+		
+	<dependency>
+	  <groupId>io.swagger</groupId>
+	  <artifactId>swagger-jaxrs</artifactId>
+	  <version>${swagger.version}</version>
+	</dependency>		
 <!-- testes unitários -->
   </dependencies>
   
