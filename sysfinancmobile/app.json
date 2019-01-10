@@ -22,8 +22,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    }
+    "android": {
+	"package": "br.net.walltec.sysfinanc"
+    },
+    "description": "sistema financeiro pessoal"
   }
 }

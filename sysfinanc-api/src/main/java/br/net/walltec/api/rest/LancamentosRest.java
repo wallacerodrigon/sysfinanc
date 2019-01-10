@@ -28,6 +28,8 @@ import br.net.walltec.api.dto.ConsultaLancamentosDTO;
 import br.net.walltec.api.dto.FiltraParcelasDto;
 import br.net.walltec.api.dto.GeracaoParcelasDto;
 import br.net.walltec.api.dto.GravacaoArquivoDto;
+import br.net.walltec.api.dto.LancamentosPorRubricaDTO;
+import br.net.walltec.api.dto.MapaDashboardDTO;
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
 import br.net.walltec.api.dto.RetornoArquivoDTO;
@@ -50,6 +52,10 @@ import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 
 /**
@@ -84,10 +90,8 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
     @Path(value="/buscarLancamentos/{mes}/{ano}")
 	@ApiOperation("Filtra os lançamentos por mês e ano")
 	@ApiResponses(value= {
-				@ApiResponse(code=200, message="Retorno bem sucedido", response=RespostaDTO.class ),
-				@ApiResponse(code=204, message="Sem retorno", response=RespostaDTO.class ),
-				@ApiResponse(code=500, message="Erro interno", response=RespostaDTO.class),
-				@ApiResponse(code=400, message="Parâmetros de entrada não informados", response=RespostaDTO.class )
+				@ApiResponse(code=200, message="Retorno bem sucedido", response=ConsultaLancamentosDTO.class ),
+				@ApiResponse(code=500, message="Erro interno")
 	 })    
 	public Response buscarLancamentos(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano){
         try {
@@ -106,6 +110,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	@POST
 	@Path(value="/baixar")
 	@Consumes(MediaType.APPLICATION_JSON)
+	
+	@ApiOperation("Efetua o pagamento de um lançamento")
+	@ApiResponses(value= {
+				@ApiResponse(code=202, message="Retorno bem sucedido"),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	public Response baixarLancamento(BaixaLancamentoDTO dto){
         try {
             servico.baixarParcelas(dto.getListaIdsLancamentos());
@@ -117,6 +127,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	
 	@POST
 	@Path(value="/utilizar")
+	
+	@ApiOperation("Efetua a utilização de um lançamento")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido"),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	public Response utilizarLancamento(UtilizacaoParcelasDto dto){
         try {
             return Response.ok(servico.utilizarLancamento(dto)).build();
@@ -128,6 +144,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 
 	@GET
 	@Path(value="/listarHistoricoUso")
+	
+	@ApiOperation("Lista o histórico de uso de um lançamento")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido", response=UtilizacaoLancamentoVO.class ),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	public Response listarHistoricoUsos(@QueryParam("idLancamento") Integer idLancamento){
         try {
             List<UtilizacaoLancamentoVO> listarHistoricoUso = servico.listarHistoricoUso(idLancamento);
@@ -143,6 +165,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		return servico;
 	}
 
+	@ApiOperation("Incluir um lançamento")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido"),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 		
 	@Override
 	public Response incluir(LancamentoVO objeto) throws WebServiceException {
         try {
@@ -157,7 +184,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
         }
 	}
 
-
+	@ApiOperation("Alterar um lançamento")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido", response=LancamentoVO.class),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 
 	@Override
 	public Response alterar(LancamentoVO objeto) throws WebServiceException {
         try {
@@ -170,6 +201,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
         }
 	}
 
+	@ApiOperation("Excluir um lançamento")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido"),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@Override
 	public Response excluir(Integer idChaveObjeto) throws WebServiceException {
         try {
@@ -183,6 +219,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
         }
 	}
 	
+	@ApiOperation("Grava um arquivo de banco")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido", response =RetornoArquivoDTO.class),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@POST
 	@Path("/gravar-arquivo")
 	public Response gravarArquivo(GravacaoArquivoDto dto) throws WebServiceException {
@@ -253,6 +294,12 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		return Response.noContent().build();
 	}
 	
+	
+	@ApiOperation("Gera lançamentos a partir de vários parâmetros")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido", response =LancamentoVO.class),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@POST
 	@Path("/gerar-lancamento")
 	public Response gerarLancamentos(GeracaoParcelasDto dto) throws WebServiceException {
@@ -269,6 +316,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		}
 	}
 	
+	@ApiOperation("Retorna dashboards referentes aos lançamentos de um mês e ano")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido", response =MapaDashboardDTO.class),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@GET
 	@Path("/obter-dashboards/{mes}/{ano}")
 	public Response gerarDashboards(@PathParam("mes") Integer mes, @PathParam("ano") Integer ano) throws WebServiceException {
@@ -283,6 +335,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	/* (non-Javadoc)
 	 * @see br.net.walltec.api.rest.comum.RequisicaoRestPadrao#alterar(java.util.List)
 	 */
+	@ApiOperation("Associa um ou vários lançamentos a um extrato bancário")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido"),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@PUT
 	@Path("/associar-lancamento-extrato")
 	public Response associarExtratoComLancamentos(List<RegistroExtratoDto> lista) throws WebServiceException {
@@ -300,6 +357,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 	}
 	
+	@ApiOperation("Fecha um mês contábil")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido"),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@PUT
 	@Path("/fechar-mes")
 	public Response fecharMes(RegistroFechamentoMesDTO fechamentoDTO) throws WebServiceException {
@@ -319,6 +381,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 	}
 	
+	@ApiOperation("Desfaz a conciliação de um mês e ano")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido"),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@PUT
 	@Path("/desfazer-conciliacao")
 	public Response desfazerConciliacoes(DesfazimentoConciliacaoDTO desfazimentoDTO) throws WebServiceException {
@@ -336,6 +403,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 	}
 	
+	@ApiOperation("Retorna o mapa do ano")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido", response=ResumoMesAnoDTO.class),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@GET
 	@Path("/obter-mapa-ano/{ano}")
 	public Response gerarMapaAno(@PathParam("ano") Integer ano) throws WebServiceException {
@@ -351,10 +423,15 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		    throw new WebServiceException(e.getMessage());
 		}
 	}
-	
+
+	@ApiOperation("Lista os totais de uma rubrica agrupados por mês durante um ano")
+	@ApiResponses(value= {
+				@ApiResponse(code=200, message="Retorno bem sucedido", response=LancamentosPorRubricaDTO.class),
+				@ApiResponse(code=500, message="Erro interno")
+	 }) 	
 	@GET
 	@Path("/rubricas-lancamentos/{ano}/{rubrica}")
-	public Response obterLancamentosPorRubricaEAno(@PathParam("rubrica") Integer idRubrica, @PathParam("ano") Integer ano) throws WebServiceException {
+	public Response obterResumoPorRubricaEAno(@PathParam("rubrica") Integer idRubrica, @PathParam("ano") Integer ano) throws WebServiceException {
 		if (ano == null || ano == 0 || idRubrica == null) {
 			throw new WebServiceException("Ano e rubrica devem ser informados!");
 		}
