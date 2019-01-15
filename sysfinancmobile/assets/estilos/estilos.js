@@ -2,10 +2,6 @@ import {StyleSheet, Dimensions} from 'react-native';
 
 const EstilosComuns = StyleSheet.create({
     container: {
-        marginTop: 28,
-        marginLeft: 3,
-        marginRight: 3,
-        marginBottom: 3,
         height: '100%',
         padding: 5,
         flexDirection: 'column',

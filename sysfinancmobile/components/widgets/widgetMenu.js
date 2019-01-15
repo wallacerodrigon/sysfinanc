@@ -4,7 +4,9 @@ import {Text, StyleSheet, View, Dimensions, Image} from 'react-native';
 const WidgetMenu = ({ itemMenu }) => (
     <View style={styles.conteiner}>
         <View style={[styles.widget, styles.circle]} >
-            <Image onPress={() => itemMenu.onClick()} source={require("../../assets/icons/rubrica.jpeg")} style={styles.widgetIcone}/>
+            <Image onPress={() => itemMenu.onClick()} 
+            source={itemMenu.icone} 
+            style={styles.widgetIcone}/>
             <Text  style={styles.widgetText} >
                  {itemMenu.title}
             </Text> 
