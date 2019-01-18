@@ -279,7 +279,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
         lancamentoUtilizada.setBolPaga(true);
         lancamentoUtilizada.setConta(lancamentoOrigem.getConta());
         lancamentoUtilizada.setDataVencimento(UtilData.getData(dtoUso.getDataUtilizacaoStr(), UtilData.SEPARADOR_PADRAO));
-        lancamentoUtilizada.setDescricao(lancamentoOrigem.getDescricao());
+        lancamentoUtilizada.setDescricao(dtoUso.getDescricao());
         lancamentoUtilizada.setFormaPagamento(new FormaPagamento());
         lancamentoUtilizada.getFormaPagamento().setId(dtoUso.getIdFormaPagamento());
         
