@@ -1,7 +1,0 @@
-{
-    "files.exclude": {
-        "**/.zip": true,
-        "/ios/": true,
-        "/node-modules/": true
-    }
-}
