@@ -112,7 +112,7 @@ public class RequisicaoInterceptor {
 		}
 		
 		if (!ehLogin &&  !new TokenManager().isTokenValido(token)){
-			throw new WebServiceException(Response.status(Status.FORBIDDEN).entity("Acesso inválido! Token vencido ou inválido!").build());
+			throw new WebServiceException(Response.status(Status.REQUEST_TIMEOUT).entity("Acesso inválido! Token vencido ou inválido!").build());
 		}
 		
 		TokenManager tm = new TokenManager();

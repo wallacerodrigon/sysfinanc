@@ -102,14 +102,12 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     public LancamentoVO alterarVO(LancamentoVO objeto) throws NegocioException {
     	Lancamento lancamento = (Lancamento) getConversor().converterPojoParaEntidade(objeto);
     	
-    	Lancamento lancBanco = this.find(objeto.getId());
-    	
     	lancamento.setFormaPagamento(new FormaPagamento());
     	lancamento.getFormaPagamento().setId(objeto.getIdFormaPagamento());
     	
     	this.alterar(lancamento);
     	
-    	return (LancamentoVO) getConversor().converterEntidadeParaPojo(lancamento);
+    	return objeto;
     }
 
     @Override

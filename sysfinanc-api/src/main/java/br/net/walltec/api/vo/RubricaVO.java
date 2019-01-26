@@ -67,4 +67,18 @@ public class RubricaVO extends GerenciadorPadraoVO {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RubricaVO [");
+		builder.append(descTipoConta);
+		builder.append(", ");
+		builder.append(descricao);
+		builder.append(", ");
+		builder.append(despesa);
+		builder.append("]");
+		return builder.toString();
+	}
 }

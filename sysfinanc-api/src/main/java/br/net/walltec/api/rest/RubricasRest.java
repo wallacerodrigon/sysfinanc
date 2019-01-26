@@ -1,5 +1,8 @@
 package br.net.walltec.api.rest;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.GET;
@@ -45,7 +48,9 @@ public class RubricasRest extends RequisicaoRestPadrao<RubricaVO> {
 	@GET
 	public Response listarRubricas(@QueryParam(value="idUsuario") Integer idUsuario, @QueryParam(value="page") Integer pagina){
         try {
-            return Response.ok(contaServico.listar(new RubricaVO())).build(); // listarTudo(pagina)).build();
+        	List<RubricaVO> rubricas = contaServico.listar(new RubricaVO());
+        	rubricas.sort(new OrdenacaoRubricas());
+            return Response.ok(rubricas).build();
         } catch (NegocioException e) {
             throw new WebServiceException(e.getMessage());
         }
@@ -62,7 +67,6 @@ public class RubricasRest extends RequisicaoRestPadrao<RubricaVO> {
 				@ApiResponse(code=200, message="Retorno bem sucedido"),
 				@ApiResponse(code=500, message="Erro interno")
 	 })      
-    @Override
     public Response incluir(RubricaVO objeto) throws WebServiceException {
         try {
             contaServico.incluirVO(objeto);
@@ -80,7 +84,6 @@ public class RubricasRest extends RequisicaoRestPadrao<RubricaVO> {
 				@ApiResponse(code=200, message="Retorno bem sucedido"),
 				@ApiResponse(code=500, message="Erro interno")
 	 })  	
-    @Override
     public Response alterar(RubricaVO objeto) throws WebServiceException {
         try {
             contaServico.alterarVO(objeto);
@@ -109,5 +112,25 @@ public class RubricasRest extends RequisicaoRestPadrao<RubricaVO> {
             e.printStackTrace();
             throw new WebServiceException(e.getMessage());
         }
+	}
+	
+	public static void main(String[] args) {
+		RubricaVO vo1 = new RubricaVO();
+		vo1.setDespesa(false);
+		vo1.setDescricao("Manutenção no carro");
+		
+		RubricaVO vo2 = new RubricaVO();
+		vo2.setDespesa(true);
+		vo2.setDescricao("Manutenção no apto");
+
+		RubricaVO vo3 = new RubricaVO();
+		vo3.setDespesa(true);
+		vo3.setDescricao("Prestação  no apto");		
+		
+		List<RubricaVO> rubricas = Arrays.asList(vo1, vo2, vo3);
+		
+		rubricas.sort(new OrdenacaoRubricas());
+		System.out.println(rubricas);
+		
 	}
 }

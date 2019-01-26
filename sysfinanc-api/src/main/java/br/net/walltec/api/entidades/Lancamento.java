@@ -50,7 +50,7 @@ public class Lancamento extends EntidadeBasica<Lancamento> {
 	@JoinColumn(name="co_conta")	
 	private Conta conta;
 	 
-	@Column(name="va_parcela")	
+	@Column(name="va_parcela", precision=2)	
 	private BigDecimal valor;
 	 
 	//montar um flyweight neste objeto

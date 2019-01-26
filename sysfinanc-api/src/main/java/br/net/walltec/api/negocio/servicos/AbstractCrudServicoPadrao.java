@@ -142,7 +142,7 @@ public abstract class AbstractCrudServicoPadrao<T,  V extends GerenciadorPadraoV
 	
 
 	@Override
-	@Transactional(value=TxType.NOT_SUPPORTED)	
+	@Transactional(value=TxType.SUPPORTS)	
 	public V buscar(Serializable id) throws NegocioException {
 		return getPojo(this.find(id));
 	}

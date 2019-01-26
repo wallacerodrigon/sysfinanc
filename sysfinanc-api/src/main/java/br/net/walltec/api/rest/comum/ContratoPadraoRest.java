@@ -27,12 +27,6 @@ public interface ContratoPadraoRest<V extends GerenciadorPadraoVO> extends Seria
 	 @GET
 	 @Path("/ping")
 	 Response novo() throws WebServiceException;
-	
-	 @POST
-	 Response incluir(V objeto) throws WebServiceException;
-	 
-	 @PUT
-	 Response alterar(V objeto) throws WebServiceException;
 	 
 	 @PUT
 	 Response alterar(List<V> lista) throws WebServiceException;	 

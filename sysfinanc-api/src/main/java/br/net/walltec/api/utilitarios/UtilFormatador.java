@@ -29,6 +29,13 @@ public class UtilFormatador {
 		return new DecimalFormat("###,###,##0.00", simbolos).format(valor);
 	}
 	
+	public static String formatarDecimal(Double valor){
+		DecimalFormatSymbols simbolos = new DecimalFormatSymbols(new Locale("pt", "BR"));
+		simbolos.setDecimalSeparator(',');
+		simbolos.setGroupingSeparator('.'); 		
+		return new DecimalFormat("###,###,##0.00", simbolos).format(valor);
+	}	
+	
 	public static String formatarTelefone(String numero) {
 		if (numero != null && numero.length() == 11) {
 			return "("+numero.substring(0, 2)+")"+numero.substring(2, 7)+"-"+numero.substring(7);

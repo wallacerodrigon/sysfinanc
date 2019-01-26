@@ -77,7 +77,6 @@ public class UsuarioRest extends RequisicaoRestPadrao<UsuarioVO> {
 				@ApiResponse(code=200, message="Retorno bem sucedido" ),
 				@ApiResponse(code=500, message="Erro interno")
 	 })  	
-	@Override
 	public Response incluir(UsuarioVO objeto) throws WebServiceException {
 		try {
 			servico.incluirVO(objeto);
@@ -98,7 +97,6 @@ public class UsuarioRest extends RequisicaoRestPadrao<UsuarioVO> {
 				@ApiResponse(code=200, message="Retorno bem sucedido"),
 				@ApiResponse(code=500, message="Erro interno")
 	 })  	
-	@Override
 	public Response alterar(UsuarioVO objeto) throws WebServiceException {
 		try {
 			servico.alterarVO(objeto);

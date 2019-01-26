@@ -3,6 +3,7 @@
  */
 package br.net.walltec.api.rest;
 
+import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +45,15 @@ import br.net.walltec.api.importacao.estrategia.ImportadorBB;
 import br.net.walltec.api.negocio.servicos.LancamentoServico;
 import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
+import br.net.walltec.api.rest.dto.AlteracaoLancamentoDTO;
 import br.net.walltec.api.rest.dto.BaixaLancamentoDTO;
+import br.net.walltec.api.rest.dto.InclusaoLancamentoDTO;
 import br.net.walltec.api.rest.dto.filtro.DesfazimentoConciliacaoDTO;
 import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
 import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
+import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 import io.swagger.annotations.Api;
@@ -165,42 +169,65 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		return servico;
 	}
 
+    @POST
 	@ApiOperation("Incluir um lançamento")
 	@ApiResponses(value= {
 				@ApiResponse(code=200, message="Retorno bem sucedido"),
 				@ApiResponse(code=500, message="Erro interno")
 	 }) 		
-	@Override
-	public Response incluir(LancamentoVO objeto) throws WebServiceException {
-        try {
-            objeto = servico.incluirVO(objeto);
-            
-            return Response.ok(objeto).build();
-        } catch (NegocioException e) {
-            throw new WebServiceException(e.getMessage());
-        } catch(Exception e){
-            e.printStackTrace();
-            throw new WebServiceException(e.getMessage());
-        }
+	public Response incluir(InclusaoLancamentoDTO dtoInclusao) throws WebServiceException {
+		
+		
+		LancamentoVO objeto = new LancamentoVO();
+		objeto.setBolConciliado(false);
+		objeto.setBolPaga(dtoInclusao.isBolPaga());
+		objeto.setDescricao(dtoInclusao.getDescricao());
+		objeto.setIdConta(dtoInclusao.getIdRubrica());
+		objeto.setIdFormaPagamento(dtoInclusao.getIdFormaPagamento());
+		objeto.setNumero(Short.valueOf("1"));
+		objeto.setValor(dtoInclusao.getValor());
+		
+		try {
+			objeto = servico.incluirVO(objeto);
+			
+			return Response.ok(objeto).build();
+		} catch (NegocioException e) {
+			throw new WebServiceException(e.getMessage());
+		} catch(Exception e){
+			e.printStackTrace();
+			throw new WebServiceException(e.getMessage());
+		}
 	}
-
+	
+	@PUT
 	@ApiOperation("Alterar um lançamento")
 	@ApiResponses(value= {
-				@ApiResponse(code=200, message="Retorno bem sucedido", response=LancamentoVO.class),
+				@ApiResponse(code=200, message="Retorno bem sucedido"),
 				@ApiResponse(code=500, message="Erro interno")
 	 }) 
-	@Override
-	public Response alterar(LancamentoVO objeto) throws WebServiceException {
-        try {
-            return Response.ok(servico.alterarVO(objeto)).build();
-        } catch (NegocioException e) {
-            throw new WebServiceException(e.getMessage());
-        } catch(Exception e){
-            e.printStackTrace();
-            throw new WebServiceException(e.getMessage());
-        }
+	public Response alterar(AlteracaoLancamentoDTO dto) throws WebServiceException {
+		
+		
+		try {
+			LancamentoVO lancamento = servico.buscar(dto.getIdLancamento());
+			lancamento.setBolPaga(dto.isBolPago());
+			lancamento.setValor(dto.getValor());
+			lancamento.setNumDocumento(dto.getNumDocumento());
+			lancamento.setIdFormaPagamento(dto.getIdFormaPagamento());
+			lancamento.setDescricao(dto.getDescricao());
+			lancamento.setValorCreditoStr(UtilFormatador.formatarDecimal(lancamento.getValor()));
+			lancamento.setValorDebitoStr(UtilFormatador.formatarDecimal(lancamento.getValor()));
+			servico.alterarVO(lancamento);
+			return Response.ok().build();
+		} catch (NegocioException e) {
+			e.printStackTrace();
+			throw new WebServiceException(e.getMessage());
+		} catch(Exception e){
+			e.printStackTrace();
+			throw new WebServiceException(e.getMessage());
+		}
 	}
-
+	
 	@ApiOperation("Excluir um lançamento")
 	@ApiResponses(value= {
 				@ApiResponse(code=200, message="Retorno bem sucedido"),
