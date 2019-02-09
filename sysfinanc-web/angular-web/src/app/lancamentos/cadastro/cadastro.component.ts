@@ -10,6 +10,7 @@ import { UtilData } from '../../utilitarios/util-data';
 import { RubricaService } from '../../rubricas/rubrica.service';
 import { AlertaComponent } from '../../componentes/mensagens/alert.component';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { InclusaoLancamentoDto } from '../../dominio/dto/InclusaoLancamentoDto';
 
 declare var jQuery: any;
 
@@ -26,7 +27,7 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
 
   @BlockUI() blockUI: NgBlockUI;
 
-  private lancamento: LancamentoVO = new LancamentoVO();
+  private lancamento: InclusaoLancamentoDto = new InclusaoLancamentoDto();
   private listaRubricas: Array<RubricaVO> = [];
   protected mostraBlocoRepetir: boolean = true;
   protected consideraPago: boolean = false;
@@ -68,13 +69,13 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
       erro = true;
     }
   
-    if (!this.campoEstaInformado('dataVencimentoStr') || 
+    if (!this.campoEstaInformado('dataVencimento') || 
         !this.campoEstaInformado('descricao') ||
         !this.campoEstaInformado('idFormaPagamento')  ){
           erro = true;
         }
 
-    if (this.habilitaDataFim && !this.campoEstaInformado('dataFimStr')){
+    if (this.habilitaDataFim && !this.campoEstaInformado('dataFimRepeticao')){
       erro = true;
     }
 
@@ -91,9 +92,13 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
   }
 
   salvar(){
-    this.lancamento.dataVencimentoStr = this.dataVencimento.nativeElement.value;
-    this.lancamento.dataFimStr  = this.mostraBlocoRepetir ? this.dataFim.nativeElement.value : null;
     this.result = null;
+    this.lancamento.descricao = this.lancamento.descricao ? this.lancamento.descricao.toLocaleLowerCase(): null;
+    this.lancamento.valor = this.valor.nativeElement.value.replace('[.]', '').replace(',', '.');
+    this.lancamento.dataVencimento = this.dataVencimento.nativeElement.value;
+    this.lancamento.bolRepete = this.habilitaDataFim;
+    this.lancamento.dataFimRepeticao = this.dataFim ? this.dataFim.nativeElement.value: null;
+
     if (! this.isDadosValidos() ){
       return false;
     }
@@ -103,23 +108,14 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
                               this.lancamento.numDocumento != null &&
                               this.lancamento.bolPaga == false ? true : this.lancamento.bolPaga;
 
-    this.lancamento.bolConciliado = this.lancamento.numDocumento != null;
     let rubrica: RubricaVO = this.getRubrica();
     if (rubrica == null){
       new AlertaComponent(this.dialogService).exibirMensagem("Rubrica não encontrada");
       return false;      
     }
-    if (rubrica.despesa){
-      this.lancamento.valorDebitoStr = this.valor.nativeElement.value;
-    } else {
-      this.lancamento.valorCreditoStr = this.valor.nativeElement.value;
-    }
-    this.lancamento.idConta = rubrica.id;
-    this.lancamento.despesa = rubrica.despesa;
-    this.lancamento.descricao = this.lancamento.descricao.toLocaleLowerCase();
+    this.lancamento.idRubrica = rubrica.id;
 
-
-    this.lancamentoService.incluir(this.lancamento)
+    this.lancamentoService.incluirLancamento(this.lancamento)
         .then(lancamentoIncluido=> {
           this.blockUI.stop();
           this.result = JSON.parse(lancamentoIncluido._body);
@@ -127,6 +123,7 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
           this.close();
         })
         .catch(erro => {
+          console.log(erro);
           this.blockUI.stop();
           new AlertaComponent(this.dialogService).exibirMensagem("Erro ao incluir o registro:" + erro._body);
         });

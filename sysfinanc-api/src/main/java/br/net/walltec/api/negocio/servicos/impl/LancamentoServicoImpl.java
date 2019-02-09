@@ -2,6 +2,7 @@ package br.net.walltec.api.negocio.servicos.impl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ import br.net.walltec.api.excecoes.CampoObrigatorioException;
 import br.net.walltec.api.excecoes.NegocioException;
 import br.net.walltec.api.excecoes.PersistenciaException;
 import br.net.walltec.api.excecoes.TotalConciliadoInvalidoException;
-import br.net.walltec.api.excecoes.WebServiceException;
 import br.net.walltec.api.negocio.servicos.AbstractCrudServicoPadrao;
 import br.net.walltec.api.negocio.servicos.LancamentoServico;
 import br.net.walltec.api.persistencia.dao.ContaDao;
@@ -101,6 +101,9 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     @Override
     public LancamentoVO alterarVO(LancamentoVO objeto) throws NegocioException {
     	Lancamento lancamento = (Lancamento) getConversor().converterPojoParaEntidade(objeto);
+    	
+    	verificarMesFechado(lancamento.getDataVencimento());
+    	
     	
     	lancamento.setFormaPagamento(new FormaPagamento());
     	lancamento.getFormaPagamento().setId(objeto.getIdFormaPagamento());
@@ -252,6 +255,10 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 
     @Override
     public List<LancamentoVO> utilizarLancamento(UtilizacaoParcelasDto dtoUtilizacao) throws NegocioException {
+    	
+    	verificarMesFechado(UtilData.getData(dtoUtilizacao.getDataUtilizacaoStr(), UtilData.SEPARADOR_PADRAO));
+    	
+    	
         Lancamento lancamento = null;
         try {
             lancamento = lancamentoDao.find(dtoUtilizacao.getIdLancamentoOrigem());
@@ -421,8 +428,8 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 							
 		return 
 				new BigDecimal[] {
-						new BigDecimal(mapPorDespesa.get(false)),
-						new BigDecimal(mapPorDespesa.get(true))};
+						new BigDecimal(mapPorDespesa.getOrDefault(false, 0.00)).setScale(2, RoundingMode.CEILING),
+						new BigDecimal(mapPorDespesa.getOrDefault(true, 0.00)).setScale(2, RoundingMode.CEILING) };
 		
 	}
 
@@ -520,9 +527,10 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
     	Date dataVencimento = UtilData.getData(objeto.getDataVencimentoStr(), UtilData.SEPARADOR_PADRAO);
     	
     	if (dataFim != null && dataFim.before(dataVencimento)) {
-    		throw new WebServiceException("Data Fim não deve ser menor do que a data de Vencimento!");
+    		throw new NegocioException("Data Fim não deve ser menor do que a data de Vencimento!");
     	}	
     	
+    	verificarMesFechado(dataVencimento);
     	
         if (dataFim != null) {
         	this.gerarLancamentos(objeto, dataVencimento, dataFim);
@@ -530,6 +538,16 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
         } else {		
         	return this.verificarUtilizacao(objeto, dataVencimento);
         }
+	}
+
+	/**
+	 * @param dataVencimento
+	 * @throws NegocioException
+	 */
+	private void verificarMesFechado(Date dataVencimento) throws NegocioException {
+		if (isMesFechado(UtilData.getMes(dataVencimento), UtilData.getAno(dataVencimento))) {
+    		throw new NegocioException("Não permitido vencimento para esta data. Este mês já se encontra fechado!");
+    	}
 	}
 	
 
@@ -552,7 +570,9 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	    	BigDecimal valor = objeto.isDespesa() 
 	    						? UtilFormatador.formatarStringComoValor(objeto.getValorDebitoStr()) :
 								  UtilFormatador.formatarStringComoValor(objeto.getValorCreditoStr());
-			
+			if (valor == null) {
+				valor = new BigDecimal(objeto.getValor());
+			}
 			lancamento.setValor(valor.add(lancamento.getValor()));
 			this.alterar(lancamento);
 			

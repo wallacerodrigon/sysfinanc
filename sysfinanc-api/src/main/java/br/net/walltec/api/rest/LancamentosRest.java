@@ -176,7 +176,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 				@ApiResponse(code=500, message="Erro interno")
 	 }) 		
 	public Response incluir(InclusaoLancamentoDTO dtoInclusao) throws WebServiceException {
-		
+		//falta validar os campos...
 		
 		LancamentoVO objeto = new LancamentoVO();
 		objeto.setBolConciliado(false);
@@ -186,7 +186,9 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		objeto.setIdFormaPagamento(dtoInclusao.getIdFormaPagamento());
 		objeto.setNumero(Short.valueOf("1"));
 		objeto.setValor(dtoInclusao.getValor());
-		
+		objeto.setDataVencimentoStr(dtoInclusao.getDataVencimento());
+		objeto.setDataFimStr(dtoInclusao.getDataFimRepeticao());
+
 		try {
 			objeto = servico.incluirVO(objeto);
 			

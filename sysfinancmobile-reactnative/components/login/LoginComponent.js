@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
 import Botao from '../botao/Botao';
 import EstilosComuns from '../../assets/estilos/estilos';
 import AppScreenNames from '../../constantes/AppScreenNames';
+import {Speech} from 'expo';
 
 const imgLogo = require('../../assets/img/logo-login.png');
  
@@ -47,7 +48,7 @@ export default class LoginComponent extends Component {
                 <TextInput style={styles.inputText} placeholder="Login"  maxLength = {10}></TextInput>
                 <TextInput style={styles.inputText} placeholder="Senha"  maxLength = {10} secureTextEntry textContentType="password" ></TextInput>
 
-                <Botao tituloBotao='Entrar'  onClick={()=>this.efetuarLogin()}/>
+                <Botao tituloBotao='Login'  onClick={()=>this.efetuarLogin()}/>
             </View>
 
             <View style={styles.footer}>

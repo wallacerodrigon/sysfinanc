@@ -11,6 +11,8 @@ import { UtilizacaoLancamentoVO } from "../dominio/vo/utilizacao-lancamento-vo";
 import { BaixaLancamentoDTO } from "../dominio/dto/baixa-lancamento-dto";
 import { GeracaoParcelasDto } from "../dominio/dto/geracao-parcelas-dto";
 import { RegistroExtratoDto } from "../dominio/dto/registro-extrato-dto";
+import { InclusaoLancamentoDto } from "../dominio/dto/InclusaoLancamentoDto";
+import { AlteracaoLancamentoDTO } from "../dominio/dto/AlteracaoLancamentoDTO";
 
 @Injectable()
 export class LancamentoService extends AbstractServicos<LancamentoVO>  {
@@ -20,6 +22,15 @@ export class LancamentoService extends AbstractServicos<LancamentoVO>  {
     constructor(protected http: HttpInterceptor) { 
         super();
     }
+
+    public incluirLancamento(objeto: InclusaoLancamentoDto): Promise<any> {
+        return this.executarPost(this.uri, objeto);
+      }      
+
+    public alterarLancamento(objeto: AlteracaoLancamentoDTO): Promise<any> {
+        return this.executarPut(this.uri, objeto);
+    }
+      
 
     public transformar(element: any): LancamentoVO {
         return UtilObjeto.transformar(element, new LancamentoVO());

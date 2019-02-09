@@ -55,9 +55,12 @@ public class ConversorLancamento extends AbstractConverter<Lancamento, Lancament
         lancamento.setFormaPagamento(new FormaPagamento());
         lancamento.getFormaPagamento().setId(pojo.getIdFormaPagamento());
         lancamento.setDataVencimento( UtilData.getData(pojo.getDataVencimentoStr(), UtilData.SEPARADOR_PADRAO)  );
-        lancamento.setValor( pojo.isDespesa() ? 
-        						UtilFormatador.formatarStringComoValor(pojo.getValorDebitoStr()) : 
-        							UtilFormatador.formatarStringComoValor(pojo.getValorCreditoStr())  );
+        
+        if (pojo.getValorCreditoStr() != null || pojo.getValorDebitoStr() != null) {
+        	lancamento.setValor( pojo.isDespesa() ? 
+        			UtilFormatador.formatarStringComoValor(pojo.getValorDebitoStr()) : 
+        				UtilFormatador.formatarStringComoValor(pojo.getValorCreditoStr())  );
+        }
         return lancamento;
     }
     

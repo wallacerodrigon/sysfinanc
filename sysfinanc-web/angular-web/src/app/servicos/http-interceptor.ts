@@ -99,6 +99,8 @@ export class HttpInterceptor extends Http  {
                 this._router.navigate(['/login']);
                 new AlertaComponent(this._dialogService).exibirMensagem('O sistema está indisponível no momento. Favor comunicar ao responsável.');
                 return null;
+            } else {
+                return Observable.throw(err);
             }
 
             
