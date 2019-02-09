@@ -3,7 +3,6 @@
  */
 package br.net.walltec.api.rest;
 
-import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +53,7 @@ import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
 import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.utilitarios.UtilFormatador;
+import br.net.walltec.api.validadores.ValidadorDados;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
 import io.swagger.annotations.Api;
@@ -76,6 +76,7 @@ import io.swagger.annotations.ApiResponses;
 public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 
 	private static Map<String, ImportadorArquivo> mapImportadores = new HashMap<String, ImportadorArquivo>();
+
 	
 	static {
 		mapImportadores.put("001", new ImportadorBB());
@@ -176,20 +177,20 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 				@ApiResponse(code=500, message="Erro interno")
 	 }) 		
 	public Response incluir(InclusaoLancamentoDTO dtoInclusao) throws WebServiceException {
-		//falta validar os campos...
-		
-		LancamentoVO objeto = new LancamentoVO();
-		objeto.setBolConciliado(false);
-		objeto.setBolPaga(dtoInclusao.isBolPaga());
-		objeto.setDescricao(dtoInclusao.getDescricao());
-		objeto.setIdConta(dtoInclusao.getIdRubrica());
-		objeto.setIdFormaPagamento(dtoInclusao.getIdFormaPagamento());
-		objeto.setNumero(Short.valueOf("1"));
-		objeto.setValor(dtoInclusao.getValor());
-		objeto.setDataVencimentoStr(dtoInclusao.getDataVencimento());
-		objeto.setDataFimStr(dtoInclusao.getDataFimRepeticao());
 
 		try {
+			ValidadorDados.validarDadosEntrada(dtoInclusao);
+			
+			LancamentoVO objeto = new LancamentoVO();
+			objeto.setBolConciliado(false);
+			objeto.setBolPaga(dtoInclusao.isBolPaga());
+			objeto.setDescricao(dtoInclusao.getDescricao());
+			objeto.setIdConta(dtoInclusao.getIdRubrica());
+			objeto.setIdFormaPagamento(dtoInclusao.getIdFormaPagamento());
+			objeto.setNumero(Short.valueOf("1"));
+			objeto.setValor(dtoInclusao.getValor());
+			objeto.setDataVencimentoStr(dtoInclusao.getDataVencimento());
+			objeto.setDataFimStr(dtoInclusao.getDataFimRepeticao());
 			objeto = servico.incluirVO(objeto);
 			
 			return Response.ok(objeto).build();
@@ -211,6 +212,8 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		
 		
 		try {
+			ValidadorDados.validarDadosEntrada(dto);
+			
 			LancamentoVO lancamento = servico.buscar(dto.getIdLancamento());
 			lancamento.setBolPaga(dto.isBolPago());
 			lancamento.setValor(dto.getValor());
@@ -229,6 +232,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			throw new WebServiceException(e.getMessage());
 		}
 	}
+
 	
 	@ApiOperation("Excluir um lançamento")
 	@ApiResponses(value= {

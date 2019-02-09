@@ -5,6 +5,10 @@ package br.net.walltec.api.rest.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
+
+
 /**
  * @author wallace
  *
@@ -16,12 +20,23 @@ public class AlteracaoLancamentoDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	@NotNull(message="Id do lançamento é obrigatório")
 	private Integer idLancamento;
+
+	@NotNull(message="Data de vencimento é obrigatória")
 	private String dataVencimento;
+	
+	@NotNull(message="Valor é obrigatório")
 	private Double valor;
+
 	private String numDocumento;
+
+	@NotNull(message="Id da forma de pagamento é obrigatória")
 	private Integer idFormaPagamento;
+
+	@NotNull(message="Descrição é obrigatório")
 	private String descricao;
+	
 	private boolean bolPago;
 	
 	public Integer getIdLancamento() {
