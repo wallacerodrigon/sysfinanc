@@ -536,7 +536,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
         	this.gerarLancamentos(objeto, dataVencimento, dataFim);
         	return objeto;
         } else {		
-        	return this.verificarUtilizacao(objeto, dataVencimento);
+        	return super.incluirVO(objeto); //this.verificarUtilizacao(objeto, dataVencimento);
         }
 	}
 
@@ -720,6 +720,7 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 	/* (non-Javadoc)
 	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#isMesFechado(int, int)
 	 */
+	@Transactional(value=TxType.NOT_SUPPORTED)
 	@Override
 	public boolean isMesFechado(int mes, int ano) throws NegocioException {
 		FechamentoContabil fechamento = new FechamentoContabil();

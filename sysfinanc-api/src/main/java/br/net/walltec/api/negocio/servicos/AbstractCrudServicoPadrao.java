@@ -91,7 +91,7 @@ public abstract class AbstractCrudServicoPadrao<T,  V extends GerenciadorPadraoV
 	public void alterar(T objeto) throws NegocioException {
 		try {
 			getDao().alterar((objeto));
-		} catch (PersistenciaException e) {
+		} catch (Exception e) {
 			throw new NegocioException(e);
 		}
 
@@ -142,7 +142,7 @@ public abstract class AbstractCrudServicoPadrao<T,  V extends GerenciadorPadraoV
 	
 
 	@Override
-	@Transactional(value=TxType.SUPPORTS)	
+	@Transactional(value=TxType.NOT_SUPPORTED)	
 	public V buscar(Serializable id) throws NegocioException {
 		return getPojo(this.find(id));
 	}

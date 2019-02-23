@@ -215,6 +215,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			ValidadorDados.validarDadosEntrada(dto);
 			
 			LancamentoVO lancamento = servico.buscar(dto.getIdLancamento());
+			lancamento.setId(dto.getIdLancamento());
 			lancamento.setBolPaga(dto.isBolPago());
 			lancamento.setValor(dto.getValor());
 			lancamento.setNumDocumento(dto.getNumDocumento());
@@ -222,6 +223,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			lancamento.setDescricao(dto.getDescricao());
 			lancamento.setValorCreditoStr(UtilFormatador.formatarDecimal(lancamento.getValor()));
 			lancamento.setValorDebitoStr(UtilFormatador.formatarDecimal(lancamento.getValor()));
+			lancamento.setDataVencimentoStr(dto.getDataVencimento());
 			servico.alterarVO(lancamento);
 			return Response.ok().build();
 		} catch (NegocioException e) {
