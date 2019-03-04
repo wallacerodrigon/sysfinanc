@@ -214,15 +214,13 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 		try {
 			ValidadorDados.validarDadosEntrada(dto);
 			
-			LancamentoVO lancamento = servico.buscar(dto.getIdLancamento());
+			LancamentoVO lancamento = new LancamentoVO();
 			lancamento.setId(dto.getIdLancamento());
 			lancamento.setBolPaga(dto.isBolPago());
 			lancamento.setValor(dto.getValor());
 			lancamento.setNumDocumento(dto.getNumDocumento());
 			lancamento.setIdFormaPagamento(dto.getIdFormaPagamento());
 			lancamento.setDescricao(dto.getDescricao());
-			lancamento.setValorCreditoStr(UtilFormatador.formatarDecimal(lancamento.getValor()));
-			lancamento.setValorDebitoStr(UtilFormatador.formatarDecimal(lancamento.getValor()));
 			lancamento.setDataVencimentoStr(dto.getDataVencimento());
 			servico.alterarVO(lancamento);
 			return Response.ok().build();

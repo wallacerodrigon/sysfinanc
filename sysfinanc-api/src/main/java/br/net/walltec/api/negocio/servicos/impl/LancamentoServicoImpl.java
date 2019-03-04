@@ -100,17 +100,26 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
      */
     @Override
     public LancamentoVO alterarVO(LancamentoVO objeto) throws NegocioException {
-    	Lancamento lancamento = (Lancamento) getConversor().converterPojoParaEntidade(objeto);
+    	Lancamento lancamento = this.find(objeto.getId()); //(Lancamento) getConversor().converterPojoParaEntidade(objeto);
     	
-    	verificarMesFechado(lancamento.getDataVencimento());
+    	Date dataVencimento = UtilData.getData(objeto.getDataVencimentoStr(), UtilData.SEPARADOR_PADRAO);
     	
+    	verificarMesFechado(dataVencimento);
     	
-    	lancamento.setFormaPagamento(new FormaPagamento());
-    	lancamento.getFormaPagamento().setId(objeto.getIdFormaPagamento());
-    	
+		lancamento.setBolPaga(objeto.isBolPaga());
+		lancamento.setValor( BigDecimal.valueOf(objeto.getValor()) );
+		lancamento.setNumDocumento(objeto.getNumDocumento());
+		
+		FormaPagamento formaPagamento = new FormaPagamento();
+		formaPagamento.setId(objeto.getIdFormaPagamento());
+		
+		lancamento.setFormaPagamento(formaPagamento);
+		lancamento.setDescricao(objeto.getDescricao());
+		lancamento.setDataVencimento(dataVencimento);    	
+    	    	
     	this.alterar(lancamento);
     	
-    	return objeto;
+    	return (LancamentoVO)getConversor().converterEntidadeParaPojo(lancamento);
     }
 
     @Override
