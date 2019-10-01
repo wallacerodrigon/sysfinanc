@@ -1,4 +1,4 @@
-package br.net.walltec;
+package br.net.walltec.api.importacao.estrategia;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

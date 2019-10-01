@@ -2,15 +2,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>br.net.walltec</groupId>
   <artifactId>sysfinanc-parent</artifactId>
-  <version>1.23.2</version>
+  <version>1.24.0</version>
   <packaging>pom</packaging>
   
   <modules>
   	<module>./sysfinanc-api</module>
-   	<module>./sysfinanc-web</module>
-
-
-
-
   </modules>
 </project>
