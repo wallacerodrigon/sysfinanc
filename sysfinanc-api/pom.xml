@@ -1,50 +1,50 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>sysfinanc-api</artifactId>
-  <packaging>war</packaging>
-  <name>sysfinanc-api</name>
-	  
-  <parent>
-	  <groupId>br.net.walltec</groupId>
-	  <artifactId>sysfinanc-parent</artifactId>
-	  <version>1.24.0</version>
-	  <relativePath>../pom.xml</relativePath>
-  
-  </parent>
-  
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>sysfinanc-api</artifactId>
+	<packaging>war</packaging>
+	<name>sysfinanc-api</name>
+
+	<parent>
+		<groupId>br.net.walltec</groupId>
+		<artifactId>sysfinanc-parent</artifactId>
+		<version>1.24.0</version>
+		<relativePath>../pom.xml</relativePath>
+
+	</parent>
+
 	<properties>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-	  	<jasper.version>6.4.1</jasper.version>
-	    <swagger.version>1.5.7</swagger.version>	  	
+		<jasper.version>6.4.1</jasper.version>
+		<swagger.version>1.5.7</swagger.version>
 	</properties>
-	  
-  <dependencies>
 
-  	<!-- basico JEE -->
-	<dependency>
-		<groupId>javax</groupId>
-		<artifactId>javaee-api</artifactId>
-		<version>7.0</version>
-		<scope>provided</scope>
-	</dependency>
-	
-	<dependency>
-	    <groupId>xstream</groupId>
-	    <artifactId>xstream</artifactId>
-	    <version>1.2.2</version>
-	</dependency>
-	
-	
-	<dependency>
-		<groupId>org.hibernate</groupId>
-		<artifactId>hibernate-core</artifactId>
-		<version>4.3.5.Final</version>
-	</dependency>
+	<dependencies>
 
-	<dependency>
+		<!-- basico JEE -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.5.Final</version>
+		</dependency>
+
+		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
 			<version>2.6.9</version>
@@ -61,52 +61,62 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.5</version>
 		</dependency>
-	
-	<!-- JWT -->
-	<dependency>
-	    <groupId>io.jsonwebtoken</groupId>
-	    <artifactId>jjwt</artifactId>
-	    <version>0.7.0</version>
+
+		<!-- JWT -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.7.0</version>
 			<exclusions>
-				<exclusion> 
+				<exclusion>
 					<groupId>*</groupId>
 					<artifactId>*</artifactId>
 				</exclusion>
 			</exclusions>
-	</dependency>
+		</dependency>
 
-	<dependency>
-	  <groupId>commons-io</groupId>
-	  <artifactId>commons-io</artifactId>
-	  <version>2.4</version>
-	  <scope>provided</scope>		  
-	</dependency>	
-	
-	<dependency>
-		<groupId>commons-beanutils</groupId>
-		<artifactId>commons-beanutils</artifactId>
-		<version>1.8.2</version>
-	</dependency>
-	
-       <dependency>
-		<groupId>commons-logging</groupId>
-		<artifactId>commons-logging</artifactId>
-		<version>1.1.1</version>
-		<scope>provided</scope>	
-	</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-jaxrs</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		
-	<dependency>
-	  <groupId>io.swagger</groupId>
-	  <artifactId>swagger-jaxrs</artifactId>
-	  <version>${swagger.version}</version>
-	</dependency>		
-<!-- testes unitários -->
-  </dependencies>
-  
-  
+
+		<!-- testes unitários -->
+	</dependencies>
+
+
 	<build>
-	    <finalName>sysfinanc-api</finalName>
+		<finalName>sysfinanc-api</finalName>
 		<pluginManagement>
 			<plugins>
 				<!-- Plugin compiler para definicao da versao do java e encoding -->
@@ -119,7 +129,7 @@
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
 				</plugin>
-	
+
 				<plugin>
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>maven-replacer-plugin</artifactId>
@@ -134,9 +144,9 @@
 					</executions>
 				</plugin>
 			</plugins>
-			
-				
-			
+
+
+
 		</pluginManagement>
-	</build>  
+	</build>
 </project>
