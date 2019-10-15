@@ -25,7 +25,7 @@ import br.net.walltec.api.entidades.comum.EntidadeBasica;
 
 @Entity
 @Table(name = "conta")
-@Cache(usage=CacheConcurrencyStrategy.TRANSACTIONAL)
+//@Cache(usage=CacheConcurrencyStrategy.TRANSACTIONAL)
 public class Conta extends EntidadeBasica<Conta> {
 
     /**

@@ -17,7 +17,7 @@ import br.net.walltec.api.entidades.comum.EntidadeBasica;
 
 @Entity
 @Table(name="formapagamento")
-@Cache(usage=CacheConcurrencyStrategy.READ_ONLY)
+//@Cache(usage=CacheConcurrencyStrategy.READ_ONLY)
 public class FormaPagamento extends EntidadeBasica<FormaPagamento> {
  
 	/**

@@ -19,12 +19,6 @@
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.jdbc.batch_size" value="30" />
-			
-<!-- 			<property name="hibernate.cache.use_second_level_cache" value="true" /> -->
-<!-- 			<property name="hibernate.cache.use_query_cache" value="true" /> -->
-<!-- 			<property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/> -->
-<!-- 			<property name="net.sf.ehcache.configurationResourceName" value="META-INF/ehcache.xml"/>			 -->
-
 		</properties>
 	</persistence-unit>
 

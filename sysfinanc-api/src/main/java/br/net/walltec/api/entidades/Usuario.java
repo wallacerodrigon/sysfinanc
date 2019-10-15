@@ -17,7 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import br.net.walltec.api.entidades.comum.EntidadeBasica;
 @Entity
 @Table(name="usuario")
-@Cache(usage=CacheConcurrencyStrategy.READ_ONLY)
+//@Cache(usage=CacheConcurrencyStrategy.READ_ONLY)
 public class Usuario extends EntidadeBasica<Usuario> {
  
 	/**
