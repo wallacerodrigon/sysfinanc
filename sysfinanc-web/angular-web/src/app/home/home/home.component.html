@@ -10,7 +10,7 @@
                         <!-- <a class="list-group-item disabled" (click)="toggleSubMenu('subMenuCadastros', 'iconeCadastros')">
                             <span class="glyphicon glyphicon-plus-sign" id="iconeCadastros"></span>
                                 Cadastros
-                        </a>  
+                        </a>
 
                         <div  class="hidden" id="subMenuCadastros" >
                             <a  [routerLink]="['/rubricas']" class="list-group-item" data-scroll >
@@ -21,7 +21,7 @@
                         <a class="list-group-item disabled" (click)="toggleSubMenu('subMenuLancamentos', 'iconeLancamentos')">
                             <span class="glyphicon glyphicon-plus-sign" id="iconeLancamentos"></span>
                             Lançamentos
-                        </a>  
+                        </a>
 
                         <div id="subMenuLancamentos" class="hidden">
                             <a  [routerLink]="['/lancamentos-geracao']" class="list-group-item" data-scroll>
@@ -29,17 +29,17 @@
                             </a>
                             <a  [routerLink]="['/conciliacoes']" class="list-group-item" data-scroll>
                                 <span>Conciliações</span>
-                            </a>    
+                            </a>
                             <a  [routerLink]="['/lancamentos']" class="list-group-item" data-scroll>
                                 <span>Consulta</span>
-                            </a>   
+                            </a>
                         </div>
-                        
+
                         <a class="list-group-item disabled" (click)="toggleSubMenu('subMenuEstatisticas', 'iconeEstatisticas')">
                             <span class="glyphicon glyphicon-plus-sign" id="iconeEstatisticas"></span>
                             Estatísticas
-                        </a>  
-                        
+                        </a>
+
                         <div id="subMenuEstatisticas" class="hidden">
                             <a [routerLink]="['/dashboard']"  class="list-group-item" data-scroll>
                                 Dashboard
@@ -47,25 +47,25 @@
 
                             <a  [routerLink]="['/mapa-lancamentos']" class="list-group-item" data-scroll>
                                 <span>Mapa</span>
-                            </a>   
+                            </a>
                         </div>
 
                         <a class="list-group-item disabled" (click)="toggleSubMenu('subMenuRelatorios', 'iconeEstatisticas')">
                                 <span class="glyphicon glyphicon-plus-sign" id="iconeEstatisticas"></span>
                                 Relatórios
-                        </a>  
-    
+                        </a>
+
                         <div id="subMenuRelatorios" class="hidden">
                                 <a [routerLink]="['/dashboard']"  class="list-group-item" data-scroll>
                                     Lançamentos por Rubrica
                                 </a>
-    
-                        </div>                        
-                        
+
+                        </div>
+
                         <a (click)="logout()" data-scroll  class="list-group-item disabled">
                                 <span class="ponteiro-maozinha">Sair</span>
-                        </a>    
-                </div>            
+                        </a>
+                </div>
         </nav>
     </div>
 
@@ -76,7 +76,7 @@
                     <a id="menu-toggle" class="glyphicon glyphicon-align-justify btn-menu toggle ponteiro-maozinha" onclick="toggleMenu(event)" >
                         <i class="fa fa-bars"></i>
                     </a>
-                    <span class="nome-sistema">Sysfinanc VI</span>
+                    <span class="nome-sistema">Sysfinanc</span>
                 </div>
                 <div class="col col-md-6 col-lg-6 col-xs-6">
                     <span class="detalhe-sistema">Sistema de Controle Financeiro</span>

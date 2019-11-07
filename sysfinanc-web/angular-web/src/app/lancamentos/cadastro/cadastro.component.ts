@@ -20,9 +20,9 @@ declare var jQuery: any;
   styleUrls: ['./cadastro.component.css']
 })
 export class CadastroComponent  extends DialogComponent<null, LancamentoVO> implements OnInit {
- 
-  @ViewChild("dataVencimento") dataVencimento: ElementRef; 
-  @ViewChild("dataFim") dataFim: ElementRef; 
+
+  @ViewChild("dataVencimento") dataVencimento: ElementRef;
+  @ViewChild("dataFim") dataFim: ElementRef;
   @ViewChild("valorStr") valor: ElementRef;
 
   @BlockUI() blockUI: NgBlockUI;
@@ -36,13 +36,13 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
   protected habilitaDataFim: boolean = false;
   protected cadastroOriginadoConciliacao: boolean = false;
 
-  constructor(protected dialogService: DialogService, 
+  constructor(protected dialogService: DialogService,
               protected lancamentoService: LancamentoService,
-              protected rubricaService: RubricaService ) { 
+              protected rubricaService: RubricaService ) {
       super(dialogService);
   }
 
- 
+
   ngOnInit() {
     jQuery(this.dataVencimento.nativeElement).datepicker();
     this.dataVencimento.nativeElement.value = UtilData.converterToString(new Date());
@@ -68,8 +68,8 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
     if (! this.valor.nativeElement.value || this.valor.nativeElement.value == ''){
       erro = true;
     }
-  
-    if (!this.campoEstaInformado('dataVencimento') || 
+
+    if (!this.campoEstaInformado('dataVencimento') ||
         !this.campoEstaInformado('descricao') ||
         !this.campoEstaInformado('idFormaPagamento')  ){
           erro = true;
@@ -95,6 +95,7 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
     this.result = null;
     this.lancamento.descricao = this.lancamento.descricao ? this.lancamento.descricao.toLocaleLowerCase(): null;
     this.lancamento.valor = this.valor.nativeElement.value.replace('[.]', '').replace(',', '.');
+    this.lancamento.valor = Formatadores.formataNumero(this.valor.nativeElement.value);
     this.lancamento.dataVencimento = this.dataVencimento.nativeElement.value;
     this.lancamento.bolRepete = this.habilitaDataFim;
     this.lancamento.dataFimRepeticao = this.dataFim ? this.dataFim.nativeElement.value: null;
@@ -104,14 +105,14 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
     }
     this.blockUI.start('Salvando Lançamento. Aguarde!');
 
-    this.lancamento.bolPaga = this.lancamento.numDocumento != null && 
+    this.lancamento.bolPaga = this.lancamento.numDocumento != null &&
                               this.lancamento.numDocumento != null &&
                               this.lancamento.bolPaga == false ? true : this.lancamento.bolPaga;
 
     let rubrica: RubricaVO = this.getRubrica();
     if (rubrica == null){
       new AlertaComponent(this.dialogService).exibirMensagem("Rubrica não encontrada");
-      return false;      
+      return false;
     }
     this.lancamento.idRubrica = rubrica.id;
 
@@ -128,7 +129,7 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
           new AlertaComponent(this.dialogService).exibirMensagem("Erro ao incluir o registro:" + erro._body);
         });
 
-  }  
+  }
 
   private acaoSelecaoRubrica(){
       let descRubrica: string = "";
@@ -143,7 +144,7 @@ export class CadastroComponent  extends DialogComponent<null, LancamentoVO> impl
       if (this.habilitaDataFim){
         jQuery(this.dataFim.nativeElement).datepicker();
         this.dataFim.nativeElement.value = UtilData.converterToString(new Date());
-    
+
       }
   }
 }
