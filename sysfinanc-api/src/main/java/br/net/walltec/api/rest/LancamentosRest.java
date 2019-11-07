@@ -41,6 +41,7 @@ import br.net.walltec.api.excecoes.WalltecException;
 import br.net.walltec.api.excecoes.WebServiceException;
 import br.net.walltec.api.importacao.estrategia.ImportadorArquivo;
 import br.net.walltec.api.importacao.estrategia.ImportadorBB;
+import br.net.walltec.api.importacao.estrategia.ImportadorCSVBB;
 import br.net.walltec.api.negocio.servicos.LancamentoServico;
 import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
@@ -52,7 +53,6 @@ import br.net.walltec.api.rest.dto.filtro.RegistroFechamentoMesDTO;
 import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
 import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
-import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.validadores.ValidadorDados;
 import br.net.walltec.api.vo.LancamentoVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
@@ -77,9 +77,13 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 
 	private static Map<String, ImportadorArquivo> mapImportadores = new HashMap<String, ImportadorArquivo>();
 
+	private static final String FILE_TYPE_CSV = "application/vnd.ms-excel";
+	
+	private static final String FILE_TYPE_TXT = "text/plain";
 	
 	static {
-		mapImportadores.put("001", new ImportadorBB());
+		mapImportadores.put("1_"+FILE_TYPE_TXT, new ImportadorBB());
+		mapImportadores.put("1_"+FILE_TYPE_CSV, new ImportadorCSVBB());
 	}
 	
 	/**
@@ -268,7 +272,7 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 			Integer ano = Integer.valueOf(dadosData[2]);
 			List<LancamentoVO> lancamentos = FabricaConversores.getInstance().criarConversor(Lancamento.class, LancamentoVO.class)
 					.converterEntidadeParaPojo(servico.listarParcelas(new FiltraParcelasDto(mes, ano)));
-			dadosArquivo = importarArquivo(
+			dadosArquivo = importarArquivo(dto.getBanco()+"_"+dto.getFileType(),
 					conteudoArquivoDesformatado, 
 					lancamentos
 					);
@@ -288,11 +292,11 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	 * @return
 	 * @throws WalltecException
 	 */
-	private List<RegistroExtratoDto> importarArquivo(byte[] conteudoArquivoDesformatado,
+	private List<RegistroExtratoDto> importarArquivo(String chaveImportador, byte[] conteudoArquivoDesformatado,
 			List<LancamentoVO> listaParcelas) throws WalltecException {
 		List<RegistroExtratoDto> dadosArquivo;
 		dadosArquivo = mapImportadores
-				.get("001")
+				.get(chaveImportador)
 				.importar("arquivo", 
 						conteudoArquivoDesformatado, 
 						listaParcelas

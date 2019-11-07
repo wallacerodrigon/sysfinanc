@@ -21,35 +21,7 @@ public class ImportadorBB implements ImportadorArquivo {
 	private static final String QUEBRA_LINHA = "\n";
 	private static final String CHARSET_8859_1 = "ISO-8859-1";
 	private static final String TAG_SALDO = "S A L D O";
-//
-//	IMPORTAR O CSV
-//public static void main(String[] args) throws Exception {
-//		
-//		String file = "c:\\temp\\extrato-agosto.csv";
-//		
-//		BufferedReader reader = new BufferedReader(new FileReader(file));
-//		String linha = null;
-//				
-//		int contaCredito = 736;
-//		int contaDebito = 152;
-//		
-//		System.out.println("insert into lancamento(co_conta,nu_parcela,dt_vencimento,va_parcela,co_formapagamento,no_descricao,bolpaga,bolconciliado,numdocumento) values");
-//		while ( (linha = reader.readLine()) != null) {
-//			String linha2 = linha.replaceAll("\"", "");
-//			String dados[] = linha2.split(",");
-//			
-//			Date dataVencimento = DataUtil.getData(dados[0].replace("\"", ""), "dd/MM/yyyy");
-//			String dataMysql = DataUtil.getDataFormatoString(dataVencimento, "yyyy-MM-dd");
-//			
-//			String conta = dados[5].startsWith("-") ? "152" : "736";
-//			String valor = dados[5].replaceAll("[-]", "");
-//			
-//			System.out.println("(" + conta + ",1,'"+ dataMysql+"',"+valor+",34,'" + dados[2]  + "', 1, 1, '" + dados[4] + "'),");
-//		}
-//		
-//		reader.close();
-//		
-//		
+
 	
 	@Override
     public List<RegistroExtratoDto> importar(String nomeArquivo, byte[] dadosArquivo, List<LancamentoVO> listaParcelas) throws WalltecException {

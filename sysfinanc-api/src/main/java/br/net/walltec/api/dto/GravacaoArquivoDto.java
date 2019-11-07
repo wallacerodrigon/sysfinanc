@@ -17,6 +17,8 @@ public class GravacaoArquivoDto extends DtoPadrao {
 	private String arquivoBase64;
 	private String strDataVencimento;
 	private Integer banco;
+	private String nomeArquivo;
+	private String fileType;
 
 	/**
 	 * @return the arquivoBase64
@@ -58,6 +60,34 @@ public class GravacaoArquivoDto extends DtoPadrao {
 	 */
 	public void setBanco(Integer banco) {
 		this.banco = banco;
+	}
+
+	/**
+	 * @return the nomeArquivo
+	 */
+	public String getNomeArquivo() {
+		return nomeArquivo;
+	}
+
+	/**
+	 * @param nomeArquivo the nomeArquivo to set
+	 */
+	public void setNomeArquivo(String nomeArquivo) {
+		this.nomeArquivo = nomeArquivo;
+	}
+
+	/**
+	 * @return the fileType
+	 */
+	public String getFileType() {
+		return fileType;
+	}
+
+	/**
+	 * @param fileType the fileType to set
+	 */
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
 	}
 
 	

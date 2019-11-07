@@ -1,15 +1,8 @@
 package br.net.walltec.api.conversores;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 import br.net.walltec.api.entidades.Conta;
 import br.net.walltec.api.entidades.FormaPagamento;
 import br.net.walltec.api.entidades.Lancamento;
-import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.utilitarios.UtilFormatador;
 import br.net.walltec.api.vo.LancamentoVO;
