@@ -4,13 +4,14 @@
   <packaging>war</packaging>
   <name>sysfinanc-web</name>
   <description>Páginas web do projeto</description>
-
-  <parent>
+  	<version>1.23.2</version>
+  	<groupId>br.net.walltec</groupId>
+ <!-- <parent>
   	<groupId>br.net.walltec</groupId>
   	<artifactId>sysfinanc-parent</artifactId>
   	<version>1.23.2</version>
   	<relativePath>../pom.xml</relativePath>
-  </parent>
+  </parent>-->
 
 	<properties>
 		<buildNumber>${maven.buildNumber}</buildNumber>

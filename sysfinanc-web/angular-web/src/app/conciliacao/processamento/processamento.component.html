@@ -12,7 +12,7 @@
                         </div>
                         <div class="col col-md-2 col-lg-4 col-xs-4">
                             <label for="database">Data dos Lançamentos</label>
-                            <input type="date" id="database" name="databaseFiltro" class="form-control" [(ngModel)]="databaseFiltro">
+                            <input type="date" id="database" name="databaseFiltro" class="form-control" [(ngModel)]="databaseFiltro" (value)="databaseFiltro">
                         </div>
                         <div class="col col-md-6">
                             <div class="form-group">
@@ -28,7 +28,7 @@
                 </div>
             </div>
     </form>
-    
+
     <block-ui>
         <!-- Nav tabs -->
         <div class="panel panel-default" *ngIf="processando">
@@ -63,7 +63,7 @@
                                             {{l.descricao}} - {{l.despesa ? l.valorDebitoStr : l.valorCreditoStr}}
                                         </li>
                                     </ul>
-                                    
+
                                     <ul *ngIf="row.lancamentos && row.lancamentos.length > 1">
                                         <span class="label label-info">Total R$ {{calcularTotal(row.lancamentos)}}</span>
                                     </ul>
@@ -84,8 +84,8 @@
                     </table>
                     <div class="col col-md-12 col-lg-12 col-xs-12">
                         <div class="center-block">
-                                <ngb-pagination [collectionSize]="tamanhoExtrato" [pageSize]="tamanhoPagina" [ellipses]="false" [maxSize]="3"  
-                                [(page)]="paginaAtual" [rotate]="true" [boundaryLinks]="true" *ngIf="listagemExtrato.length &gt; 0"></ngb-pagination>            
+                                <ngb-pagination [collectionSize]="tamanhoExtrato" [pageSize]="tamanhoPagina" [ellipses]="false" [maxSize]="3"
+                                [(page)]="paginaAtual" [rotate]="true" [boundaryLinks]="true" *ngIf="listagemExtrato.length &gt; 0"></ngb-pagination>
                         </div>
                     </div>
                 </div>

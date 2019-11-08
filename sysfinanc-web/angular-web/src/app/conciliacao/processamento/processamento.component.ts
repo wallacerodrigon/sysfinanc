@@ -28,7 +28,7 @@ declare var jQuery: any;
 export class ProcessamentoComponent implements OnInit {
 
   private colunasPadrao: string[] = ["Descrição", "Data", "Documento", "C/D", "Valor", "Lançamentos", "Ações"];
- 
+
   private listagemExtrato: RegistroExtratoDto[] = [];
   private listaExtratoInteira: RegistroExtratoDto[] = [];
   private listagemNaoConciliados: LancamentoVO[] = [];
@@ -39,18 +39,22 @@ export class ProcessamentoComponent implements OnInit {
   private tamanhoPagina: number = 6;
 
   private conteudoArquivoBase64: string = null;
+
+  private fileName: string = null;
+  private fileType: string = null;
+
   protected databaseFiltro: Date = new Date();
   private processando: boolean = false;
   private mesFechado: boolean = false;
 
   private paginaAtual: number = 1;
   private totalConciliado: number = 0.00;
-  
-  @BlockUI() blockUI: NgBlockUI;   
+
+  @BlockUI() blockUI: NgBlockUI;
 
   @ViewChild("arquivo") arquivo: ElementRef;
 
-  constructor(private servico: ConciliacaoServiceService, 
+  constructor(private servico: ConciliacaoServiceService,
               private dialogService: DialogService,
               private lancamentoService: LancamentoService) { }
 
@@ -60,12 +64,12 @@ export class ProcessamentoComponent implements OnInit {
 
    associarExtratoLancamento(){
 
-      let extratosAAtualizar: Array<RegistroExtratoDto> = 
+      let extratosAAtualizar: Array<RegistroExtratoDto> =
                                         this
                                         .listagemExtrato
-                                        .filter(extrato => 
-                                          !extrato.conciliado && 
-                                          extrato.confirmado && 
+                                        .filter(extrato =>
+                                          !extrato.conciliado &&
+                                          extrato.confirmado &&
                                           extrato.arrayIds &&
                                           extrato.arrayIds.length > 0);
 
@@ -83,7 +87,7 @@ export class ProcessamentoComponent implements OnInit {
       } else {
           new AlertaComponent(this.dialogService).exibirMensagem('Selecione um extrato e um lançamento para conciliar');
       }
-      
+
    }
 
    private efetivarAssociacao(extratosAAtualizar: Array<RegistroExtratoDto>){
@@ -99,7 +103,7 @@ export class ProcessamentoComponent implements OnInit {
 
    private desfazerAssociacao(){
     let disposable = this.dialogService.addDialog(ConfirmComponent, {
-      title:'Desconciliar', 
+      title:'Desconciliar',
       message: 'Deseja realmente desfazer a conciliação deste mês?' })
       .subscribe(confirmado=> {
           if (confirmado){
@@ -122,7 +126,7 @@ export class ProcessamentoComponent implements OnInit {
       console.log(erro);
       new AlertaComponent(this.dialogService).exibirMensagem("Ocorreu um erro ao desfazer as conciliações!");
     })
-   }    
+   }
 
    protected efetuarUpload(){
         this.totalConciliado = 0;
@@ -144,7 +148,7 @@ export class ProcessamentoComponent implements OnInit {
         let strData: string = UtilData.converterDataUSAToBR( this.databaseFiltro.toString() );
 
         this.servico.enviarArquivo(
-                      new GravacaoArquivoDto(this.conteudoArquivoBase64, strData, 1)
+                      new GravacaoArquivoDto(this.conteudoArquivoBase64, strData, 1, this.fileName, this.fileType)
                     )
             .subscribe(dados => {
                 let data = dados.json();
@@ -172,14 +176,20 @@ export class ProcessamentoComponent implements OnInit {
     let reader = new FileReader();
     if(event.target.files.length > 0) {
       let file = event.target.files[0];
-      this.conteudoArquivoBase64 = file;
+//      this.conteudoArquivoBase64 = file;
+      this.fileName = file.name;
+      this.fileType = file.type;
       reader.readAsDataURL(file);
       reader.onload = () => {
-          this.conteudoArquivoBase64 = reader.result.split(',')[1];
-      };      
+        this.conteudoArquivoBase64 = reader.result.toString().split(',')[1];
+      };
+      reader.onerror = () => {
+        this.blockUI.stop();
+      }
+
     }
   }
-  
+
   private novoCadastro(){
     this.dialogService.addDialog(CadastroComponent, {
       mostraBlocoRepetir: false,
@@ -198,7 +208,7 @@ export class ProcessamentoComponent implements OnInit {
                 dto.lancamentos.push(lancamentoCadastrado)
               });
         }
-    }); 
+    });
   }
 
   private utilizarLancamento(){
@@ -218,9 +228,9 @@ export class ProcessamentoComponent implements OnInit {
                 dto.lancamentos.push(lancamentoUtilizado)
               });
         }
-    }); 
+    });
   }
-  
+
   protected limpar(dto: RegistroExtratoDto): void {
     dto.arrayIds = [];
   }
@@ -236,7 +246,7 @@ export class ProcessamentoComponent implements OnInit {
     let selecionado: boolean = event.target.checked;
     if (selecionado){
         if (! dto.arrayIds.find(id => id === lancamento.id) ){
-          dto.arrayIds.push(lancamento.id);        
+          dto.arrayIds.push(lancamento.id);
         }
     } else {
       dto.arrayIds.forEach((id, index) => {
@@ -247,6 +257,6 @@ export class ProcessamentoComponent implements OnInit {
     }
     dto.confirmado = dto.arrayIds.length > 0;
   }
- 
+
 
 }
