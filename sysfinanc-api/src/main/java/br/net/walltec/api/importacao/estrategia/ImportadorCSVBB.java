@@ -8,16 +8,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.enterprise.inject.spi.CDI;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.excecoes.WalltecException;
+import br.net.walltec.api.negocio.servicos.LancamentoServico;
 import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.vo.LancamentoVO;
 
+@Named
 public class ImportadorCSVBB implements ImportadorArquivo {
 
 	public static final String DATA = "dd/MM/yyyy";	
 	private static final String CHARSET_8859_1 = "ISO-8859-1";	
 
+	private LancamentoServico servico;
+	
 	public static Date getData(String data, String formato) {
 		DateFormat df = new SimpleDateFormat(formato);
 		try {
@@ -49,8 +57,8 @@ public class ImportadorCSVBB implements ImportadorArquivo {
 	public List<RegistroExtratoDto> importar(String nomeArquivo, byte[] dadosArquivo, List<LancamentoVO> listaParcelas)
 			throws WalltecException {
 			List<LancamentoVO> listaVOs = recuperarListaLancamentoVO(dadosArquivo);
-			
-			System.out.println(listaVOs);
+			servico =  CDI.current().select(LancamentoServico.class).get();
+			System.out.println(servico);
 			
 			return new ArrayList<>();
 
