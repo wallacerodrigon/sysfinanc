@@ -772,6 +772,22 @@ public class LancamentoServicoImpl extends AbstractCrudServicoPadrao<Lancamento,
 			throw new NegocioException(e);
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.negocio.servicos.LancamentoServico#excluirParcelasPorPeriodo(java.util.Date, java.util.Date)
+	 */
+	@Override
+	@Transactional(value=TxType.REQUIRES_NEW, rollbackOn=Exception.class)
+	public void excluirParcelasPorPeriodo(Date dataInicio, Date dataFim) throws NegocioException {
+		dataInicio = UtilData.getDataSemHoras(dataInicio);
+		dataFim = UtilData.getDataSemHoras(dataFim);
+		try {
+			this.lancamentoDao.excluirParcelasPagasDebitoPorPeriodo(dataInicio, dataFim);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	
 }
