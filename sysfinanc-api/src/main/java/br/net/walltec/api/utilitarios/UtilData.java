@@ -191,7 +191,7 @@ public class UtilData {
 
 	public static Date getPrimeiroDiaMes(Date dataBase) {
 		int mes = UtilData.getMes(dataBase);
-		return createDataSemHoras(1, mes, dataBase.getYear());
+		return createDataSemHoras(1, mes, UtilData.getAno(dataBase));
 	}
 
 	public static boolean isMesValido(Integer mes) {

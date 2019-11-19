@@ -197,15 +197,10 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 		params.put("idFormaPagamento", Constantes.ID_FORMA_PAGAMENTO_DEBITO);
 		
 		String hql ="update Lancamento l set l.lancamentoOrigem = null where l.dataVencimento between :dataInicio and :dataFim and l.formaPagamento.id = :idFormaPagamento and l.bolPaga = true";
-		//javax.persistence.Query query = this.createQuery(hql);
-//		query.setParameter("dataInicio", dataInicio);
-//		query.setParameter("dataFim", dataFim);
-//		query.setParameter("idFormaPagamento", Constantes.ID_FORMA_PAGAMENTO_DEBITO);
-//		query.executeUpdate();
+		this.executarUpdateHql(hql, params);
 		
-		//this.executarUpdateHql(hql, params);
-		//hql ="delete from Lancamento where dataVencimento between :dataInicio and :dataFim and formaPagamento.id = :idFormaPagamento";
-		//this.executarUpdateHql(hql, params);
+		hql ="delete from Lancamento where dataVencimento between :dataInicio and :dataFim and formaPagamento.id = :idFormaPagamento";
+		this.executarUpdateHql(hql, params);
 		
 	}
 	

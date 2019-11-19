@@ -65,9 +65,12 @@ public class ImportadorCSVBB implements ImportadorArquivo {
 			Date dataInicio = UtilData.getPrimeiroDiaMes(dataBase);
 			Date dataFim = UtilData.getUltimaDataMes(dataBase);
 			
-			//excluir os lançamentos
-			//servico.excluirParcelasPorPeriodo(dataInicio, dataFim);
-		//	servico.incluirVO(listaVOs);
+			servico.excluirParcelasPorPeriodo(dataInicio, dataFim);
+			
+			listaVOs.get(0).setDataVencimentoStr( UtilData.getDataFormatada(dataInicio, "dd/MM/yyyy") );
+			listaVOs.remove(listaVOs.size() -1);
+			
+			servico.incluirVO(listaVOs);
 			
 			return listaVOs.stream()
 					.map(vo -> montarRegistroExtratoDTO(vo))
@@ -130,7 +133,7 @@ public class ImportadorCSVBB implements ImportadorArquivo {
 			vo.setNumDocumento(dadosDaLinha[4]);
 			vo.setNumero(Short.valueOf("1"));
 			vo.setValorDebitoStr(valor);
-			vo.setValorDebitoStr(valor);
+			vo.setValorCreditoStr(valor);
 			
 			lancamentos.add(vo);
 			
