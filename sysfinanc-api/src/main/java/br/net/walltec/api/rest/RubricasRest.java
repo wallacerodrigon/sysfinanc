@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.interceptor.Interceptors;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -17,7 +17,6 @@ import br.net.walltec.api.excecoes.WebServiceException;
 import br.net.walltec.api.negocio.servicos.ContaServico;
 import br.net.walltec.api.negocio.servicos.comum.CrudPadraoServico;
 import br.net.walltec.api.rest.comum.RequisicaoRestPadrao;
-import br.net.walltec.api.rest.interceptors.RequisicaoInterceptor;
 import br.net.walltec.api.vo.RubricaVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +27,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Path("/rubricas")
 @Produces(value=MediaType.APPLICATION_JSON)
-@Interceptors({RequisicaoInterceptor.class})
+//@Interceptors({RequisicaoInterceptor.class})
 @Api("Webservice de rubricas")
 public class RubricasRest extends RequisicaoRestPadrao<RubricaVO> {
 
@@ -67,6 +66,7 @@ public class RubricasRest extends RequisicaoRestPadrao<RubricaVO> {
 				@ApiResponse(code=200, message="Retorno bem sucedido"),
 				@ApiResponse(code=500, message="Erro interno")
 	 })      
+	@POST
     public Response incluir(RubricaVO objeto) throws WebServiceException {
         try {
             contaServico.incluirVO(objeto);
