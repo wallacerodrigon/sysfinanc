@@ -2,7 +2,6 @@ package br.net.walltec.api.persistencia.dao.impl;
 
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +11,11 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.transaction.TransactionScoped;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+
+import org.hibernate.Query;
 
 import br.net.walltec.api.dto.LancamentosPorRubricaDTO;
 import br.net.walltec.api.dto.ResumoMesAnoDTO;
@@ -19,6 +23,7 @@ import br.net.walltec.api.entidades.Lancamento;
 import br.net.walltec.api.excecoes.PersistenciaException;
 import br.net.walltec.api.persistencia.dao.LancamentoDao;
 import br.net.walltec.api.persistencia.dao.comum.AbstractPersistenciaPadraoDao;
+import br.net.walltec.api.utilitarios.Constantes;
 import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.vo.ResumoLancamentosVO;
 import br.net.walltec.api.vo.UtilizacaoLancamentoVO;
@@ -176,6 +181,31 @@ public class LancamentoDaoImpl extends AbstractPersistenciaPadraoDao<Lancamento>
 					return dto;
 				})
 				.collect(Collectors.toList());
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see br.net.walltec.api.persistencia.dao.LancamentoDao#excluirParcelasPagasDebitoPorPeriodo(java.util.Date, java.util.Date)
+	 */
+	@Override
+	@TransactionScoped
+	@Transactional(value=TxType.REQUIRED, rollbackOn=Exception.class)
+	public void excluirParcelasPagasDebitoPorPeriodo(Date dataInicio, Date dataFim) throws PersistenciaException {
+		Map<String, Object> params = new HashMap<>();
+		params.put("dataInicio", dataInicio);
+		params.put("dataFim", dataFim);
+		params.put("idFormaPagamento", Constantes.ID_FORMA_PAGAMENTO_DEBITO);
+		
+		String hql ="update Lancamento l set l.lancamentoOrigem = null where l.dataVencimento between :dataInicio and :dataFim and l.formaPagamento.id = :idFormaPagamento and l.bolPaga = true";
+		//javax.persistence.Query query = this.createQuery(hql);
+//		query.setParameter("dataInicio", dataInicio);
+//		query.setParameter("dataFim", dataFim);
+//		query.setParameter("idFormaPagamento", Constantes.ID_FORMA_PAGAMENTO_DEBITO);
+//		query.executeUpdate();
+		
+		//this.executarUpdateHql(hql, params);
+		//hql ="delete from Lancamento where dataVencimento between :dataInicio and :dataFim and formaPagamento.id = :idFormaPagamento";
+		//this.executarUpdateHql(hql, params);
 		
 	}
 	

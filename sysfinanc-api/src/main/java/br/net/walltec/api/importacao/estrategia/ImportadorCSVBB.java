@@ -5,17 +5,19 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.net.walltec.api.dto.RegistroExtratoDto;
 import br.net.walltec.api.excecoes.WalltecException;
 import br.net.walltec.api.negocio.servicos.LancamentoServico;
 import br.net.walltec.api.utilitarios.Constantes;
+import br.net.walltec.api.utilitarios.UtilData;
 import br.net.walltec.api.vo.LancamentoVO;
 
 @Named
@@ -58,10 +60,37 @@ public class ImportadorCSVBB implements ImportadorArquivo {
 			throws WalltecException {
 			List<LancamentoVO> listaVOs = recuperarListaLancamentoVO(dadosArquivo);
 			servico =  CDI.current().select(LancamentoServico.class).get();
-			System.out.println(servico);
-			
-			return new ArrayList<>();
 
+			Date dataBase = listaVOs.size() > 1 ? UtilData.getData(listaVOs.get(1).getDataVencimentoStr(), "/") : new Date();
+			Date dataInicio = UtilData.getPrimeiroDiaMes(dataBase);
+			Date dataFim = UtilData.getUltimaDataMes(dataBase);
+			
+			//excluir os lançamentos
+			//servico.excluirParcelasPorPeriodo(dataInicio, dataFim);
+		//	servico.incluirVO(listaVOs);
+			
+			return listaVOs.stream()
+					.map(vo -> montarRegistroExtratoDTO(vo))
+					.collect(Collectors.toList());
+
+	}
+
+	/**
+	 * @param vo
+	 * @return
+	 */
+	private RegistroExtratoDto montarRegistroExtratoDTO(LancamentoVO vo) {
+		RegistroExtratoDto dto = new RegistroExtratoDto();
+		dto.setArrayIds(new int[0]);
+		dto.setConciliado(true);
+		dto.setConfirmado(true);
+		dto.setCreditoDebito(vo.isDespesa() ?  "D":"C");
+		dto.setDataLancamento(vo.getDataVencimentoStr());
+		dto.setDocumento(vo.getNumDocumento());
+		dto.setHistorico(vo.getDescricao());
+		dto.setLancamentos( Arrays.asList(vo) );
+		dto.setValor( vo.isDespesa() ? vo.getValorDebitoStr() : vo.getValorCreditoStr());
+		return dto;
 	}
 
 	/**

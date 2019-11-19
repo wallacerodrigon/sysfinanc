@@ -30,4 +30,6 @@ public interface LancamentoDao extends PersistenciaPadraoDao<Lancamento> {
     List<ResumoMesAnoDTO> gerarMapaAno(Integer ano) throws PersistenciaException;
     
     List<LancamentosPorRubricaDTO> listarLancamentosPorRubricaEAno(Integer ano, Integer idRubrica) throws PersistenciaException;
+    
+    void excluirParcelasPagasDebitoPorPeriodo(Date dataInicio, Date dataFim) throws PersistenciaException;
 }

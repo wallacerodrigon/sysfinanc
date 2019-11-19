@@ -79,11 +79,14 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 
 	private static final String FILE_TYPE_CSV = "application/vnd.ms-excel";
 	
+	private static final String FILE_TYPE_CSV_LINUX = "text/csv";
+	
 	private static final String FILE_TYPE_TXT = "text/plain";
 	
 	static {
 		mapImportadores.put("1_"+FILE_TYPE_TXT, new ImportadorBB());
 		mapImportadores.put("1_"+FILE_TYPE_CSV, new ImportadorCSVBB());
+		mapImportadores.put("1_"+FILE_TYPE_CSV_LINUX, new ImportadorCSVBB());
 	}
 	
 	/**
@@ -294,9 +297,14 @@ public class LancamentosRest extends RequisicaoRestPadrao<LancamentoVO> {
 	 */
 	private List<RegistroExtratoDto> importarArquivo(String chaveImportador, byte[] conteudoArquivoDesformatado,
 			List<LancamentoVO> listaParcelas) throws WalltecException {
+		ImportadorArquivo importadorArquivo = mapImportadores.get(chaveImportador);
+		
+		if (importadorArquivo == null) {
+			throw new WalltecException("Importador não encontrado com a chave " + chaveImportador);
+		}
+		
 		List<RegistroExtratoDto> dadosArquivo;
-		dadosArquivo = mapImportadores
-				.get(chaveImportador)
+		dadosArquivo = importadorArquivo
 				.importar("arquivo", 
 						conteudoArquivoDesformatado, 
 						listaParcelas
